@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cmr_stock_warehouse_form_replication" model="ir.ui.view">
+        <field name="name">stock.warehouse.form.replication</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Integration">
+                    <group>
+                        <field name="update_replication" readonly="1" force_save="1"/>
+                        <button name="send_replication_data" type="object" string="Submit" class="oe_highlight" invisible="update_replication == True"/>
+                        <button name="button_fetch_replication_data" type="object" string="Get Data" class="oe_highlight" invisible="warehouse_replication_id != False"/>
+                    </group>
+                    <field name="warehouse_replication_id" readonly="1">
+                        <tree editable="bottom">
+                            <field name="store_id" width="40%"/>
+                            <field name="status" width="30%"/>
+                            <field name="date_replication" width="30%"/>
+                            <field name="nhcl_terminal_ip"/>
+                            <field name="nhcl_port_no"/>
+                            <field name="nhcl_api_key"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

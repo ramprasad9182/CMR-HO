@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_nhcl_master_sequence_dynamic_data_list" model="ir.ui.view">
+            <field name="name">nhcl.master.sequence.list</field>
+            <field name="model">nhcl.master.sequence</field>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name="nhcl_code" readonly="nhcl_state == 'activate'" required="1" force_save="1"/>
+                    <field name="nhcl_type" readonly="nhcl_state == 'activate'" required="1" force_save="1"/>
+                    <field name="nhcl_data" readonly="nhcl_state == 'activate'" required="1" force_save="1"/>
+                    <field name="nhcl_prefix" readonly="nhcl_state == 'activate'" required="1" force_save="1"/>
+                    <field name="nhcl_padding" readonly="nhcl_state == 'activate'" required="1" force_save="1"/>
+                    <field name="nhcl_next_number" readonly="nhcl_state == 'activate'" required="1" force_save="1"/>
+                    <field name="nhcl_active"/>
+                    <field name="nhcl_state" widget="badge"/>
+                    <button name="activate_sequence" type="object" class="oe_highlight" string="Active"
+                            invisible="nhcl_state not in ['draft','in_activate']"/>
+                    <button name="deactivate_sequence" type="object" class="oe_highlight" string="De Active"
+                            invisible="nhcl_state != 'activate'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_view_nhcl_master_sequence_dynamic_data_search" model="ir.ui.view">
+            <field name="name">nhcl.master.sequence.search</field>
+            <field name="model">nhcl.master.sequence</field>
+            <field name="arch" type="xml">
+                <search string="Action">
+                    <filter name="nhcl_state" string="Active" domain="[('nhcl_state', '=', 'activate')]"
+                            context="{'default_nhcl_status': 'activate'}"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_nhcl_master_sequence_dynamic_data" model="ir.actions.act_window">
+            <field name="name">Sequence Master</field>
+            <field name="res_model">nhcl.master.sequence</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_nhcl_state': 'activate'}</field>
+        </record>
+
+        <menuitem name="NHCL HO Setup" id="nhcl_cmr_configuration" parent="base.menu_administration" sequence="111"/>
+
+
+        <menuitem name="Sequences" id="nhcl_master_sequence_menu"
+                  parent="cmr_customizations.nhcl_cmr_configuration" sequence="2"/>
+
+        <menuitem
+                id="menu_nhcl_master_sequence_data"
+                name="Sequence Master"
+                parent="cmr_customizations.nhcl_master_sequence_menu"
+                action="action_nhcl_master_sequence_dynamic_data"
+                sequence="1"/>
+    </data>
+</odoo>

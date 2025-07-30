@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fiscal_year_replication_inherit_view" model="ir.ui.view">
+        <field name="name">account.fiscal.replication.form.view.inherit</field>
+        <field name="model">account.fiscal.year</field>
+        <field name="inherit_id" ref="account_accountant.action_account_fiscal_year_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="inside">
+                <notebook>
+                    <page string="Integration">
+                        <group>
+                            <field name="update_replication" readonly="1" force_save="1"/>
+                            <button name="get_stores_data" string="Get Stores" type="object" class="oe_highlight"/>
+                            <button name="send_fiscal_year_replication_data" type="object" string="Submit"
+                                    class="oe_highlight"/>
+                        </group>
+                        <field name="account_fiscal_year_id" readonly="0">
+                            <tree create="false" editable="bottom">
+                                <field name="store_id" width="40%"/>
+                                <field name="status" width="30%"/>
+                                <field name="date_replication" width="30%"/>
+                                <field name="nhcl_terminal_ip"/>
+                                <field name="nhcl_port_no"/>
+                                <field name="nhcl_api_key"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_fiscal_year_inherit_tree_view" model="ir.ui.view">
+        <field name="name">account.fiscal.year.tree.view.inherit</field>
+        <field name="model">account.fiscal.year</field>
+        <field name="inherit_id" ref="account_accountant.action_account_fiscal_year_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="update_replication"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

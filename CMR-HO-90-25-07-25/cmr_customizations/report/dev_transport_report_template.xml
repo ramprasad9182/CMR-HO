@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="dev_transport_report_body">  
+		<t t-call="web.external_layout">
+			<t t-foreach="docs" t-as="o">  	
+				<div class="page" style="font-size:15px;">
+					<center><h2><strong>Transport Report</strong></h2> </center>
+					<br/><br/>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~new row~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <div class="col-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="50%"> 
+                                    <table width="100%">
+								        <tr>
+									        <td width="30%"><strong>Transport No</strong></td>
+									        <td width="10%">:</td>
+									        <td width="60%"><span t-field="o.name"/></td>
+								        </tr>
+								        <tr>
+									        <td width="30%"><strong>LR Number</strong></td>
+									        <td width="10%">:</td>
+									        <td width="60%"><span t-field="o.lr_number"/></td>
+								        </tr>
+								        <tr>
+									        <td width="30%"><strong>Date</strong></td>
+									        <td width="10%">:</td>
+									        <td width="60%"><span t-field="o.transport_date"/></td>
+								        </tr>
+							        </table>
+                                </td>
+                                <td width="50%"> 
+                                    <table width="100%">
+								        <tr>
+									        <td width="25%">
+									            <td>
+									                <strong><span t-field="o.partner_id"/></strong>
+									                <span t-field="o.partner_id" t-options='{"widget": "contact","fields": ["address","phone"]}'/>
+									            </td>
+									        </td>
+								        </tr>
+							        </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                       <h3>Transporter Details</h3> 
+                       <br/>
+					    <div class="row mt32 mb32">
+                            <div  class="col-auto" name="div_origin">
+                                <strong>Delivery Order</strong>
+                                <p t-field="o.picking_id"/>
+                            </div>
+                            <div  class="col-auto" name="div_sched_date">
+                                <strong>Transport By</strong>
+                                <p t-field="o.transport_details_id"/>
+                            </div>
+                            <div  class="col-auto" name="div_sched_date">
+                                <strong>Transport Vehicle</strong>
+                                <p t-field="o.vehicle_id"/>
+                            </div>
+                            <div  class="col-auto" name="div_sched_date">
+                                <strong>No Of Parcels</strong>
+                                <p t-field="o.no_of_parcel"/>
+                            </div>
+                        </div>
+                        <br/>
+                       <h3>Route Details</h3> 
+                        <table width="100%" style="table-layout: fixed;" class="table table-condensed">
+                            <tr style="word-wrap: break-word;line-height: 12px;">
+                                <th width='20%' style="font-size: 12px;border-bottom: 2px solid black;border-top: 1px solid white;">
+                                    <b>Source Location</b>
+                                </th>
+                                <th width='19%' style="font-size: 12px;border-bottom: 2px solid black;border-top: 1px solid white;">
+                                    <b>Destination Location</b>
+                                </th>
+                                <th width='9%' style="font-size: 12px;border-bottom: 2px solid black;border-top: 1px solid white;">
+                                    <b>Distance</b>
+                                </th>
+                                <th width='11%' style="font-size: 12px;border-bottom: 2px solid black;border-top: 1px solid white;">
+                                    <b>Time Hours</b>
+                                </th>
+                                 <th width='13%' style="font-size: 12px;border-bottom: 2px solid black;border-top: 1px solid white;">
+                                    <b>Start Time</b>
+                                </th>
+                                <th width='13%' style="font-size: 12px;border-bottom: 2px solid black;border-top: 1px solid white;">
+                                    <b>End Time</b>
+                                </th>
+                                <th width='14%' style="font-size: 12px;border-bottom: 2px solid black;border-top: 1px solid white;">
+                                    <b>Status</b>
+                                </th>
+                            </tr>
+                            <tr t-foreach="o.transport_location_line" t-as="line" style="word-wrap: break-word;line-height: 10px;">
+                                <td>
+                                   <span t-field="line.source_location_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.destination_location_id"/>
+                                </td>
+                                <td>
+                                    <center> <span t-field="line.distance"/></center>
+                                </td>
+                                <td>
+                                    <center> <span t-field="line.time_hour"/> </center>
+                                </td>
+                                <td>
+                                    <span t-field="line.start_time"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.end_time"/>
+                                </td>
+                                <td>
+                                    <center><span t-field="line.state"/> </center>
+                                </td>
+                        </tr>
+                        </table>
+                    </div>
+					
+<!--					<hr style="border-top: 1px solid;"/>-->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~new row~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--					<div class="row">-->
+<!--						<div class="col-6">-->
+<!--							<h3>Salary and Advantages</h3><br/>-->
+<!--							<table width="100%">-->
+<!--								<tr>-->
+<!--									<td width="20%"><strong>Wage</strong></td>-->
+<!--									<td width="10%">:</td>-->
+<!--									<td width="70%"><span t-field="o.wage"/></td>-->
+<!--								</tr>-->
+<!--							</table>-->
+<!--						</div>-->
+<!--						<div class="col-6">-->
+<!--							<h3>Duration</h3><br/>-->
+<!--							<table width="100%">-->
+<!--								<tr>-->
+<!--									<td width="45%"><strong>Trial Period Duration</strong></td>-->
+<!--									<td width="55%">:&#160;-->
+<!--<span t-field="o.date_start" t-options ='{"format": "dd/MM/yyyy"}' /> - <span t-field="o.date_end" t-options ='{"format": "dd/MM/yyyy"}'/></td>-->
+<!--								</tr>-->
+<!--								<tr>-->
+<!--									<td width="45%"><strong>Working Schedule&#160;</strong></td>-->
+<!--									<td width="55%">:&#160;<span t-field="o.resource_calendar_id.name"/></td>-->
+<!--								</tr>-->
+<!--							</table>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--					<hr style="border-top: 1px solid;"/>-->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~new row~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--					<div class="row">-->
+<!--						<div class="col-6">-->
+<!--							<h3>Work Permit</h3><br/>-->
+<!--							<table width="100%">-->
+<!--								<tr>-->
+<!--									<td width="45%"><strong>Visa No</strong></td>-->
+<!--									<td width="10%">:</td>-->
+<!--									<td width="45%"><span t-field="o.visa_no"/></td>-->
+<!--								</tr>-->
+<!--								<tr>-->
+<!--									<td><strong>Visa Expire Date</strong></td>-->
+<!--									<td>:</td>-->
+<!--									<td><span t-field="o.visa_expire" t-options ='{"format": "dd/MM/yyyy"}'/></td>-->
+<!--								</tr>-->
+<!--							</table>-->
+<!--						</div>-->
+<!--						<div class="col-6">-->
+<!--							<br/><br/><br/>-->
+<!--							<table width="100%">-->
+<!--								<tr>-->
+<!--									<td width="40%"><strong>Work Permit No</strong></td>-->
+<!--									<td width="10%">:</td>-->
+<!--									<td width="50%">246810</td>-->
+<!--								</tr>-->
+<!--							</table>-->
+<!--						</div>-->
+<!--					</div>-->
+					
+<!--~~~~~~~~~~~~~~~~~~~~~~~~new row~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--					<t t-if="o.notes">-->
+<!--						<hr style="border-top: 1px solid;"/>-->
+<!--						<div class="row">-->
+<!--							<div class="col-12">-->
+<!--								<h3>Notes</h3>-->
+<!--								<span t-field="o.notes"/>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</t>	-->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~new row~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--						<hr style="border-top: 1px solid;"/>-->
+<!--						<div class="row">-->
+<!--							<div class="col-12">-->
+<!--								<h3>Employee Advatages</h3>-->
+<!--								    Full Time Working-->
+<!--							</div>-->
+<!--						</div>-->
+
+				</div>
+			</t>
+		</t>
+	</template>
+	 
+	
+	<template id="dev_transport_report_template">
+           <t t-call="web.html_container">
+               <t t-foreach="docs" t-as="o">
+                    <t t-call="cmr_customizations.dev_transport_report_body"/>
+                </t>
+           </t>
+       </template>  
+
+</odoo>
+

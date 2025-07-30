@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="cmr_transactions_tree_view" model="ir.ui.view">
+        <field name="name">nhcl.ho.store.transactions.tree</field>
+        <field name="model">nhcl.ho.store.transactions</field>
+        <field name="arch" type="xml">
+            <tree string="HO/Store Transactions" editable="bottom">
+                <field name="nhcl_create_date" readonly="1"/>
+                <field name="nhcl_sync_type" required="1"/>
+                <field name="nhcl_from_warehouse_id" required="1"/>
+                <field name="nhcl_to_warehouse_id" required="1"/>
+                <field name="nhcl_from_terminal_ip" required="1"/>
+                <field name="nhcl_to_terminal_ip" required="1"/>
+                <field name="nhcl_effective_date" required="1"/>
+                <field name="nhcl_document" required="1"/>
+                <field name="nhcl_endpoint" required="1"/>
+                <field name="nhcl_active" string="Status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- odoorestapi : actions -->
+    <record id="nhcl_ho_store_transactions_action" model="ir.actions.act_window">
+        <field name="name">HO/Store Transactions</field>
+        <field name="res_model">nhcl.ho.store.transactions</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="cmr_transactions_tree_view"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Transaction
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="nhcl_cmr_transactions_config" name="HO/Store Transactions"
+              parent="nhcl_ho_store_cmr_integration.nhcl_integration_configuration"
+              action="nhcl_ho_store_transactions_action" sequence="2"/>
+</odoo>

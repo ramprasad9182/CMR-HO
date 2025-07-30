@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="0">
+	
+		<record id="sample_sale_order_line_xls" model="ir.attachment">
+	        <field name="name">sale_order_line.xls</field>
+            <field name="public" eval="True"/>
+	        <field name="type">binary</field>
+<!--	        <field name="datas" type="base64" file="bi_import_all_orders_lines/Sample Files/sale_order_line.xls"/>-->
+	    </record>
+	
+	    <record id="sample_sale_order_line_csv" model="ir.attachment">
+	        <field name="name">sale_order_line.csv</field>
+            <field name="public" eval="True"/>
+	        <field name="type">binary</field>
+<!--	        <field name="datas" type="base64" file="bi_import_all_orders_lines/Sample Files/sale_order_line.csv"/>-->
+	    </record>
+	    
+	</data>
+</odoo>

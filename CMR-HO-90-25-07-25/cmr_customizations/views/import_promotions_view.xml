@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="import_promotions_wizard_view" model="ir.ui.view">
+            <field name="name">Import Promotions</field>
+            <field name="model">import.promotions.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="import_option" widget="radio"/>
+                        <field name="promotion_file"/>
+                    </group>
+                    <footer>
+                        <button string="Import" name="import_promotions" class="oe_highlight" type="object"/>
+                        or
+                        <button name="cancel" string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="import_promotion_action" model="ir.actions.act_window">
+            <field name="name">Import Promotions</field>
+            <field name="res_model">import.promotions.wizard</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="import_promotions_wizard_view"/>
+            <field name="view_mode">form</field>
+        </record>
+
+        <record id="loyalty_program_inherit_tree_view" model="ir.ui.view">
+            <field name="name">Loyalty Program Tree Inherit</field>
+            <field name="model">loyalty.program</field>
+            <field name="inherit_id" ref="loyalty.loyalty_program_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <header>
+                        <button name="button_import_promotion_action"
+                                string="Import Promotions"
+                                type="object" display="always" class="oe_highlight"
+                                />
+                    </header>
+                </xpath>
+            </field>
+        </record>
+</odoo>

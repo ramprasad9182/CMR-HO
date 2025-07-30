@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<record id="view_multi_product_wizard_form" model="ir.ui.view">
+    <field name="name">multi.product.wizard.form</field>
+    <field name="model">multi.product.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Multi Product Selector" create="false" edit="false">
+            <group>
+                    <field name="product_name_id" options="{'no_create': True}"/>
+                    <field name="available_attribute_value_ids" invisible="1"/>
+                    <field name="attribute_value_ids"
+                           domain="[('id', 'in', available_attribute_value_ids)]" options="{'no_create': True}"
+                           widget="many2many_tags"/>
+            </group>
+
+            <footer>
+                <button name="action_search_products" string="Add to Approval" type="object" class="btn-primary"/>
+                <button string="Cancel" class="btn-secondary" special="cancel"/>
+            </footer>
+        </form>
+    </field>
+</record>
+</odoo>

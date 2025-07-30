@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cmr_res_partner_form_view" model="ir.ui.view">
+        <field name="name">res.partner.form.inherits</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='category_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='category_id']" position="after">
+                <field name="group_contact" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="1" readonly="group_contact != False" force_save="1"/>
+                <field name="msme" required="1" force_save="1"/>
+                <field name="msme_category_type" invisible="msme != 'yes'" required="msme == 'yes'"/>
+                <field name="msme_type" invisible="msme != 'yes'" required="msme == 'yes'"/>
+                 <field name="udyam_reg_no" invisible="msme != 'yes'" required="msme == 'yes'"/>
+                <field name="vendor_zone" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="1" domain="[('name','!=','Basement')]"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='website']" position="before">
+                <field name="contact_sequence" readonly="1" required="1"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='property_supplier_payment_term_id']" position="attributes">
+                <attribute name="readonly">msme_category_type != 'trading'</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cmr_res_partner_kanban_view" model="ir.ui.view">
+        <field name="name">res.partner.kanban.inherits</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_tags_section')]" position="inside">
+                <t t-if="record.contact_sequence.value">[<field name="contact_sequence"/>]</t>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cmr_view_partner_tree" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherits</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="before">
+                <field name="contact_sequence"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cmr_hr_employee_form_view" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherits</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='department_id']" position="before">
+                <field name="employee_sequence" readonly="1" required="1" force_save="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cmr_hr_expense_form_view" model="ir.ui.view">
+        <field name="name">hr.expense.form.inherits</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='date']" position="before">
+                <field name="vehicle_id" options='{"no_open": True, "no_create": True,"no_edit": True}' readonly="state in ['approved','done']"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cmr_view_hr_expense_sheet_form" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form.inherits</field>
+            <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page[@name='expenses']/field/tree/field[@name='tax_ids']" position="before">
+                <field name="vehicle_id" options='{"no_open": True, "no_create": True,"no_edit": True}' readonly="parent.state in ['approved','done']"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cmr_res_company_form_view" model="ir.ui.view">
+        <field name="name">res.company.form.inherits</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page/group/group/field[@name='phone']" position="before">
+                <field name="nhcl_company_bool" required="1"/>
+                <field name="nhcl_res_cin_no"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

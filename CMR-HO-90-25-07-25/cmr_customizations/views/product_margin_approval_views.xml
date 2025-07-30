@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="nhcl_product_margin_approval_action" model="ir.actions.act_window">
+        <field name="name">Product Margin Approval</field>
+        <field name="res_model">product.margin.approval</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p>Product margin</p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="nhcl_product_margin_approval_tree">
+        <field name="name">ProductMarginApproval</field>
+        <field name="model">product.margin.approval</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="filter_type"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'refused'" decoration-primary="state == 'submitted'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="nhcl_product_margin_approval_form" model="ir.ui.view">
+        <field name="name">Product Margin Approval Form</field>
+        <field name="model">product.margin.approval</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,refused"/>
+
+                        <button name="ho_store_update_rsp" type="object"
+                                string="Store Sync" class="btn-primary"
+                                invisible="state not in ['approved'] or nhcl_integration_status != False"/>
+                        <button name="get_filtered_serials" type="object"
+                                string="Get Serial's" class="btn-primary"
+                                invisible="state in ['submitted','approved','refused']"/>
+                        <button name="action_submit" type="object"
+                                string="Request For Approval" class="btn-primary"
+                                invisible="state in ['submitted','approved','refused']"/>
+                        <button name="action_approve" type="object"
+                                string="Approve" class="btn-primary"
+                                invisible="state in ['approved','draft','refused'] or is_manager != True"/>
+
+                        <button name="action_reset_to_draft" type="object"
+                                string="Reset To Draft" class="btn-primary"
+                                invisible="state in ['approved','draft','submitted'] "/>
+
+                        <button name="action_refused" type="object"
+                                string="Refused" class="btn-primary"
+                                invisible="state in ['approved','draft','refused'] or is_manager != True"/>
+
+                        <button name="action_import_excel" string="Import Excel" type="object" class="btn-secondary"
+                                invisible="state in ['approved','submitted','refused']"/>
+
+
+                    </header>
+                    <group name="lot_name" style="border: 2px solid #990099; padding: 10px;">
+                        <group name="name">
+                            <field name="user_id" invisible="0" readonly="1" force_save="1"
+                                   options='{"no_open": True, "no_create": True,"no_edit": True}'/>
+                            <field name="filter_type" required="1"
+                                   placeholder="Please, Select......"
+                                   readonly="state in ['submitted','approved']"/>
+                            <field name="lot_name"
+                                   style="border: 4px solid #714B67;padding-top: 6px;margin-bottom: 10px;"
+                                   placeholder="Please, Enter barcode Number Here......"
+                                   readonly="state in ['submitted','approved']"/>
+                            <field name="lot_ref" invisible="filter_type != 'barcode'"
+                                   style="border: 4px solid #714B67;padding-top: 6px;margin-bottom: 10px;"
+                                   placeholder="Please, Enter Barcode Here......"
+                                   readonly="state in ['submitted','approved']"/>
+                            <field name="manager_id" invisible="1"/>
+                            <field name="is_manager" invisible="1"/>
+                            <field name="pm_category_1_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_category_2_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_category_3_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_category_4_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_category_5_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_category_6_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_category_7_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_category_8_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_receipt" invisible="filter_type in ['condition','barcode','update']"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...."
+                            />
+                            <field name="margin_id" invisible="filter_type in ['condition','barcode','document']"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...."
+                            />
+                        </group>
+                        <group name="dates">
+                            <field name="from_date" required="filter_type != 'update'"/>
+                            <field name="to_date" required="filter_type != 'update'"/>
+                            <field name="pm_description_1_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                                   context="{'tree_view_ref': 'cmr_customizations.view_product_aging_line_tree'}"/>
+                            />
+                            <field name="pm_description_2_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_description_3_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_description_4_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_description_5_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_description_6_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_description_7_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_description_8_ids" invisible="filter_type != 'condition'"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." widget="many2many_tags"
+                            />
+                            <field name="pm_day_ageing_slab" invisible="filter_type != 'condition'"
+                                   placeholder="Please Select ...."
+                            />
+                            <field name="nhcl_integration_status" readonly="1" force_save="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Margin">
+                            <field name="product_margin_approval_ids" readonly="state in ['submitted','approved']">
+                                <tree create="0" editable="bottom">
+                                    <field name="product_id"
+                                           options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                           readonly="1" force_save="1"/>
+                                    <field name="lot_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                           readonly="1" force_save="1"/>
+                                    <field name="from_company" readonly="1" force_save="1"/>
+                                    <field name="actual_cost_price" readonly="1" force_save="1"/>
+                                    <field name="actual_margin" readonly="1" force_save="1"/>
+                                    <field name="actual_rsp_price" readonly="1" force_save="1"/>
+                                    <!--                                    <field name="new_cost_price" readonly="1" force_save="1"/>-->
+                                    <field name="enter_new_rsp"/>
+                                    <field name="enter_new_margin"/>
+
+                                    <field name="new_margin" readonly="1" force_save="1"/>
+                                    <field name="new_rsp_price" readonly="1" force_save="1"/>
+                                    <field name="shortage" readonly="1" force_save="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <!--                                <div class="oe_chatter">-->
+                <!--                                    <field name="message_follower_ids"/>-->
+                <!--                                    <field name="activity_ids"/>-->
+                <!--                                    <field name="message_ids"/>-->
+                <!--                                </div>-->
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="menu_product_margin_approval"
+              name="Product Margin"
+              parent="stock.menu_stock_inventory_control"
+              action="cmr_customizations.nhcl_product_margin_approval_action"/>
+
+
+    <!--#### Product Aging####-->
+    <record id="nhcl_product_aging_action" model="ir.actions.act_window">
+        <field name="name">Product Aging</field>
+        <field name="res_model">product.aging</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p>Product Aging</p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="nhcl_product_aging_tree">
+        <field name="name">Product Aging Tree</field>
+        <field name="model">product.aging</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_aging_line_tree" model="ir.ui.view">
+        <field name="name">product.aging.line.tree</field>
+        <field name="model">product.aging.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="nhcl_product_aging_form" model="ir.ui.view">
+        <field name="name">Product Aging Form</field>
+        <field name="model">product.aging</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                    </group>
+                    <notebook>
+                        <page string="Product Aging">
+                            <field name="product_aging_ids" readonly="1" force_save="1">
+                                <tree create="0" delete="0" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="from_date"/>
+                                    <field name="to_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <!--                                <div class="oe_chatter">-->
+                <!--                                    <field name="message_follower_ids"/>-->
+                <!--                                    <field name="activity_ids"/>-->
+                <!--                                    <field name="message_ids"/>-->
+                <!--                                </div>-->
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="menu_product_aging"
+              name="Product Aging"
+              parent="stock.menu_stock_inventory_control"
+              action="cmr_customizations.nhcl_product_aging_action"/>
+
+
+    <!--    #### Import serial numbers###-->
+    <record id="view_product_margin_approval_import_wizard_form" model="ir.ui.view">
+        <field name="name">product.margin.approval.import.wizard.form</field>
+        <field name="model">product.margin.approval.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Excel">
+                <group>
+                    <field name="file_data" widget="binary" filename="file_name"/>
+                    <field name="file_name"/>
+                </group>
+                <footer>
+                    <button string="Import" type="object" name="action_import" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_product_margin_approval_import" model="ir.actions.act_window">
+        <field name="name">Import Excel</field>
+        <field name="res_model">product.margin.approval.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
+

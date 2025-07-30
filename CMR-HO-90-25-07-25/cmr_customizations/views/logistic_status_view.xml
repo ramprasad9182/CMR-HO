@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="logistic_status_tree_view" model="ir.ui.view">
+        <field name="name">Logistic Status</field>
+        <field name="model">logistic.status.screen</field>
+        <field name="arch" type="xml">
+            <tree string="Transport Check">
+                <field name="transporter_name"/>
+                <field name="date"/>
+                <field name="logistic_numbering"/>
+                <field name="logistic_stage"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_logistic_screen_status" model="ir.actions.act_window">
+        <field name="name">Logistic Status</field>
+        <field name="res_model">logistic.status.screen</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+
+    <record id="logistic_status_form" model="ir.ui.view">
+        <field name="name">Logistic Status</field>
+        <field name="model">logistic.status.screen</field>
+
+        <field name="arch" type="xml">
+            <form string="Logistic Screen" create="0">
+               <h1 style="color:purple;font-weight:1000;text-align:center;">Logistic Status</h1>
+                <sheet>
+                    <header>
+                         <button name="action_check_logistics" type="object"
+                                        string="Get Status" class="btn-primary"/>
+                                <button name="action_to_reset" type="object"
+                                        string="Reset" class="btn-secondary" />
+                        <button name="get_excel_sheet" type="object"
+                                        string="Excel" class="btn-success" />
+                    </header>
+                    <group name="logistic_status" style="border: 2px solid #990099; padding: 10px;">
+                        <group name="logistic_status_group">
+                            <field name="transporter_name" widget="res_partner_many2one"
+                                   placeholder="Enter Logistic Entry Number .."/>
+                            <field name="logistic_numbering"  domain="[('transporter','=',transporter_name)]" />
+                        </group>
+                        <group name="transport_date_details">
+                            <field name="date"/>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Loistic Status">
+                            <field name="logistic_status_ids">
+                                <tree create="0">
+                                    <field name="logistic_stage"/>
+                                    <field name="logistic_bales"/>
+                                    <field name="logistic_date"/>
+                                    <field name="lg_arrived"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+                </sheet>
+                <!--                                <div class="oe_chatter">-->
+                <!--                                    <field name="message_follower_ids"/>-->
+                <!--                                    <field name="activity_ids"/>-->
+                <!--                                    <field name="message_ids"/>-->
+                <!--                                </div>-->
+            </form>
+        </field>
+    </record>
+
+</odoo>
+

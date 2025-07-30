@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_owl_transport_dashboard" model="ir.actions.client">
+        <field name="name">Transport Dashboard</field>
+        <field name="tag">owl.transport_dashboard</field>
+    </record>
+
+    <!--    invoice type menu -->
+    <menuitem id="menu_nhcl_transports_dashboard"
+              name="Transport Dashboard"
+              sequence="0"
+              action="action_owl_transport_dashboard"
+              parent="cmr_customizations.menu_parent_transport"/>
+</odoo>

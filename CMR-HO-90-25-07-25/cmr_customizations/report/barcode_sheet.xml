@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="report_delivery_barcode" model="ir.actions.report">
+            <field name="name">Print Barcode</field>
+            <field name="model">delivery.check</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">cmr_customizations.delivery_check_barcode</field>
+            <field name="report_file">cmr_customizations.delivery_check_barcode</field>
+            <field name="binding_model_id" ref="cmr_customizations.model_delivery_check"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="delivery_check_barcode">
+            <t t-call="web.basic_layout">
+                <t t-call="web.html_container">
+                    <style>
+                        .o_delivery_check_barcode {
+                        width: 100%;
+                        overflow: hidden;
+                        }
+                        .o_container {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: space-around;
+                        width: 100%;
+                        }
+                        .o_box {
+                        width: 50mm;
+                        height: 100mm;
+                        margin: 10mm;
+                        padding: 5mm;
+                        box-sizing: border-box;
+                        border: 1px solid #ccc;
+                        text-align: center;
+                        font-size: 3mm;
+                        overflow: hidden;
+                        page-break-inside: avoid; /* Prevent breaking inside the box */
+                        break-inside: avoid;
+                        }
+                        .o_barcode_table {
+                        width: 100%;
+                        height: 100%;
+                        border-collapse: collapse;
+                        }
+                        .o_barcode_row {
+                        height: 100%;
+                        }
+                        .o_barcode_cell {
+                        border: 1px solid #ccc;
+                        padding: 1mm;
+                        text-align: center;
+                        font-size: 2.5mm;
+                        height: 100%;
+                        vertical-align: middle;
+                        }
+                        .o_label_name {
+                        text-align: center;
+                        font-size: 4mm;
+                        margin: 2mm 0;
+                        }
+                        .o_barcode_image {
+                        margin: 3mm 0;
+                        font-size: 2.5mm;
+                        }
+                        h1, h2, h3 {
+                        font-size: 3.5mm;
+                        margin: 0;
+                        }
+                        .table td {
+                        font-size: 2.5mm;
+                        padding: 1mm;
+                        height: 5mm;
+                        }
+                        .table td p {
+                        margin: 0;
+                        }
+                        .table .title {
+                        font-weight: bold;
+                        width: 40%;
+                        }
+                        .table .value {
+                        width: 60%;
+                        text-align: left;
+                        }
+                    </style>
+                    <div class="o_delivery_check_barcode">
+                        <div class="o_container">
+                            <!-- Loop through the delivery_ids to generate barcodes dynamically -->
+                            <t t-foreach="docs" t-as="o">
+                                <t t-foreach="o.delivery_ids" t-as="k">
+                                    <!-- Generate a barcode for each item -->
+                                    <div class="o_box">
+                                        <table class="o_barcode_table">
+                                            <tr class="o_barcode_row">
+                                                <td class="o_barcode_cell">
+                                                    <h1>
+                                                        <b>CMR</b>
+                                                    </h1>
+                                                    <h2 style="border:1px solid black; width: 100%; padding: 1mm;">
+                                                        <t t-esc="o.get_first_six_characters(o.logistic_lr_number)"/>
+                                                        (<t t-esc="o.delivery_date.strftime('%Y')"/>)
+                                                    </h2>
+                                                    <br/>
+                                                    <div class="o_barcode_image">
+                                                        <span t-if="k.sequence" t-field="k.sequence"
+                                                              t-options="{'widget': 'barcode', 'humanreadable': 1, 'symbology': 'auto', 'img_style': 'width:80%; height:auto;'}">
+                                                            Barcode Placeholder
+                                                        </span>
+                                                    </div>
+                                                    <h2 t-if="k.serial_no">
+                                                        COUNT :<span style="font-weight:bold" t-field="k.serial_no"/>/
+                                                        <span style="font-weight:bold" t-field="o.deliver_bales"/>
+                                                    </h2>
+                                                    <h3>LR NUMBER</h3>
+                                                    <div style="font-size:2.5mm;">
+                                                        <t t-esc="o.logistic_lr_number"/>
+                                                    </div>
+                                                    <div style="font-size:2.5mm; text-align:center;">
+                                                        <t t-esc="o.po_order_id.partner_id.name"/>
+                                                    </div>
+                                                    <br/>
+                                                    <center>
+                                                        <table class="table table-sm"
+                                                               style="border:1px solid black; width:100%; height:auto;">
+                                                            <tr>
+                                                                <td class="title">Logistic No:</td>
+                                                                <td class="value">
+                                                                    <p t-field="o.logistic_entry_number"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="title">City Name:</td>
+                                                                <td class="value">
+                                                                    <p t-field="o.city"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="title">Transporter:</td>
+                                                                <td class="value">
+                                                                    <p t-field="o.transporter"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="title">LR Date:</td>
+                                                                <td class="value">
+                                                                    <p t-field="o.logistic_lr_date"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="title">No of Bales:</td>
+                                                                <td class="value">
+                                                                    <p t-field="o.no_of_bales"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="title">Delivery Date:</td>
+                                                                <td class="value">
+                                                                    <p t-field="o.delivery_date"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="title">Zone:</td>
+                                                                <td class="value">
+                                                                    <p t-field="o.placements.name"/>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+
+<!--        #############Brand#############-->
+        <record id="paperformat_label_sheet_brand" model="report.paperformat">
+            <field name="name">Brand Label Sheet</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">70</field>
+            <field name="page_width">40</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">2</field>
+            <field name="margin_bottom">2</field>
+            <field name="margin_left">6</field>
+            <field name="margin_right">2</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+        <record id="nhcl_report_product_template_label_brand" model="ir.actions.report">
+            <field name="name">Product Label (brand)</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">cmr_customizations.nhcl_report_productlabel_brand</field>
+            <field name="report_file">cmr_customizations.nhcl_report_productlabel_brand</field>
+            <field name="paperformat_id" ref="paperformat_label_sheet_brand"/>
+            <field name="binding_type">report</field>
+            <field name="binding_model_id" ref="cmr_customizations.model_stock_picking"/>
+
+        </record>
+
+
+        <template id="nhcl_report_productlabel_brand">
+            <!--            <t t-call="web.basic_layout">-->
+            <t t-call="web.html_container">
+                <t t-set="barcode_size" t-value="'width:30mm;height:4mm'"/>
+                <!--                    <t t-set="table_style" t-value="'width:40mm;height:150mm;'"/>-->
+                <t t-set="padding_page" t-value="'padding: 2mm'"/>
+                <table class="table table-sm" style=" width:40mm; height:70mm;">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-foreach="o.move_line_ids" t-as="k">
+                            <table class="table table-bordered"
+                                   style="width: 100%; margin: 0; padding: 0; border-collapse: collapse; font-size: 8px; font-family: Arial, Verdana, sans-serif;">
+                                <tr>
+                                    <th colspan="3" style="font-size: 5px; text-align: left;">
+                                        <span t-if="k.product_id" t-field="k.product_id.display_name"/>
+                                        <span t-else="" t-field="k.product_id.name"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="font-size: 10px; text-align: right; ">
+                                        <span t-if="k.descrip_1" t-field="k.descrip_1.name"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="font-size: 6px; text-align: left; ">
+                                        <span t-if="k.categ_2" t-field="k.categ_2.name"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="font-size: 6px; text-align: left; ">
+                                        <span t-if="k.categ_3" t-field="k.categ_3.name"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="font-size: 6px; text-align: left; ">
+                                        <span t-if="k.categ_4" t-field="k.categ_4.name"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <tr>
+                                        <th colspan="3" style="height: 8mm;"></th>
+                                    </tr>
+                                </tr>
+
+                                <tr>
+                                    <th colspan="3" style="font-size: 5px; text-align: left;">
+                                        <span t-if="k.product_id" t-field="k.product_id.display_name"/>
+                                        <span t-else="" t-field="k.product_id.name"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                        <th colspan="3" style="height: 1mm;"></th>
+                                    </tr>
+                                <tr>
+                                    <th colspan="3">
+                                        <span t-if="k.lot_id.name" t-field="k.nhcl_name"
+                                              t-options="{'widget': 'barcode', 'humanreadable': 1, 'symbology': 'auto', 'img_style': barcode_size}">
+                                        </span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                        <th colspan="3" style="height: 2mm;"></th>
+                                    </tr>
+                                <tr>
+                                    <th colspan="3" style="text-align:right;">
+                                        <strong>MRP:</strong>
+                                        <t t-if="k.mr_price">
+                                            <strong style="font-size: 15px;"><span t-esc="int(k.mr_price)"/>/-
+                                            </strong>
+                                        </t>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="text-align:right;">
+                                        <strong style="font-size: 10px;">RSP:</strong>
+                                        <t t-if="k.rs_price">
+                                            <strong style="font-size: 20px;"><span t-esc="int(k.rs_price)"/>/-
+                                            </strong>
+                                        </t>
+                                    </th>
+                                </tr>
+                            </table>
+
+                            <p style="page-break-before:always;"></p>
+                        </t>
+                    </t>
+                </table>
+
+            </t>
+        </template>
+
+
+        <!--        ############### Ready Made#################-->
+
+        <record id="paperformat_label_sheet_ready_made" model="report.paperformat">
+            <field name="name">Ready Made Label Sheet</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">70</field>
+            <field name="page_width">40</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">2</field>
+            <field name="margin_bottom">2</field>
+            <field name="margin_left">2</field>
+            <field name="margin_right">2</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+
+        <record id="nhcl_report_product_template_label_ready_made" model="ir.actions.report">
+            <field name="name">Product Label (ready_made)</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">cmr_customizations.nhcl_report_product_label_ready_made</field>
+            <field name="report_file">cmr_customizations.nhcl_report_product_label_ready_made</field>
+            <field name="paperformat_id" ref="paperformat_label_sheet_ready_made"/>
+            <field name="binding_type">report</field>
+            <field name="binding_model_id" ref="cmr_customizations.model_stock_picking"/>
+
+        </record>
+
+
+        <template id="nhcl_report_product_label_ready_made">
+            <!--            <t t-call="web.basic_layout">-->
+            <t t-call="web.html_container">
+                <t t-set="barcode_size" t-value="'width:30mm;height:4mm'"/>
+                <!--                    <t t-set="table_style" t-value="'width:40mm;height:150mm;'"/>-->
+                <t t-set="padding_page" t-value="'padding: 2mm'"/>
+                <table class="table table-sm" style="width:38mm; height:70mm;">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-foreach="o.move_line_ids" t-as="k">
+                            <table class="table table-bordered"
+                                   style="width: 100%;  padding: 0; border-collapse: collapse; font-size: 8px; font-family: Arial, Verdana, sans-serif; border: 1px solid black;">
+                                <tr>
+                                    <th style="padding: 1px; text-align: left; border: 1px solid black;">Size:
+                                        <t t-if="k.categ_7">
+                                            <strong>
+                                                <span t-field="k.categ_7.name"/>
+                                            </strong>
+                                        </t>
+                                    </th>
+                                    <th style="padding: 1px; text-align: center; border: 1px solid black;">NETQ:
+                                        <t t-if="k.quantity">
+                                            <strong>
+                                                <span t-esc="int(k.quantity)"/>N
+                                            </strong>
+                                        </t>
+                                    </th>
+                                    <th style="padding: 1px; text-align: right; border: 1px solid black;">Color:
+                                        <t t-if="k.categ_1">
+                                            <strong>
+                                                <span t-field="k.categ_1.name"/>
+                                            </strong>
+                                        </t>
+                                    </th>
+                                </tr>
+
+                                <tr>
+                                    <th colspan="2" style="border: 1px solid black;">Mfd.Date:
+                                        <t t-if="k.lot_name">
+                                            <strong>
+                                                <t t-esc="k.mfd_date()"/>
+                                            </strong>
+                                        </t>
+                                    </th>
+                                    <th colspan="1" style="border: 1px solid black;">
+                                        <t t-if="k.lot_name">
+                                            <strong>
+                                                <t t-esc="k.descrip_1.name"/>
+                                            </strong>
+                                        </t>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="font-size: 5px; text-align: left; border: 1px solid black;">
+                                        <span t-if="k.product_id" t-field="k.product_id.display_name"/>
+                                        <span t-else="" t-field="k.product_id.name"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="border: 1px solid black;">
+                                        <span t-if="k.lot_name" t-field="k.nhcl_name"
+                                              t-options="{'widget': 'barcode', 'humanreadable': 1, 'symbology': 'auto', 'img_style': barcode_size}">
+                                        </span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="border: 1px solid black;font-size: 6px;">
+                                        <strong>Manufactured By:</strong>
+                                        <t t-if="o.partner_id">
+                                            <strong>
+                                                <span t-field="o.partner_id.name"/>
+                                            </strong>
+                                        </t>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="border: 1px solid black;font-size: 6px;">
+                                        <span t-field="o.partner_id.street"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="border: 1px solid black;">
+                                        <strong>Customer Care:</strong>
+                                        <t t-if="o.partner_id">
+                                            <strong>
+                                                <span t-field="o.partner_id.phone"/>
+                                            </strong>
+                                        </t>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="border: 1px solid black;">
+                                        <span t-field="o.partner_id.email"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="border: 1px solid black;">
+                                        <strong>MRP:</strong>
+                                        <t t-if="k.mr_price">
+                                            <strong style="font-size: 15px;"><span t-esc="int(k.mr_price)"/>/-
+                                            </strong>
+                                        </t>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" style="border: 1px solid black;">
+                                        <strong style="font-size: 10px;">RSP:</strong>
+                                        <t t-if="k.rs_price">
+                                            <strong style="font-size: 20px;"><span t-esc="int(k.rs_price)"/>/-
+                                            </strong>
+                                        </t>
+                                    </th>
+                                </tr>
+                            </table>
+
+                            <p style="page-break-before:always;"></p>
+                        </t>
+                    </t>
+                </table>
+
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

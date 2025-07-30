@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    <record id="view_nhcl_po_approvals" model="ir.ui.view">-->
+<!--        <field name="name">nhcl.dynamic.data.list</field>-->
+<!--        <field name="model">po.approvals.master</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <tree editable="top">-->
+<!--                <field name="date" readonly="nhcl_approval_state != 'draft'" required="1" force_save="1"/>-->
+<!--                <field name="table_type" readonly="nhcl_approval_state != 'draft'" required="1" force_save="1"/>-->
+<!--                <field name="approval_type" readonly="nhcl_approval_state != 'draft'" required="1" force_save="1"/>-->
+<!--                <field name="min_approvals" readonly="nhcl_approval_state != 'draft'" required="1" force_save="1"/>-->
+<!--                <field name="max_approvals" readonly="nhcl_approval_state != 'draft'" required="1" force_save="1"/>-->
+<!--                <field name="approval_limit" readonly="nhcl_approval_state != 'draft'" required="1" force_save="1"/>-->
+<!--                <field name="approval_active"/>-->
+<!--                <field name="nhcl_approval_state" widget="badge"/>-->
+<!--                <button name="activate_approvals" type="object" class="oe_highlight btn-success" string="Activate"-->
+<!--                        invisible="nhcl_approval_state != 'draft'"/>-->
+<!--                <button name="deactivate_approvals" type="object" class="oe_highlight" string="Deactivate"-->
+<!--                        invisible="nhcl_approval_state != 'activate'"/>-->
+<!--            </tree>-->
+<!--        </field>-->
+<!--    </record>-->
+<!--    <record id="action_view_nhcl_master_approval_dynamic_data_search" model="ir.ui.view">-->
+<!--        <field name="name">nhcl.master.sequence.search</field>-->
+<!--        <field name="model">po.approvals.master</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search string="Action">-->
+<!--                <filter name="approval_active" string="Active" domain="[('approval_active', '=', True)]"-->
+<!--                        context="{'default_approval_active': True}"/>-->
+<!--            </search>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+<!--    <record id="action_nhcl_approval_data" model="ir.actions.act_window">-->
+<!--        <field name="name">Approvals</field>-->
+<!--        <field name="res_model">po.approvals.master</field>-->
+<!--        <field name="view_mode">tree</field>-->
+<!--        <field name="domain">[]</field>-->
+<!--        <field name="context">{'search_default_approval_active': True}</field>-->
+<!--    </record>-->
+
+
+<!--    <menuitem id="menu_approval_settings" name="Approval Settings" parent="cmr_customizations.nhcl_cmr_configuration"-->
+<!--              sequence="3"-->
+<!--              action="action_nhcl_approval_data"/>-->
+
+</odoo>

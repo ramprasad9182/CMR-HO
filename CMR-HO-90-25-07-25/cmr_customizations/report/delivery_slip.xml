@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle
+ -->
+<odoo>
+    <template id="report_delivery_sli" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@name='signature']" position="before">
+            <table class="table table-sm" t-if="o.transpoter_id" style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">
+                            <strong>Transporter</strong>
+                        </th>
+                        <th style="text-align: left;">
+                            <strong>LR Number</strong>
+                        </th>
+                        <th style="text-align: left;">
+                            <strong>No Of Parcels</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: left;">
+                            <span t-esc="o.transpoter_id and o.transpoter_id.name or ''"/>
+                        </td>
+                        <td style="text-align: left;">
+                            <span t-esc="o.lr_number"/>
+                        </td>
+                        <td style="text-align: left;">
+                            <span t-esc="o.no_of_parcel"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+</odoo>

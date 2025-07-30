@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_pos_lfb_pdf">
+        <t t-call="web.html_container">
+            <div class="header" style="text-align: center;">
+                <h2>POS Bill Number Report</h2>
+                     <t t-if="doc and doc[0]">
+
+                         <p>
+    <strong>From Date:</strong> <span t-esc="doc[0]['start_date']"/>
+    <strong>To Date:</strong> <span t-esc="doc[0]['end_date']"/>
+</p>
+
+        </t>
+            </div>
+
+
+            <!-- Table for Store Report -->
+            <table class="table table-bordered" style="width: 100%; border-collapse: collapse; margin-top: 30px;">
+                <thead>
+                    <tr style="background-color: #f2f2f2; text-align: left; font-weight: bold;">
+                        <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">Site</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">First Bill No</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">Last Bill No</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through the report data for each store -->
+                    <t t-foreach="doc" t-as="line">
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
+                                <span t-esc="line['store_name']"/>
+                            </td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
+                                <span t-esc="line['first_bill_no']"/>
+                            </td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
+                                <span t-esc="line['last_bill_no']"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+    </template>
+</odoo>

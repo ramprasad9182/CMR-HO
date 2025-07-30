@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="sequence_cmr" model="ir.ui.view">
+        <field name="name">sequence Filter</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='group_id']" position="after">
+                <field name="sequence"/>
+                <field name="nhcl_flag"/>
+                <field name="update_flag"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="exap_sequence_ho" model="ir.ui.view">
+        <field name="name">sequence Filter</field>
+        <field name="model">account.group</field>
+        <field name="inherit_id" ref="account.view_account_group_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="sequence"/>
+                <field name="type"/>
+                <field name="asset_sub_type" invisible="type != 'asset'"/>
+                <field name="liability_sub_type" invisible="type != 'liability'"/>
+                <field name="equity_sub_type" invisible="type != 'equity'"/>
+                <field name="revenue_sub_type" invisible="type != 'revenue'"/>
+                <field name="expense_sub_type" invisible="type != 'expenditure'"/>
+                <field name="other_sub_type" invisible="type != 'others'"/>
+                <field name="flag_type" invisible="1"/>
+                <field name="nhcl_flag"/>
+                <field name="update_flag"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="integration_account_move_form_view" model="ir.ui.view">
+    <field name="name">account.move.form.inherits</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_move_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//form/sheet/group/group[@id='header_right_group']" position="inside">
+            <field name="nhcl_flag"/>
+            <field name="update_flag"/>
+            <field name="nhcl_tally_company_name"/>
+        </xpath>
+    </field>
+</record>
+
+    <!-- Asset Sequence -->
+    <record id="seq_account_group_asset" model="ir.sequence">
+        <field name="name">Account Group - Asset</field>
+        <field name="code">account.group.asset</field>
+        <field name="prefix">1</field>
+        <field name="padding">3</field>
+        <field name="number_next">0</field>
+    </record>
+
+    <!-- Liability Sequence -->
+    <record id="seq_account_group_liability" model="ir.sequence">
+        <field name="name">Account Group - Liability</field>
+        <field name="code">account.group.liability</field>
+        <field name="prefix">2</field>
+        <field name="padding">3</field>
+        <field name="number_next">0</field>
+    </record>
+
+    <!-- Equity Sequence -->
+    <record id="seq_account_group_equity" model="ir.sequence">
+        <field name="name">Account Group - Equity</field>
+        <field name="code">account.group.equity</field>
+        <field name="prefix">3</field>
+        <field name="padding">3</field>
+        <field name="number_next">0</field>
+    </record>
+
+    <!-- Revenue Sequence -->
+    <record id="seq_account_group_revenue" model="ir.sequence">
+        <field name="name">Account Group - Revenue</field>
+        <field name="code">account.group.revenue</field>
+        <field name="prefix">4</field>
+        <field name="padding">3</field>
+        <field name="number_next">0</field>
+    </record>
+
+    <!-- Expenditure Sequence -->
+    <record id="seq_account_group_expenditure" model="ir.sequence">
+        <field name="name">Account Group - Expenditure</field>
+        <field name="code">account.group.expenditure</field>
+        <field name="prefix">5</field>
+        <field name="padding">3</field>
+        <field name="number_next">0</field>
+    </record>
+
+    <!-- Others Sequence -->
+    <record id="seq_account_group_others" model="ir.sequence">
+        <field name="name">Account Group - Others</field>
+        <field name="code">account.group.others</field>
+        <field name="prefix">6</field>
+        <field name="padding">3</field>
+        <field name="number_next">0</field>
+    </record>
+
+    <record id="integration_cmr_res_partner_form_view" model="ir.ui.view">
+        <field name="name">res.partner.form.inherits</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='website']" position="before">
+                <field name="nhcl_flag"/>
+                <field name="update_flag"/>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="odoo_sap_company_form_view" model="ir.ui.view">
+        <field name="name">res.company.form.inherits</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="nhcl_flag"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

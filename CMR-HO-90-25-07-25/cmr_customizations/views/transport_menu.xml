@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle
+ -->
+<odoo>
+ 	<menuitem name="Transport"
+              id='menu_parent_transport'
+			  web_icon="cmr_customizations,static/description/transporter.png"
+              sequence="6"/>
+
+	<menuitem name="Configuration"
+              id='menu_transport_config'
+			  parent="menu_parent_transport"
+              sequence="99"/>
+</odoo>

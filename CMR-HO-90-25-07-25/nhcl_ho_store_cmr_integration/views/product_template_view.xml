@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_template_replication_inherit_view" model="ir.ui.view">
+        <field name="name">product.template.replication.form.view.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="before">
+                <div class="alert alert-success" role="alert" invisible="update_replication == False">
+                    <field name="warning_message" style="white-space: pre-wrap;"/>
+                </div>
+                <div class="alert alert-danger" role="alert" invisible="update_replication == True">
+                    <field name="warning_message" style="white-space: pre-wrap;"/>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page string="Integration">
+                <button name="get_stores_data" type="object" string="Get Stores" class="oe_highlight"/>
+                    <group>
+                        <field name="nhcl_id" readonly="1" force_save="1"/>
+                        <field name="update_replication" readonly="1" force_save="1"/>
+                        <field name="update_status" readonly="1" force_save="1"/>
+                        <button name="send_replication_data" type="object" string="Create" class="oe_highlight" invisible="update_replication == True"/>
+                        <button name="update_product_data" type="object" string="Update" class="oe_highlight"/>
+                    </group>
+                    <field name="product_replication_id">
+                        <tree create="true" editable="bottom">
+                            <field name="store_id" width="40%" />
+                            <field name="status" width="30%" />
+                            <field name="date_replication" width="30%" />
+                            <field name="update_status" width="30%" />
+                            <field name="nhcl_terminal_ip" />
+                            <field name="nhcl_port_no" />
+                            <field name="nhcl_api_key" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_replication_inherit_view" model="ir.ui.view">
+        <field name="name">stock.picking.replication.form.view.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_label_type']" position="after">
+                <button name="get_delivery_orders" type="object" string="Replicate" class="btn-primary" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='location_id']" position="after">
+                <field name="nhcl_delivery_status" readonly="1" force_save="1"
+                       invisible="picking_type_code == 'incoming'"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='picking_type_id']" position="before">
+                <field name="company_type" invisible="stock_type != 'pos_exchange'"
+                       required="stock_type == 'pos_exchange'" readonly="state == 'done'"/>
+                <field name="nhcl_pos_order" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                       invisible="stock_type != 'pos_exchange' or company_type != 'same'"
+                       readonly="state == 'done'"/>
+                <field name="nhcl_purchased_store" invisible="stock_type != 'pos_exchange'" readonly="1"
+                       force_save="1"/>
+                <field name="nhcl_invoice_date" invisible="stock_type != 'pos_exchange'" readonly="1" force_save="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="stock_type" invisible="1"/>
+                <!--                <field name="is_picking_type" invisible="1"/>-->
+                <field name="nhcl_credit_note_count" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="store_name" invisible="company_type != 'other'" domain="[('nhcl_store_type','=','store')]"
+                       required="company_type == 'other'" readonly="state == 'done'"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                <field name="store_pos_order" invisible="company_type != 'other'"
+                       readonly="state == 'done'" required="company_type == 'other'"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree//field[@name='product_uom_qty']"
+                   position="after">
+                <field name="nhcl_exchange" column_invisible="parent.stock_type != 'pos_exchange'"
+                       required="parent.stock_type == 'pos_exchange'" readonly="parent.state == 'done'"/>
+                <field name="nhcl_rsp" column_invisible="parent.stock_type != 'pos_exchange'" readonly="0"
+                       force_save="1"/>
+                <field name="nhcl_tax_ids" widget="many2many_tags"
+                       column_invisible="parent.stock_type != 'pos_exchange'" readonly="0" force_save="1"/>
+                <field name="nhcl_discount" column_invisible="parent.stock_type != 'pos_exchange'" readonly="0"
+                       force_save="1"/>
+                <field name="nhcl_price_subtotal" column_invisible="parent.stock_type != 'pos_exchange'" readonly="0"
+                       force_save="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="pos_order_lines" column_invisible="1"/>
+                <field name="ref_pos_order_line_id" column_invisible="1"/>
+                <field name="serial_no"
+                       column_invisible="parent.stock_type != 'pos_exchange' and parent.company_type != 'other'"/>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='operations']" position="inside">
+                <group invisible="stock_type != 'pos_exchange'">
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="nhcl_tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"
+                               readonly="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_transfer_replication_inherit_view" model="ir.ui.view">
+        <field name="name">stock.picking.batch.transfer.replication.form.view.inherit</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+        <xpath expr="//header" position="inside">
+                    <button name="get_batch_orders" type="object" string="Replicate" class="btn-primary" invisible="state != 'done' or nhcl_batch_status == True"/>
+                </xpath>
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="nhcl_batch_status" readonly="1" force_save="1"/>
+                <field name="nhcl_company" readonly="state in ['done']" required="picking_type_id != 'Delivery Orders'" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

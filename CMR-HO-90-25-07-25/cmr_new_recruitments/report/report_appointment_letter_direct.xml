@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="appointment_letter_cmr_direct" model="report.paperformat">
+        <field name="name">Cmr Appointment</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">30</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_spacing">5</field>
+        <field name="dpi">96</field>
+    </record>
+
+
+    <record id="action_appointment_letter_report_direct" model="ir.actions.report">
+        <field name="name">Appointment Letter</field>
+        <field name="model">employee.letter</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cmr_new_recruitments.appointment_letter_template_direct</field>
+        <field name="report_file">cmr_new_recruitments.appointment_letter_template_direct</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="appointment_letter_cmr_direct"/>
+    </record>
+
+    <template id="nhcl_appointment_temp_header_direct">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <div class="header" style="padding: 10px 0; margin-bottom: 50px;"></div>
+    </template>
+
+
+    <!-- Report Template -->
+    <template id="appointment_letter_main_temp_direct">
+        <t t-name="cmr_new_recruitments.nhcl_appointment_temp_header_direct">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page"
+                         style="padding: 30px; font-family: Cambria, serif; font-size: 14pt; letter-spacing: 0.75px; line-height: 1.6;">
+                        <p>
+                            <span t-field="doc.todays_date"/>
+                        </p>
+                        <p>Visakhapatnam.</p>
+                        <p>Emp :
+                        </p>
+
+                        <p>Dear<t t-esc="doc.employee_id.name"/>,
+                        </p>
+
+                        <p>This is reference to your application and the subsequent interview you had with us. We
+                            are pleased to appoint you as
+                            <strong>
+                                <t t-esc="doc.designation_id.name"/>
+                            </strong>
+                            in our business on the following terms and conditions of your appointment.
+                        </p>
+
+                        <h4>1.
+                            <u>Appointment and Reporting</u>
+                        </h4>
+
+                        <p style="margin-left: 30px;">
+
+                            1.1 You are required to join the services of the company on or before
+                            <strong>
+                                <t t-esc="doc.date_of_joining.strftime('%d-%m-%Y') if doc.date_of_joining else ''"/>
+                            </strong>
+                            .
+                            If you fail to report to duty on or before the joining date, you will be deemed
+                            not
+                            to
+                            have joined
+                            the company and this appointment letter will be considered withdrawn/cancelled
+                            without
+                            any further liability.
+                            <br/>
+                            1.2 At the time of joining, you are requested to furnish copies of your educational
+                            qualifications,
+                            testimonials, and a relieving letter from your previous organization. This offer is also
+                            subject to
+                            you not being under any contractual obligation that prevents you from accepting this
+                            offer or
+                            starting work on the date of joining.
+                            <br/>
+
+                            1.3 In case you do not submit the required documents within <strong>30 days</strong> from
+                            your date of joining,
+                            the company shall be constrained to hold back your salary until such documents are
+                            furnished.
+                        </p>
+
+
+                        <h4>2.
+                            <u>Initial Posting and Transfer</u>
+                        </h4>
+
+                        <p style="margin-left: 30px;">
+                            2.1 Your initial place of posting shall be at <strong>Vizag</strong>.
+                            <br/>
+
+                            2.2 You will be liable to transfer in such capacity as the company may from time to time
+                            determine to any other location or department. In such case, you will be governed by the
+                            terms and conditions of services applicable to the new assignment.
+                        </p>
+
+
+                        <h4>3.
+                            <u>Probation</u>
+                        </h4>
+
+                        <p style="margin-left: 30px;">
+                            3.1 You will be on a probation period of <strong>6 months</strong> from the date of
+                            joining, and your confirmation will be subject to satisfactory completion of the
+                            probation period.
+                            <br/>
+
+                            3.2 During the probation period, your employment is terminable by either party by
+                            giving <strong>
+                            15 day's notice</strong>.
+                        </p>
+
+
+                        <h4>4.
+                            <u>Confidential Information</u>
+                        </h4>
+
+                        <p style="margin-left: 30px;">
+                            4.1 During the course of your employment and by virtue of the position held by you, you
+                            shall keep and maintain strict confidentiality of all information and data.
+                            <br/>
+
+                            4.2 Upon expiry or termination of your employment with the company, you must return and
+                            surrender to your supervisor all such confidential information, including but not
+                            limited to data, files, books, reports, and records.
+                            <br/>
+
+
+                            4.3 You shall not disclose any such information to the public or in any media, public
+                            papers, or journals.
+                            <br/>
+
+                            4.4 You are required to adhere to and comply with the company's information security
+                            policy at all times.
+                        </p>
+
+
+                        <h4>5.
+                            <u>Incentive</u>
+                        </h4>
+
+                        <p style="margin-left: 30px;">
+                            5.1 You will also participate in the company's incentive plan as applicable to your
+                            role. The plan will be communicated to you by your management.
+                        </p>
+
+
+                        <h4>6.
+                            <u>Timing</u>
+                        </h4>
+
+                        <p style="margin-left: 30px;">
+                            6.1 Your work timings will be as per the Company rules pertaining to the stores to which
+                            you are currently attached.
+                        </p>
+
+                        <h4>7.
+                            <u>Termination</u>
+                        </h4>
+
+                        <p style="margin-left: 30px;">
+                            7.1 Your appointment and continued employment with the company is strictly based on
+                            consistently delivering performance as per agreed parameters and business targets.
+                            <br/>
+
+
+                            7.2 <strong>Absenteeism:</strong> If you absent yourself without leave or remain absent
+                            beyond the period of granted or extended leave, you shall be considered as having
+                            voluntarily terminated your employment unless:
+                            <br/>
+                        </p>
+
+                        <ul>
+                            <li>You return to work within 7 working days from the commencement of such absence;
+                                and
+                            </li>
+                            <li>You provide a satisfactory explanation to the Management for the absence.</li>
+                            <li>If you are found medically unfit to continue the job, you may be terminated from
+                                employment.
+                            </li>
+                        </ul>
+
+                        <p style="margin-left: 30px;">
+                            7.3 <strong>Harassment:</strong> The company considers harassment and discrimination of
+                            any nature to be unacceptable behavior and it will not be tolerated under any
+                            circumstance.
+                            <br/>
+
+
+                            7.4 Disciplinary action, including termination of employment, will be taken against
+                            anyone found guilty of harassment or discrimination against a fellow employee.
+                        </p>
+
+
+                        <h4>8.
+                            <u>Retirement / Notice Period</u>
+                        </h4>
+
+                        <p style="margin-left: 30px;">
+                            8.1 You will retire from the services of the Company upon attaining the age of 58 years
+                            or such retirement age as may be decided by the Management.
+                            <br/>
+
+                            8.2 This contract of employment is terminable by either party with a 60 day's (2 months)
+                            notice period.
+                        </p>
+
+                        <p>
+                            The company shall have the right to terminate your employment without notice if:
+                        </p>
+                        <ul>
+                            <li>You become insolvent or bankrupt, or are charged with a criminal offence that is
+                                prejudicial to the interests of the company.
+                            </li>
+                            <li>You commit any material breach of your duties and responsibilities under this
+                                contract.
+                            </li>
+                            <li>You are involved in harassment at the workplace.</li>
+                            <li>You are found in violation of any of your obligations under the general terms and
+                                conditions of employment and the Code of Conduct as outlined in Annexure 1. The
+                                company's opinion in such matters shall be final and binding.
+                            </li>
+                        </ul>
+
+                        <h4>ANNEXURE 1: List of Misconduct</h4>
+
+                        <p>Misconduct includes but is not limited to:</p>
+                        <ol>
+                            <li>Wilful insubordination or disobedience, whether alone or with others, to any lawful
+                                and reasonable order of the superior, including refusal to accept transfer.
+                            </li>
+                            <li>Theft, fraud, or dishonesty in connection with the company's business or property.
+                            </li>
+                            <li>Wilful damage to or causing loss of goods or property.</li>
+                            <li>Taking or giving bribe or commission for purchases/contracts made on behalf of the
+                                company.
+                            </li>
+                            <li>Remaining absent without information for more than 7 consecutive working days.</li>
+                            <li>Habitual late attendance, leaving the workplace early, or being absent from the
+                                place of work without permission.
+                            </li>
+                            <li>Entering or remaining within the company premises except on duty or without
+                                authorization.
+                            </li>
+                            <li>Riotous behavior during working hours or any act subversive of discipline.</li>
+                            <li>Negligence or neglect of work.</li>
+                            <li>Refusal to work regular office hours while on the premises or disrupting
+                                co-workers.
+                            </li>
+                            <li>Engaging in private work or trade within the company premises or holding other
+                                employment for profit without written permission from the company.
+                            </li>
+                            <li>Displaying or distributing within the company premises any bills, pamphlets,
+                                placards, posters, or banners.
+                            </li>
+                            <li>Disclosing any confidential information obtained during the course of employment
+                                without authorization.
+                            </li>
+                            <li>Reporting to work under the influence of liquor.</li>
+                            <li>Conviction by a court of law for any criminal offence involving moral turpitude.
+                            </li>
+                            <li>Quarrelling, fighting, or using abusive language within company premises.</li>
+                            <li>Misbehaving with customers or contractors of the company.</li>
+                            <li>Engaging in sexual harassment of any employee during or outside working hours.
+                                Sexual harassment includes:
+                                <ul>
+                                    <li>Physical contact and advances</li>
+                                    <li>Demand or request for sexual favours</li>
+                                    <li>Sexually colored remarks</li>
+                                    <li>Unwelcome physical, verbal or non-verbal conduct of a sexual nature causing
+                                        annoyance to co-workers, vendors, or customers
+                                    </li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <p>The company may revise the terms and conditions from time to time in its best interest.
+                        </p>
+
+                        <p>We look forward to your joining and wish you a rewarding and successful career with us.
+                        </p>
+
+                        <br/>
+                        <p>
+                            <strong>Authorised Signatory</strong>
+                        </p>
+                        <p>
+                            <strong>CMR Textiles And Jewellers Private Limited</strong>
+                        </p>
+
+                        <br/>
+                        <br/>
+                        <h4>Acknowledgement and Acceptance</h4>
+                        <p>
+                            I have read and understood all the terms and conditions relating to my
+                            appointment/employment and declare that I hereby unconditionally and irrevocably accept
+                            the same.
+                        </p>
+                        <p>I hereby confirm joining the services of the company on: ____________________________</p>
+                        <p>Name: __________________________ Signature: __________________________ Date:
+                            __________________________
+                        </p>
+
+
+                        <p style="page-break-before:always;"></p>
+                        <h4>SALARY BREAKDOWN</h4>
+                        <table class="table table-sm table-bordered" style="width:100%; border-collapse: collapse;"
+                               border="1">
+                            <thead>
+                                <tr style="background-color: #f0f0f0;">
+                                    <th style="padding: 6px;">Component</th>
+                                    <th style="padding: 6px;">Per Annum</th>
+                                    <th style="padding: 6px;">Per Month</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 6px;">CTC</td>
+                                    <td t-esc="'%.2f' % doc.ctc if doc.ctc else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                    <td t-esc="'%.2f' % doc.ctc_m if doc.ctc_m else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px;">Basic</td>
+                                    <td t-esc="'%.2f' % doc.basic if doc.basic else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                    <td t-esc="'%.2f' % doc.basic_m if doc.basic_m else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px;">HRA</td>
+                                    <td t-esc="'%.2f' % doc.hra if doc.hra else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                    <td t-esc="'%.2f' % doc.hra_m if doc.hra_m else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px;">Other Allowance</td>
+                                    <td t-esc="'%.2f' % doc.other_allowance if doc.other_allowance else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                    <td t-esc="'%.2f' % doc.other_allowance_m if doc.other_allowance_m else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px;">PF</td>
+                                    <td t-esc="'%.2f' % doc.pf if doc.pf else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                    <td t-esc="'%.2f' % doc.pf_m if doc.pf_m else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px;">PT</td>
+                                    <td t-esc="'%.2f' % doc.pt if doc.pt else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                    <td t-esc="'%.2f' % doc.pt_m if doc.pt_m else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px;">Net Take Home</td>
+                                    <td t-esc="'%.2f' % doc.net_take_home if doc.net_take_home else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                    <td t-esc="'%.2f' % doc.net_take_home_m if doc.net_take_home_m else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px;">Family Insurance</td>
+                                    <td t-esc="'%.2f' % doc.family_insurance if doc.family_insurance else '0.00'"
+                                        style="text-align: right; padding: 6px;"/>
+                                    <td style="text-align: center; padding: 6px;">-</td>
+                                </tr>
+                                <t t-if="doc.ctc_type == 'with_bonus'">
+                                    <tr>
+                                        <td style="padding: 6px;">Bonus</td>
+                                        <td t-esc="'%.2f' % doc.bonus if doc.bonus else '0.00'"
+                                            style="text-align: right; padding: 6px;"/>
+                                        <td style="text-align: center; padding: 6px;">-</td>
+                                    </tr>
+                                </t>
+
+                            </tbody>
+
+                        </table>
+
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="appointment_letter_template_direct">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="cmr_new_recruitments.appointment_letter_main_temp_direct"/>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>

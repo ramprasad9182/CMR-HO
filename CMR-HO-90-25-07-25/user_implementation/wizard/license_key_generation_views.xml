@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_generate_license_key_wizard" model="ir.ui.view">
+        <field name="name">generate.license.key.wizard.form</field>
+        <field name="model">generate.license.key.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirm License Key Generation">
+                <div class="o_form_label">
+                     Do You Want to Generate the License Key?
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object" string="Yes" class="btn-primary"/>
+                    <button name="action_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_generate_license_key_wizard" model="ir.actions.act_window">
+        <field name="name">Generate License Key</field>
+        <field name="res_model">generate.license.key.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

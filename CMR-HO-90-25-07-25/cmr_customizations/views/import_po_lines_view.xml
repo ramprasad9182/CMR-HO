@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+
+		<record id="po_order_wizard_view" model="ir.ui.view">
+			<field name="name">Import Purchase Order Lines</field>
+			<field name="model">import.po.line.wizard</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+					    <field name="import_option" widget="radio"/>
+						<field name="purchase_order_file"/>
+					</group>
+					<group>
+						<group>
+				        <field name="import_prod_option" widget='radio'/>
+				        </group>
+				         <group>
+					
+				        <field name="product_details_option" widget='radio'/>
+				        </group>
+				    </group>
+				    
+<!--				    <group>-->
+<!--	                  <group string="Download Sample XLS and CSV Files">-->
+<!--	                      <field name="down_samp_file" widget="checkbox" />-->
+<!--	                      <field name="sample_option" widget="radio" invisible='down_samp_file == False'/>-->
+<!--	                      <button name="download_auto" string="Download Sample File" type="object" class="oe_highlight" invisible='down_samp_file == False'/>-->
+<!--	                  </group>-->
+<!--		            </group>-->
+				    
+					<footer>
+						<button string="Import" name="import_pol" class="oe_highlight" type="object"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="import_po_line_action" model="ir.actions.act_window">
+			<field name="name">Import Purchase Order Lines</field>
+			<field name="res_model">import.po.line.wizard</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="po_order_wizard_view"/>
+			<field name="view_mode">form</field>
+		</record>
+
+		<record id="purchase_order_inherited_view" model="ir.ui.view">
+			<field name="name">Purchase Order</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form"/>
+			<field name="arch" type="xml">
+				<header>
+					<button name="%(import_po_line_action)d" 
+					string="Import Products"
+                    type="action" 
+                    class="btn-primary" invisible="allow_import_order == False or state in ['purchase','done']"/>
+					<field name="allow_import_order" invisible="1"/>
+				</header>
+			</field>
+		</record>
+
+	</data>
+</odoo>

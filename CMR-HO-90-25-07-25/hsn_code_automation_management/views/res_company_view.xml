@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_company_view_form" model="ir.ui.view">
+        <field name="name">res_company.view.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[2]" position="after">
+                <page string="HSN Code Category" name="HSNCategory" invisible="country_code != 'IN'">
+                    <field name="category_id"
+                        widget="section_and_note_one2many"
+                        mode="tree"
+                        ></field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

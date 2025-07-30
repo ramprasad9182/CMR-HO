@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    # Purchase Order Approval Buttons-->
+    <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_view_picking']" position="replace">
+                <button name="action_view_picking"
+                        string="Receive Products" class="oe_highlight" type="object"
+                        invisible="receipt_invisible == 0 or nhcl_po_type not in ['ho_operation',''] or receipt_status == 'full'"
+                        data-hotkey="y" groups="stock.group_stock_user"/>
+                <button name="action_view_picking"
+                        string="Receive Products" class="oe_highlight" type="object"
+                        invisible="nhcl_po_type == 'ho_operation' or receipt_status == 'full'"
+                        data-hotkey="y" groups="stock.group_stock_user"/>
+            </xpath>
+            <xpath expr="//div/button[@name='action_view_picking']" position="replace">
+                <button type="object"
+                        name="action_view_picking"
+                        class="oe_stat_button"
+                        icon="fa-truck" invisible="receipt_invisible == 0 or nhcl_po_type not in ['ho_operation','']"
+                        groups="stock.group_stock_user">
+                    <field name="incoming_picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
+                </button>
+                <button type="object"
+                        name="action_view_picking"
+                        class="oe_stat_button"
+                        icon="fa-truck" invisible="nhcl_po_type == 'ho_operation'" groups="stock.group_stock_user">
+                    <field name="incoming_picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
+                </button>
+            </xpath>
+            <xpath expr="//div/button[@name='action_view_invoice']" position="before">
+                <button type="object"
+                        name="logistic_screen_button"
+                        class="oe_stat_button"
+                        icon="fa-truck" string="Logistic Entry" invisible="logistic_count == 0">
+                    <field name="logistic_count" widget="statinfo" string="Logistic Entry"/>
+                </button>
+                <button type="object"
+                        name="transport_check_button"
+                        class="oe_stat_button"
+                        icon="fa-truck" string="Transport Check" invisible="transport_count == 0">
+                    <field name="transport_count" widget="statinfo" string="Transport Check"/>
+                </button>
+                <button type="object"
+                        name="delivery_check_button"
+                        class="oe_stat_button"
+                        icon="fa-truck" string="Delivery Check" invisible="delivery_count == 0">
+                    <field name="delivery_count" widget="statinfo" string="Delivery Check"/>
+                </button>
+                <button type="object"
+                        name="open_parcel_button"
+                        class="oe_stat_button"
+                        icon="fa-truck" string="Open Parcels" invisible="parcel_count == 0">
+                    <field name="parcel_count" widget="statinfo" string="Open Parcel"/>
+                </button>
+
+            </xpath>
+            <xpath expr="//field[@name='partner_ref']" position="attributes">
+                <attribute name="readonly">state in ['cancel', 'done', 'purchase']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="sum_of_quantites" invisible="1"/>
+                <field name="receipt_invisible" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='product_qty']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_received']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_invoiced']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_qty']" position="after">
+                <field name="nhcl_pi_qty" readonly="parent.state not in ['draft','sent']"
+                       column_invisible="parent.nhcl_po_type != 'ho_operation'"/>
+                <field name="hsn_code" readonly="1" force_save="1" widget="badge"
+                       decoration-primary="hsn_code != False"/>
+                <field name="purchase_category_id" column_invisible="1"/>
+                <field name="design_id" optional="hide"/>
+            </xpath>
+            <!-- Insert the 'po' field after 'partner_id' -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="street" placeholder="Street..." class="o_address_street"/>
+                <span class="o_form_label o_td_label" name="address_name">
+                </span>
+                <div class="o_address_format">
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="city" placeholder="City" class="o_address_city"/>
+                    <field name="state_id" class="o_address_state" placeholder="State"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                    <div name="partner_address_country" class="d-flex justify-content-between">
+                        <field name="country_id" placeholder="Country" class="o_address_country"/>
+                    </div>
+                </div>
+                <!--                <field name="po"/>-->
+                <field name="po_approval" invisible="1"/>
+                <field name="nhcl_po_type" required="1" placeholder="Please PO Type..."
+                       readonly="state not in ['draft','sent']"/>
+                <field name="dummy_po_type" placeholder="Please PO Type..." force_save="1" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+                <attribute name="domain">[('group_contact.name', 'in', ['Vendor','Branch','Agent'])]</attribute>
+            </xpath>
+            <!--            ## Name changes to Request For Quation and Print RFQ-->
+            <xpath expr="//div[hasclass('oe_title')]/span[hasclass('o_form_label')]"
+                   position="replace">
+                <span class="o_form_label" invisible="state not in ('draft', 'sent')">Request for Purchase Indent</span>
+
+            </xpath>
+            <xpath expr="//button[@name='print_quotation']" position="replace">
+                <button name="print_quotation" string="Print PI" type="object" invisible="1" class="oe_highlight"
+                        groups="base.group_user" data-hotkey="k"/>
+            </xpath>
+            <xpath expr="//button[@name='print_quotation'][2]" position="replace">
+                <button name="print_quotation" string="Print PI" type="object" invisible="1" groups="base.group_user"
+                        data-hotkey="k"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="verify_po" invisible="1"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='date_order']" position="before">
+                <field name="ho_status" widget="badge" invisible="nhcl_po_type != 'ho_operation'"/>
+                <field name="advt_status" widget="badge" invisible="nhcl_po_type != 'advertisement'"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="advertisement_info" string="Advertisement Info" invisible="nhcl_po_type != 'advertisement'">
+                    <group>
+                        <field name="start_date" readonly="state in ['purchase','done']"
+                               required="nhcl_po_type == 'advertisement'"/>
+                        <field name="end_date" readonly="state in ['purchase','done']"
+                               required="nhcl_po_type == 'advertisement'"/>
+                        <field name="due_days" readonly="state in ['purchase','done']"/>
+                        <field name="renewal_date" readonly="state in ['purchase','done']"
+                               required="nhcl_po_type == 'advertisement'"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_kpis_tree_cmr" model="ir.ui.view">
+        <field name="name">purchase.order.tree.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="nhcl_po_type" optional="hide"/>
+                <field name="ho_status" optional="hide" widget="badge"/>
+                <field name="advt_status" widget="badge" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    Purchase Order Filter by PO Type View-->
+    <record id="view_purchase_order_filter_cmr" model="ir.ui.view">
+        <field name="name">purchase.order.search.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_purchases']" position="before">
+                <filter name="po_advertisement" string="Advertisement"
+                        domain="[('nhcl_po_type', '=', 'advertisement')]"/>
+                <filter name="po_ho_operation" string="HO Operation" domain="[('nhcl_po_type', '=', 'ho_operation')]"/>
+                <filter name="po_inter_state" string="Inter State" domain="[('nhcl_po_type', '=', 'inter_state')]"/>
+                <filter name="po_others" string="Others" domain="[('nhcl_po_type', '=', 'others')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_inherit_domain_product" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.domain</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase_product_matrix.purchase_order_form_matrix"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_template_id']" position="attributes">
+                <attribute name="domain">[('nhcl_type','=',parent.dummy_po_type)]</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+                <attribute name="widget"></attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="approval_request_view_tree_cmr_textile" model="ir.ui.view">
+        <field name="name">approval.reques.view.treee.domain</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="approval_reques_view_tree_product_domain_test" model="ir.ui.view">
+        <field name="name">approval.reques.view.tree.domain</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
+            <!--            <xpath expr="//button[@name='action_cancel']" position="replace">-->
+            <!--                <button name="action_cancel" string="Cancel"-->
+            <!--                        invisible="request_status in ['new', 'cancel', 'pending','margin_approved','approved']"/>-->
+            <!--            </xpath>-->
+            <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="invisible">request_status in ['new', 'cancel',
+                    'pending','margin_approved','refused','approved']
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_draft']" position="attributes">
+                <attribute name="invisible">is_requestor == False</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_approve']" position="attributes">
+                <attribute name="class">btn-success</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_approve'][2]" position="attributes">
+                <attribute name="class">btn-success</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="class">btn-danger</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_withdraw']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="after">
+                <button name="open_rejection_manager_wizard" string="Refuse" type="object" class="btn-danger"
+                        invisible="request_status in ['approved', 'refused', 'cancel'] or user_status != 'pending'"/>
+            </xpath>
+            <xpath expr="//field[@name='request_owner_id']" position="attributes">
+                <attribute name="string">Request Owner/అభ్యర్థి పేరు</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                <attribute name="string">Category/విభాగం</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="string">Date/తేదీ</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="is_requestor" invisible="1"/>
+                <field name="pi_type" required="1" placeholder="Please PI Type..." readonly="request_status != 'new'"/>
+                <field name="dummy_pi_type" force_save="1" placeholder="Please PI Type..." invisible="1"
+                       readonly="request_status != 'new'"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+                <attribute name="domain">[('group_contact.name', 'in', ['Vendor','Agent'])]</attribute>
+                <attribute name="string">Vendor/వెండర్</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="fiscal_position_id" readonly="request_status != 'new'" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" required="1"/>
+                <field name="street" placeholder="Street..." class="o_address_street"/>
+                <span class="o_form_label o_td_label" name="address_name">
+                </span>
+                <div class="o_address_format">
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="city" placeholder="City" class="o_address_city"/>
+                    <field name="state_id" class="o_address_state" placeholder="State"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                    <div name="partner_address_country" class="d-flex justify-content-between">
+                        <field name="country_id" placeholder="Country" class="o_address_country"/>
+                    </div>
+                </div>
+                <field name="vendor_gst" readonly="1" force_save="1"/>
+                <field name="is_not_margin_approve" invisible="1"/>
+                <field name="allowed_category_ids" widget="many2many_tags" invisible="1"/>
+                <field name="from_date" readonly="request_status != 'new'"/>
+                <field name="to_date" readonly="request_status != 'new'"/>
+                <field name="purchase_type" readonly="request_status != 'new'"/>
+            </xpath>
+            <xpath expr="//button[@name='action_create_purchase_orders']" position="before">
+                <button name="action_rsp_margin_approve" type="object"
+                        groups="cmr_customizations.group_rsp_margin_approver"
+                        string="RSP Margin Approve" class="btn-success"
+                        data-hotkey="g"
+                        invisible="request_status != 'pending'"/>
+                <button name="open_rejection_wizard" string="Refuse" type="object" class="btn-danger"
+                        invisible="request_status != 'pending'" groups="cmr_customizations.group_rsp_margin_approver"
+                />
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="reset_approval_product_lines" type="object"
+                        string="Reset Lines" class="btn-primary"
+                        data-hotkey="g"
+                        invisible="request_status != 'new'"/>
+            </xpath>
+            <xpath expr="//button[@name='action_create_purchase_orders']" position="replace">
+                <button name="action_create_purchase_orders" type="object"
+                        groups="purchase.group_purchase_user"
+                        string="Create RFQ's" class="btn-primary"
+                        data-hotkey="g"
+                        invisible="approval_type != 'purchase'
+                    or request_status != 'approved'
+                    or purchase_order_count &gt; 0
+                    or request_owner_id != uid"/>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='products']/field[@name='product_line_ids']"
+                   position="attributes">
+                <attribute name="readonly">request_status not in ['new','pending']</attribute>
+                <attribute name="widget">one2many_search</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='products']/field[@name='product_line_ids']" position="after">
+                <group name="note_group" col="6" class="mt-2 mt-md-0">
+                    <group colspan="4">
+                        <field colspan="2" name="terms_conditions" nolabel="1" placeholder="Terms and conditions..."/>
+                    </group>
+                    <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                        <field name="nhcl_tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"
+                               readonly="1"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='products']//field[@name='product_line_ids']" position="before">
+                <button name="select_product_ids" type="object" string="Select Products(FIL)"
+                        invisible="request_status !='new'" class="btn-primary"/>
+                <button name="select_product_direct_ids" type="object" string="Select Products"
+                        invisible="request_status !='new'" class="btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="approval_request_view_kanban_cmr" model="ir.ui.view">
+        <field name="name">approval.request.view.kanban.cmr</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
+            <xpath expr="//a[@name='action_withdraw']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="approval_product_line_view_tree_product_domain" model="ir.ui.view">
+        <field name="name">approval.product.line.view.tree.domain</field>
+        <field name="model">approval.product.line</field>
+        <field name="inherit_id" ref="approvals.approval_product_line_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="before">
+                <field name="image" widget="image" options="{'size': [80, 80]}"/>
+                <field name="family" string="Family/ఫ్యామిలీ" width="150px"
+                       options="{'no_open': True,'no_create': True,'no_edit':True}"
+                       column_invisible="parent.pi_type != 'ho_operation'"
+                       optional="hide"
+                       domain="[('id','in',parent.allowed_category_ids)]"/>
+                <field name="category" optional="hide"
+                       string="Category/కేటగిరీ" width="150px" widget="many2one"
+                       options="{'no_open': True,'no_create': True,'no_edit':True}"
+                       column_invisible="parent.pi_type != 'ho_operation'"
+                       readonly="family == False"/>
+                <field name="Class" optional="hide"
+                       string="Class/క్లాస్" width="130px" widget="many2one"
+                       options="{'no_open': True,'no_create': True,'no_edit':True}"
+                       column_invisible="parent.pi_type != 'ho_operation'"
+                       readonly="category == False"/>
+                <field name="brick" optional="hide"
+                       string="Brick/బ్రిక్" width="130px" widget="many2one"
+                       options="{'no_open': True,'no_create': True,'no_edit':True}"
+                       column_invisible="parent.pi_type != 'ho_operation'"
+                       readonly="Class == False"/>
+                <field name="product_domain" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="options">{"no_open": True, "no_create": True, "no_edit": True}</attribute>
+                <attribute name="string">Product/ప్రోడక్ట్</attribute>
+                <attribute name="domain">product_domain</attribute>
+                <attribute name="widget">many2one</attribute>
+                <attribute name="width">140px</attribute>
+            </xpath>
+            <xpath expr="field[@name='description']" position="attributes">
+                <attribute name="string">Description/వివరణ</attribute>
+                <attribute name="widget">selection_and_note_text</attribute>
+                <attribute name="optional">hide</attribute>
+                <attribute name="width">150px</attribute>
+
+            </xpath>
+            <xpath expr="field[@name='quantity']" position="attributes">
+                <attribute name="string">Quantity/క్వాంటిటీ</attribute>
+                <attribute name="sum">Quantity</attribute>
+                <attribute name="width">160px</attribute>
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="after">
+                <field name="nhcl_hsn_code"  string="HSN Code" width="100px" optional="hide" widget="badge" decoration-primary="nhcl_hsn_code != False"/>
+                <field name="approval_attribute_id" column_invisible="1" width="150px"/>
+                <field name="design_category_id" domain="[('attribute_id','=',approval_attribute_id)]"
+                       context="{'default_attribute_id':approval_attribute_id}" width="80px"/>
+                <field name="unit_price" width="130px"/>
+                <field name="default_rsp_margin" width="150px" readonly="1" force_save="1" column_invisible="0"
+                       optional="hide"/>
+                <field name="enter_rsp_margin" width="130px"/>
+                <field name="pi_rsp_price" readonly="1" force_save="1" width="100px"/>
+                <field name="pi_mrp_price" readonly="1" force_save="1" width="115px" optional="hide"/>
+                <field name="nhcl_taxes_id" widget="many2many_tags" width="90px"/>
+                <field name="nhcl_price_total" width="250px"/>
+                <field name="nhcl_price_subtotal" width="280px" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='product_uom_id']" position="attributes">
+                <attribute name="string">UOM/కొలత యూనిట్</attribute>
+                <attribute name="optional">hide</attribute>
+                <attribute name="width">170px</attribute>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.menu" id="purchase.menu_purchase_rfq">
+        <field name="name">Purchase Indent</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="purchase.purchase_rfq">
+        <field name="name">Purchase Indent</field>
+    </record>
+
+</odoo>
