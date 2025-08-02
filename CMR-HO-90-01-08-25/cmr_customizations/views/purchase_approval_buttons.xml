@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    # Purchase Order Approval Buttons-->
+    <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_view_picking']" position="replace">
+                <button name="action_view_picking"
+                        string="Receive Products" class="oe_highlight" type="object"
+                        invisible="receipt_invisible == 0 or nhcl_po_type not in ['ho_operation',''] or receipt_status == 'full'"
+                        data-hotkey="y" groups="stock.group_stock_user"/>
+                <button name="action_view_picking"
+                        string="Receive Products" class="oe_highlight" type="object"
+                        invisible="nhcl_po_type == 'ho_operation' or receipt_status == 'full'"
+                        data-hotkey="y" groups="stock.group_stock_user"/>
+            </xpath>
+            <xpath expr="//div/button[@name='action_view_picking']" position="replace">
+                <button type="object"
+                        name="action_view_picking"
+                        class="oe_stat_button"
+                        icon="fa-truck" invisible="receipt_invisible == 0 or nhcl_po_type not in ['ho_operation','']"
+                        groups="stock.group_stock_user">
+                    <field name="incoming_picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
+                </button>
+                <button type="object"
+                        name="action_view_picking"
+                        class="oe_stat_button"
+                        icon="fa-truck" invisible="nhcl_po_type == 'ho_operation'" groups="stock.group_stock_user">
+                    <field name="incoming_picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
+                </button>
+            </xpath>
+            <xpath expr="//div/button[@name='action_view_invoice']" position="before">
+                <button type="object"
+                        name="logistic_screen_button"
+                        class="oe_stat_button"
+                        icon="fa-truck" string="Logistic Entry" invisible="logistic_count == 0">
+                    <field name="logistic_count" widget="statinfo" string="Logistic Entry"/>
+                </button>
+                <button type="object"
+                        name="transport_check_button"
+                        class="oe_stat_button"
+                        icon="fa-truck" string="Transport Check" invisible="transport_count == 0">
+                    <field name="transport_count" widget="statinfo" string="Transport Check"/>
+                </button>
+                <button type="object"
+                        name="delivery_check_button"
+                        class="oe_stat_button"
+                        icon="fa-truck" string="Delivery Check" invisible="delivery_count == 0">
+                    <field name="delivery_count" widget="statinfo" string="Delivery Check"/>
+                </button>
+                <button type="object"
+                        name="open_parcel_button"
+                        class="oe_stat_button"
+                        icon="fa-truck" string="Open Parcels" invisible="parcel_count == 0">
+                    <field name="parcel_count" widget="statinfo" string="Open Parcel"/>
+                </button>
+
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="%(import_po_line_action)d"
+                        string="Import Products"
+                        type="action"
+                        class="btn-primary" invisible="allow_import_order == False or state in ['purchase','done']"/>
+                <field name="allow_import_order" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_ref']" position="attributes">
+                <attribute name="readonly">state in ['cancel', 'done', 'purchase']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="sum_of_quantites" invisible="1"/>
+                <field name="receipt_invisible" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='product_qty']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_received']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_invoiced']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_qty']" position="after">
+                <field name="nhcl_pi_qty" readonly="parent.state not in ['draft','sent']"
+                       column_invisible="parent.nhcl_po_type != 'ho_operation'"/>
+                <field name="hsn_code" readonly="1" force_save="1" widget="badge"
+                       decoration-primary="hsn_code != False"/>
+                <field name="purchase_category_id" column_invisible="1"/>
+                <field name="design_id" optional="hide"/>
+            </xpath>
+            <!-- Insert the 'po' field after 'partner_id' -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="street" placeholder="Street..." class="o_address_street"/>
+                <span class="o_form_label o_td_label" name="address_name">
+                </span>
+                <div class="o_address_format">
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="city" placeholder="City" class="o_address_city"/>
+                    <field name="state_id" class="o_address_state" placeholder="State"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                    <div name="partner_address_country" class="d-flex justify-content-between">
+                        <field name="country_id" placeholder="Country" class="o_address_country"/>
+                    </div>
+                </div>
+                <!--                <field name="po"/>-->
+                <field name="po_approval" invisible="1"/>
+                <field name="nhcl_po_type" required="1" placeholder="Please PO Type..."
+                       readonly="state not in ['draft','sent']"/>
+                <field name="dummy_po_type" placeholder="Please PO Type..." force_save="1" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+                <attribute name="domain">[('group_contact.name', 'in', ['Vendor','Branch','Agent'])]</attribute>
+            </xpath>
+            <!--            ## Name changes to Request For Quation and Print RFQ-->
+            <xpath expr="//div[hasclass('oe_title')]/span[hasclass('o_form_label')]"
+                   position="replace">
+                <span class="o_form_label" invisible="state not in ('draft', 'sent')">Request for Purchase Indent</span>
+
+            </xpath>
+            <xpath expr="//button[@name='print_quotation']" position="replace">
+                <button name="print_quotation" string="Print PI" type="object" invisible="1" class="oe_highlight"
+                        groups="base.group_user" data-hotkey="k"/>
+            </xpath>
+            <xpath expr="//button[@name='print_quotation'][2]" position="replace">
+                <button name="print_quotation" string="Print PI" type="object" invisible="1" groups="base.group_user"
+                        data-hotkey="k"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="verify_po" invisible="1"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='date_order']" position="before">
+                <field name="ho_status" widget="badge" invisible="nhcl_po_type != 'ho_operation'"/>
+                <field name="advt_status" widget="badge" invisible="nhcl_po_type != 'advertisement'"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="advertisement_info" string="Advertisement Info" invisible="nhcl_po_type != 'advertisement'">
+                    <group>
+                        <field name="start_date" readonly="state in ['purchase','done']"
+                               required="nhcl_po_type == 'advertisement'"/>
+                        <field name="end_date" readonly="state in ['purchase','done']"
+                               required="nhcl_po_type == 'advertisement'"/>
+                        <field name="due_days" readonly="state in ['purchase','done']"/>
+                        <field name="renewal_date" readonly="state in ['purchase','done']"
+                               required="nhcl_po_type == 'advertisement'"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_kpis_tree_cmr" model="ir.ui.view">
+        <field name="name">purchase.order.tree.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="nhcl_po_type" optional="hide"/>
+                <field name="order_qty"/>
+                <field name="received_qty"/>
+                <field name="pending_qty"/>
+                <field name="ho_status" optional="hide" widget="badge"/>
+                <field name="advt_status" widget="badge" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    Purchase Order Filter by PO Type View-->
+    <record id="view_purchase_order_filter_cmr" model="ir.ui.view">
+        <field name="name">purchase.order.search.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_purchases']" position="before">
+                <filter name="po_advertisement" string="Advertisement"
+                        domain="[('nhcl_po_type', '=', 'advertisement')]"/>
+                <filter name="po_ho_operation" string="HO Operation" domain="[('nhcl_po_type', '=', 'ho_operation')]"/>
+                <filter name="po_inter_state" string="Inter State" domain="[('nhcl_po_type', '=', 'inter_state')]"/>
+                <filter name="po_others" string="Others" domain="[('nhcl_po_type', '=', 'others')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_inherit_domain_product" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.domain</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase_product_matrix.purchase_order_form_matrix"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_template_id']" position="attributes">
+                <attribute name="domain">[('nhcl_type','=',parent.dummy_po_type)]</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+                <attribute name="widget"></attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.menu" id="purchase.menu_purchase_rfq">
+        <field name="name">Purchase Indent</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="purchase.purchase_rfq">
+        <field name="name">Purchase Indent</field>
+    </record>
+
+    <record id="view_report_po_line_tree_only_order" model="ir.ui.view">
+        <field name="name">purchase.order.line.report.only.order.tree</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="PO Line Report" create="false">
+                <field name="partner_id" string="Vendor"/>
+                <field name="order_id" string="Indent No"/>
+                <field name="family" string="Family"/>
+                <field name="category" string="Category"/>
+                <field name="class_level_id" string="Class"/>
+                <field name="brick" string="Brick"/>
+                <field name="product_id" string="Product Variants"/>
+                <field name="product_qty" sum="Total Qty"/>
+                <field name="qty_received" string="GRC Qty" sum="Total GRC Qty"/>
+                <field name="pending_qty" string="Pending Qty" sum="Total Pending Qty"/>
+                <field name="date_approve"/>
+                <field name="date_planned"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_po_line_report_only_order" model="ir.actions.act_window">
+        <field name="name">PO Line Report</field>
+        <field name="res_model">purchase.order.line</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_report_po_line_tree_only_order"/>
+        <field name="domain">[('order_id.state', 'in', ['done'])]</field>
+        <field name="context" eval="{
+        'group_by': ['family', 'category', 'class_level_id', 'brick', 'product_id'],
+        'search_default_family': 1,
+        'search_default_category': 1,
+        'search_default_class_level_id': 1,
+        'search_default_brick': 1,
+
+    }"/>
+    </record>
+
+
+    <menuitem id="menu_po_line_report_only_order"
+              name="Pending PO Report"
+              parent="purchase.purchase_report_main"
+              action="action_po_line_report_only_order"/>
+
+
+    <record id="purchase_order_line_search_purchase_hierarchy_groupby" model="ir.ui.view">
+        <field name="name">purchase.order.line.search.purchase.hierarchy.groupby</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='order_reference']" position="after">
+                <separator string="Group by Category Hierarchy"/>
+                <filter name="groupby_family"
+                        string="Family"
+                        context="{'group_by': 'family'}"/>
+
+                <filter name="groupby_category"
+                        string="Category"
+                        context="{'group_by': 'category'}"/>
+
+                <filter name="groupby_class"
+                        string="class_level_id"
+                        context="{'group_by': 'class_level_id'}"/>
+
+                <filter name="groupby_brick"
+                        string="Brick"
+                        context="{'group_by': 'brick'}"/>
+
+                <filter name="groupby_product_id"
+                        string="Product Variants"
+                        context="{'group_by': 'product_id'}"/>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

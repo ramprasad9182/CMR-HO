@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="delivery_check_tree" model="ir.ui.view">
+        <field name="name">delivery.check.tree</field>
+        <field name="model">delivery.check</field>
+        <field name="arch" type="xml">
+            <tree string="Transport Check" create="0" multi_edit="1">
+                <field name="logistic_entry_number"/>
+                <field name="logistic_lr_date"/>
+                <field name="logistic_lr_number"/>
+                <field name="logistic_date" widget="date" optional="show"/>
+                <field name="transporter" widget="many2one_avatar_user"/>
+                <field name="consignment_number" optional="show"/>
+                <field name="po_order_id" readonly="1" optional="show"/>
+                <field name="state"
+                       decoration-success="state == 'delivery'"
+                       decoration-info="state == 'draft'"
+                       widget="badge"
+                       optional="show"/>
+                <!--                <field name="no_of_bales" invisible="1"/>-->
+                <field name="item_details" optional="show"/>
+                <field name="partial_bales"/>
+                <field name="deliver_bales"/>
+                <field name="overall_remaining_bales"/>
+                <field name="placements"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    #### Delivery Check Search View #####-->
+    <record id="delivery_check_search_view" model="ir.ui.view">
+        <field name="model">delivery.check</field>
+        <field name="name">delivery.check.search</field>
+        <field name="arch" type="xml">
+            <search string="Delivery check">
+                <field name="transporter"/>
+                <field name="po_order_id"/>
+                <field name="logistic_entry_number"/>
+                <field name="state"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"
+                        context="{'default_state': 'draft'}"/>
+
+            </search>
+        </field>
+    </record>
+
+
+    <record id="delivery_check_form" model="ir.ui.view">
+        <field name="name">delivery.check.form</field>
+        <field name="model">delivery.check</field>
+        <field name="arch" type="xml">
+            <form string="Transport Check" create="0">
+                <header>
+                    <button name="action_confirm" id="action_confirm" data-hotkey="q"
+                            string="Confirm" class="btn-primary" type="object"
+                            invisible="state == 'delivery'"/>
+                    <button name="print_barcodes" data-hotkey="q"
+                            string="Print Barcode Sheet" class="btn-success" type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,delivery"/>
+                </header>
+                <sheet>
+                    <group name="transport_header">
+                        <group name="transport_details">
+                            <field name="logistic_entry_number"
+                                   placeholder="Enter Logistic Entry Number .." readonly="1" force_save="1"/>
+
+                            <field name="transporter"
+                                   widget="res_partner_many2one"
+                                   placeholder="Type to find a Transporter..." readonly="1" force_save="1"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   domain="[('group_contact.name','=','Transporter')]"/>
+
+                            <field name="logistic_lr_date"
+                                   readonly="1" force_save="1"/>
+
+                            <field name="logistic_lr_number"
+                                   placeholder="Enter Logistic LR Number .." readonly="1" force_save="1"/>
+                            <field name="invoice_entry"
+                                   placeholder="Enter Invoice  Entry.."
+                                   readonly="state in ['delivery']"/>
+                            <field name="delivery_date"
+                                   placeholder="Today Date"/>
+                        </group>
+                        <group name="transport_date_details">
+
+                            <field name="logistic_date"
+                                   readonly="state in ['delivery']"/>
+
+                            <field name="consignment_number"
+                                   placeholder="Enter Consignment Number .."
+                                   readonly="state in ['delivery']"/>
+
+                            <field name="po_order_id" readonly="1" force_save="1"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+
+                            <field name="no_of_bales"
+                                   placeholder="Enter Number Of Bales.."
+                                   readonly="1"/>
+
+                            <field name="product_id" readonly="1"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+
+                            <field name="city"
+                                   placeholder="Enter City.."
+                                   readonly="1"/>
+
+                            <field name="item_details"/>
+                        </group>
+                    </group>
+                    <p style="font-weight:bold;">Bale Information</p>
+
+                    <hr/>
+
+                    <group>
+
+                        <field name="partial_bales"
+                               placeholder="Enter Partial Bales" required="True" readonly="state in ['delivery']"/>
+                        <field name="deliver_bales"
+                               placeholder="Enter Delivery Bales " required="True" readonly="1" force_save="1"/>
+
+                        <field name="overall_remaining_bales"
+                               string="Remaining Bales" required="True" readonly="1"/>
+
+                        <field name="placements"
+                               placeholder="Select Zone" required="True" readonly="state in ['delivery']"
+                               domain="[('name', '!=', 'Basement')]"
+                               options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+
+                    </group>
+                    <notebook>
+                        <page name="Barcodes" string="Barcodes">
+                            <field name="delivery_ids" readonly="1">
+                                <tree create="false" edit="false" editable="bottom">
+                                    <field name="serial_no"/>
+                                    <field name="delivery_id" options="{'no_open':True}"/>
+                                    <field name="barcode"/>
+                                    <field name="sequence" readonly="1" force_save="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_to_delivery_check" model="ir.actions.act_window">
+        <field name="name">Delivery Check</field>
+        <field name="res_model">delivery.check</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="delivery_check_search_view"/>
+        <field name="context">{"search_default_state":'draft'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Delivery Check
+            </p>
+        </field>
+    </record>
+
+    <record id="cmr_dashboard_action" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">cmr_dashboard_tag</field>
+    </record>
+
+    <menuitem id="logistic_menu_root"
+              web_icon="cmr_customizations,static/description/truck_image.png"
+              name="Logistics"/>
+
+    <menuitem
+            id="logistic_operation_menu"
+            name="Operations"
+            parent="logistic_menu_root"
+            sequence="1"/>
+
+    <menuitem
+            id="logistic_master_menu"
+            name="Masters"
+            parent="logistic_menu_root"
+            sequence="2"/>
+
+    <menuitem
+            id="logistic_menu"
+            name="Logistic Entry Check"
+            parent="logistic_operation_menu"
+            action="cmr_customizations.logistic_screen_data_action"
+            sequence="1"/>
+
+    <menuitem id="transport_menu_root"
+              name="Transport Check"
+              action="cmr_customizations.action_to_transport_check"
+              parent="logistic_operation_menu"
+              sequence="2"/>
+
+
+    <menuitem id="delivery_check_root"
+              name="Delivery Check"
+              parent="logistic_operation_menu"
+              action="cmr_customizations.action_to_delivery_check"
+              sequence="3"/>
+
+    <menuitem id="placement_master_root"
+              name="Placement Master"
+              parent="cmr_customizations.logistic_master_menu"
+              action="cmr_customizations.action_to_placement_master"
+              sequence="5"/>
+
+    <menuitem id="reporting_status"
+              name="Reporting"
+              parent="logistic_menu_root"
+              sequence="6"/>
+
+    <!--    For creating Menu for Dashboard    -->
+    <menuitem name="Dashboard" id="cmr_dashboard_menu"
+              parent="logistic_menu_root"
+              sequence="1"
+              action="cmr_dashboard_action"/>
+
+    <menuitem id="reporting_status_logistic"
+              name="Logistic Status"
+              parent="reporting_status"
+              action="cmr_customizations.action_logistic_screen_status"
+              sequence="7"/>
+
+</odoo>

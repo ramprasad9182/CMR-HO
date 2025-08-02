@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cmr_account_move_form_view" model="ir.ui.view">
+        <field name="name">account.move.form.inherits</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group[@id='header_left_group']" position="inside">
+                <field name="vehicle_id" options='{"no_open": True, "no_create": True,"no_edit": True}' invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')" readonly="state != 'draft'"/>
+                <field name="ref_partner_ids" widget="many2many_tags" invisible="1"/>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@id='aml_tab']/field/tree/field[@name='name']" position="after">
+                <field name="vehicle_id" options='{"no_open": True, "no_create": True,"no_edit": True}'  readonly="parent.state in ['posted']" force_save="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_reverse']" position="attributes">
+                <attribute name="invisible">move_type not in ('out_invoice') or state != 'posted'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_reverse']" position="after">
+                <button name="action_reverse" string="Debit Note" type="object" groups="account.group_account_invoice" invisible="move_type not in ('in_invoice') or state != 'posted'"/>
+            </xpath>
+             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="after">
+                <field name="account_design_id" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='tax_totals']" position="before">
+                <button name="open_account_discount_wizard" string="Discount" type="object" class="oe_highlight" invisible="move_type not in ('in_invoice') or state == 'posted'"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="%(import_inv_line_action)d"
+                            string="Import Invoice Lines"
+                            type="action"
+                            class="btn-primary" invisible="allow_import_order == False or state == 'posted'"/>
+					<field name="allow_import_order" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cmr_account_payment_form_view" model="ir.ui.view">
+        <field name="name">account.payment.form.inherits</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//field[@name='partner_id']" position="attributes">
+                   <attribute name="domain">[('id', 'in', cust_vend_ids)]</attribute>
+                 <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id'][2]" position="attributes">
+                   <attribute name="domain">[('id', 'in', cust_vend_ids)]</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+             <xpath expr="//field[@name='partner_id']" position="after">
+                 <field name="cust_vend_ids" widget="many2many_tags" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_tax_form_inherited_for_max_min" model="ir.ui.view">
+        <field name="name">account.tax.form.inherited.custom</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_scope']" position="after">
+                <field name="min_amount" invisible="amount_type!='group'"/>
+                <field name="max_amount" invisible="amount_type!='group'"/>
+                <field name="nhcl_creadit_note_tax"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_account_group_for_nhcl_parent" model="ir.ui.view">
+        <field name="name">account.group.form.inherit</field>
+        <field name="model">account.group</field>
+        <field name="inherit_id" ref="account.view_account_group_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="nhcl_parent_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

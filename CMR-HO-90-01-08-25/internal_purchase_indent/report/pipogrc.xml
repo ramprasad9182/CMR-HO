@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_trade_report_tree" model="ir.ui.view">
+        <field name="name">trade.report.tree</field>
+        <field name="model">pi.po.grc</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="approval_create_date"/>
+                <field name="product_id"/>
+                <field name="approval_reqeuest_id"/>
+                <field name="approval_quantity"/>
+                <field name="po_number"/>
+                <field name="po_quantity"/>
+                <field name="receipt_number"/>
+                <field name="receipt_number_qty"/>
+                <field name="partner_id"/>
+                <field name="sale_transfer_id"/>
+                <field name="sale_delivery_qty"/>
+                <field name="pos_delivery_quantity_in_partner_company"/>
+                <field name="return_quantity_from_partner"/>
+                <field name="present_stock_quantity"/>
+                <field name="company_id"/>
+                <field name="po_origin"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_trade_report" model="ir.actions.act_window">
+        <field name="name">PI vs PO vs GRC report</field>
+        <field name="res_model">pi.po.grc</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_trade_report"
+              name="PIvsPOvsGRC REPORT"
+              parent="purchase.purchase_report_main"
+              action="action_trade_report"/>
+
+</odoo>

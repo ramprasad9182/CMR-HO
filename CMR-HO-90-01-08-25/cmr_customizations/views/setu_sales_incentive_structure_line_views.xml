@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="setu_sales_incentive_structure_line_tree_view" model="ir.ui.view">
+            <field name="name">setu.sales.incentive.structure.line.tree.view</field>
+            <field name="model">setu.sales.incentive.structure.line</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Incentive Structure Line">
+                    <field name="sequence" widget="handle" column_invisible="True"/>
+                    <field name="incentive_structure_id"/>
+                    <field name="company_id"/>
+                    <field name="role"/>
+                    <field name="calculate_based_on"/>
+                    <field name="target_based_on"/>
+                    <field name="calculation_method"/>
+                    <field name="incentive_value"/>
+                    <field name="target_value_min"/>
+                    <field name="target_value_max"/>
+                    <field name="product_ids" widget="many2many_tags"
+                           required="calculate_based_on == 'product'" invisible="calculate_based_on != 'product'"/>
+                    <field name="category_ids" widget="many2many_tags"
+                           required="calculate_based_on == 'category'" invisible="calculate_based_on != 'category'"/>
+                    <field name="sales_team_ids" widget="many2many_tags"
+                           required="role in ['sales_person', 'sales_manager']"/>
+<!--                    <field name="sales_agent_group_ids" widget="many2many_tags"-->
+<!--                           required="role == 'agent'"/>-->
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

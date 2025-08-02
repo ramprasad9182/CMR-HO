@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dev_routes_details_view" model="ir.ui.view">
+        <field name="name">dev.routes.details.form.view</field>
+        <field name="model">dev.routes.details</field>
+        <field name="arch" type="xml">
+            <form string="Routes Details">
+                <header>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+        					<field name="name" required="1" />
+        					<field name="transpoter_id" />
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <notebook>
+                    <page string="Location Detail" name="location_details">
+                        <field name="location_details_ids" >
+                            <tree editable="bottom">
+                                <field name="source_location_id" />
+                                <field name="destination_location_id" />
+                                <field name="distance" />
+                                <field name="transport_charges" />
+                                <field name="time_hour" />
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--tree-->
+	<record id="dev_routes_details_tree_view" model="ir.ui.view">
+		<field name="name">dev.routes.details.tree.view</field>
+		<field name="model">dev.routes.details</field>
+		<field name="arch" type="xml">
+		    <tree string="Routes Details">
+                <field name="name" />
+				<field name="transpoter_id" />
+ 		    </tree>
+		</field>
+	</record>
+	
+	<record id="dev_routes_details_filter_view" model="ir.ui.view">
+        <field name="name">dev.routes.details.filter</field>
+        <field name="model">dev.routes.details</field>
+        <field name="arch" type="xml">
+            <search string="Routes Details">
+            	<field name="name" />
+				<field name="transpoter_id" />
+				<group expand="1" string="Group By">
+                    <filter string="Transpoter" name="transpoter" context="{'group_by': 'transpoter_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+	<!--Action-->
+	<record id="action_dev_routes_details" model="ir.actions.act_window">
+        <field name="name">Transport Routes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dev.routes.details</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="dev_routes_details_tree_view"/>
+    </record>
+    
+    
+
+ 	<menuitem name="Transport Routes"
+              id='menu_action_routes_details'
+              parent="menu_transport_config"
+              action="action_dev_routes_details"
+              sequence="2"/>
+              
+</odoo>

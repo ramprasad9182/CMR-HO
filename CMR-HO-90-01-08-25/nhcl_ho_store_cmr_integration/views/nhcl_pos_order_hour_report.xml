@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="nhcl_pos_hour_report" model="ir.actions.act_window">
+        <field name="name">Pos Hour Report</field>
+        <field name="res_model">nhcl.pos.hour.report</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="nhcl_pos_hour_report_form" model="ir.ui.view">
+        <field name="name">Pos Hour Report Form</field>
+        <field name="model">nhcl.pos.hour.report</field>
+        <field name="arch" type="xml">
+            <form string="Pos Order Hourly Based Quantity vs Amount" create="0">
+                <h1 style="color:black;font-weight:1000;text-align:center;">Pos Order Hourly Based Quantity vs Amount</h1>
+                <sheet>
+                    <header>
+                        <button name="get_pos_order_hour_report" type="object"
+                                string="Submit" class="btn-primary"/>
+                        <button name="action_to_reset" type="object"
+                                string="Reset" class="btn-secondary"/>
+                        <button name="get_excel_sheet" type="object"
+                                string="Excel" class="btn-success"/>
+                    </header>
+                    <group name="pos_hour_report" style="border: 2px solid #990099; padding: 10px;">
+                        <group name="pos_hour_report_group">
+                            <field name="nhcl_store_id"
+                                   placeholder="Select Company" domain="[('nhcl_active', '=', True),('nhcl_store_type', '!=', 'ho')]" widget="many2many_checkboxes"/>
+                        </group>
+                        <group name="pos_hour_report_date_details">
+                            <group>
+                                <field name="from_date" required="1" widget="daterange"
+                                       options="{'to_date_field': 'to_date'}"/>
+                                <field name="to_date" required="1"/>
+                            </group>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="POS Order Report">
+                            <field name="nhcl_pos_hour_report_ids" readonly="1" forsesave="1">
+                                <tree create="0" delete="0" editable="bottom">
+                                    <field name="nhcl_store_id"/>
+                                    <field name="nhcl_order_ref"/>
+                                    <field name="nhcl_date_order"/>
+                                    <field name="nhcl_order_quantity"/>
+                                    <field name="nhcl_amount_total"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+                </sheet>
+                <!--                                <div class="oe_chatter">-->
+                <!--                                    <field name="message_follower_ids"/>-->
+                <!--                                    <field name="activity_ids"/>-->
+                <!--                                    <field name="message_ids"/>-->
+                <!--                                </div>-->
+            </form>
+        </field>
+    </record>
+
+    <record id="empty_page" model="ir.actions.client">
+        <field name="name">Empty</field>
+        <field name="tag">empty_report</field>
+    </record>
+
+
+    <menuitem id="hour_report_menu_root"
+              web_icon="nhcl_ho_store_cmr_integration,static/description/report_icon.png"
+              name="MIS Reports/Dashboards"
+              action="empty_page"/>
+
+
+    <menuitem id="reporting_status"
+              name="Reports"
+              parent="hour_report_menu_root"
+              sequence="1"/>
+     <menuitem id="dashboard_report"
+              name="Dashboards"
+              parent="hour_report_menu_root"
+              sequence="2"/>
+
+    <menuitem id="log_report"
+              name="Logs"
+              parent="hour_report_menu_root"
+              sequence="3"/>
+    <menuitem id="configurations_report"
+              name="Configuration"
+              parent="hour_report_menu_root"
+              sequence="4"/>
+    <menuitem id="cron_job_report"
+              name="Cron-Job"
+              parent="hour_report_menu_root"
+              sequence="5"/>
+
+     <menuitem id="reporting_ho_heading"
+              name="HO"
+              parent="reporting_status"
+              />
+
+      <menuitem id="reporting_store_heading"
+              name="Store"
+              parent="reporting_status"
+              />
+
+
+     <menuitem id="reporting_new_master_data"
+              name="New Store Integration Count"
+              parent="reporting_ho_heading"
+              action="cmr_customizations.action_master_data"
+              />
+
+    <menuitem id="reporting_old_master_data"
+              name="Old Store Integration Count"
+              parent="reporting_ho_heading"
+              action="cmr_customizations.action_master_data"
+           />
+
+
+
+<!--    <menuitem id="reporting_empty_page"-->
+<!--              name="Reporting"-->
+<!--              parent="reporting_status"-->
+<!--              action="nhcl_ho_store_cmr_integration.empty_page"-->
+<!--              sequence="0"/>-->
+
+    <menuitem id="reporting_sale_person_incentive_report"
+              name="Sales Incentive Detailed Report"
+              parent="cmr_customizations.incentive_reports_menu"
+              action="nhcl_ho_store_cmr_integration.sale_person_incentive_report"
+              sequence="1"/>
+
+    <menuitem id="reporting_sale_person_incentive_summary_report"
+              name="Sales Incentive Summary Report"
+              parent="cmr_customizations.incentive_reports_menu"
+              action="nhcl_ho_store_cmr_integration.sale_person_incentive_summary_report"
+              sequence="2"/>
+
+    <menuitem id="reporting_status_pos_hour"
+              name="Pos Order Hourly Based Quantity vs Amount"
+              parent="reporting_store_heading"
+              action="nhcl_ho_store_cmr_integration.nhcl_pos_hour_report"
+              sequence="3"/>
+
+<!--    <record id="sale_person_incentive_summary_ageing_report" model="ir.actions.act_window">-->
+<!--        <field name="name">Pos Ageing Report</field>-->
+<!--        <field name="res_model">sale.person.incentive.ageing.report</field>-->
+<!--        <field name="view_mode">form</field>-->
+<!--        <field name="domain">[]</field>-->
+<!--        <field name="context">{}</field>-->
+<!--    </record>-->
+
+
+<!--    <menuitem id="reporting_sale_person_incentive_summary_ageing_report"-->
+<!--              name="Sale Incentive Ageing Report"-->
+<!--              parent="cmr_customizations.incentive_reports_menu"-->
+<!--              action="nhcl_ho_store_cmr_integration.sale_person_incentive_summary_ageing_report"-->
+<!--              sequence="15"/>-->
+
+
+
+<!--    #### HSN With Tax Action ####-->
+    <record id="nhcl_hsn_with_tax" model="ir.actions.act_window">
+        <field name="name">HSN with Tax</field>
+        <field name="res_model">nhcl.pos.hour.report</field>
+        <field name="view_mode">form</field>
+    </record>
+
+
+
+    <record id="hourly_sale_report_action" model="ir.actions.act_window">
+        <field name="name">Hourly Sale Report</field>
+        <field name="res_model">nhcl.pos.hour.report</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <menuitem id="hourly_sale_report_menu"
+              name="Hourly Sale Report"
+              parent="reporting_store_heading"
+              action="nhcl_ho_store_cmr_integration.hourly_sale_report_action"
+              sequence="11"/>
+
+<!--    <record id="daily_sale_dsd_action" model="ir.actions.act_window">-->
+<!--        <field name="name">Daily Sale DSD</field>-->
+<!--        <field name="res_model">nhcl.pos.hour.report</field>-->
+<!--        <field name="view_mode">form</field>-->
+<!--    </record>-->
+
+<!--    <menuitem id="daily_sale_dsd_menu"-->
+<!--              name="Daily Sale DSD"-->
+<!--              parent="reporting_status"-->
+<!--              action="nhcl_ho_store_cmr_integration.daily_sale_dsd_action"-->
+<!--              sequence="12"/>-->
+
+<!--    <record id="mop_tax_store_wise_action" model="ir.actions.act_window">-->
+<!--        <field name="name">MOP Vs Tax Store Wise</field>-->
+<!--        <field name="res_model">nhcl.pos.hour.report</field>-->
+<!--        <field name="view_mode">form</field>-->
+<!--    </record>-->
+
+<!--    <menuitem id="mop_tax_store_wise_menu"-->
+<!--              name="MOP Vs Tax Store Wise"-->
+<!--              parent="reporting_status"-->
+<!--              action="nhcl_ho_store_cmr_integration.mop_tax_store_wise_action"-->
+<!--              sequence="13"/>-->
+
+</odoo>
+

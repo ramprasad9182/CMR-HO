@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+  <data noupdate="1">
+    <record id="seq_internal_purchase_indent" model="ir.sequence">
+      <field name="name">Internal Purchase Indent</field>
+      <field name="code">internal.purchase.indent</field>
+      <field name="prefix">IPI/</field>
+      <field name="padding">5</field>
+      <field name="number_next">1</field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_internal_purchase_indent_one,access_internal_purchase_indent_one,model_internal_purchase_indent,,1,1,1,1
+access_internal_purchase_indent_line_one,access_internal_purchase_indent_line_one,model_internal_purchase_indent_orderline,,1,1,1,1
+access_product_summary,access_product_sumarys,model_product_summary,,1,1,1,1
+access_pi_po_grc,access.pi.po.grc,model_pi_po_grc,,1,1,1,1
+

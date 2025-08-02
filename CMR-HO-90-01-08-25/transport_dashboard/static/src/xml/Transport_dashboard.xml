@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="owl.OwlTransportDashboard" owl="1">
+         <section class="section invoice_type">
+           <style>
+           body {
+              background-color: #ffffff !important;
+           }
+
+           .main-parent {
+                font-size: 16px;
+                font-weight: bold;
+                margin-top: 10px;
+            }
+
+            .sub-parent {
+                font-size: 14px;
+                font-weight: 600;
+                margin-top: 5px;
+                margin-left: 10px;
+            }
+
+            .sidebar-item {
+                margin-left: 20px;
+                cursor: pointer;
+                padding: 5px;
+            }
+
+            .sidebar-item.active {
+                background-color: #007bff;
+                color: white;
+                border-radius: 5px;
+            }
+
+            .sidebar-title {
+              font-weight: bold;
+              margin-top: 1rem;
+              padding: 5px 5px 5px 15px ;
+              color: #444;
+            }
+            .sidebar-item {
+              padding: 8px 12px 0 35px; //top-right-bottom-left
+              font-size:14px;
+              color: black;
+              cursor: pointer;
+            }
+            .sidebar-item:hover {
+             background-color: #F5F5F5;
+            }
+            .sidebar-item.active {
+              background-color: #f2f7fc;
+              color: #2b6340;
+            }
+
+            .title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #444;
+            margin: 8px;
+            letter-spacing: 0.8px;
+            }
+
+            .sidebar {
+            background-color: #ffff; /* Odoo light background */
+            border-right: 1px solid #e0e0e0;
+            width: 240px;
+            height: 80vh;
+            overflow-y: auto;
+            }
+            .clickable-div {
+            cursor: pointer; /* Makes the cursor appear clickable */
+            }
+       </style>
+             <div class="title"><span>Transports Dashboard </span></div>
+             <div class="row">
+                <div class="border m-0 p-0 bg-white"/>
+                 <div class="col-lg-3 sidebar" style="background-color: #fff; padding: 1rem;">
+                     <div class="bulk-sidebar">
+                        <t t-set="lastMainParent" t-value="''"/>
+                        <t t-set="lastSubParent" t-value="''"/>
+                        <t t-foreach="menuItems" t-as="item" t-key="item.id">
+                            <t t-if="item.mainParent !== lastMainParent">
+                                <div class="sidebar-title main-parent">
+                                    <t t-esc="item.mainParent"/>
+                                </div>
+                                <t t-set="lastMainParent" t-value="item.mainParent"/>
+                                <t t-set="lastSubParent" t-value="''"/> <!-- Reset subParent on new mainParent -->
+                            </t>
+
+                            <t t-if="item.subParent !== lastSubParent">
+                                <div class="sidebar-title sub-parent">
+                                    <t t-esc="item.subParent"/>
+                                </div>
+                                <t t-set="lastSubParent" t-value="item.subParent"/>
+                            </t>
+
+                            <div class="sidebar-item"
+                                 t-att-class="state.selected === item.id ? 'active' : ''"
+                                 t-on-click="() => selectMenu(item.id)">
+                                <t t-esc="item.label"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                 <div class="col" style="padding: 1rem; bg-white">
+                    <br/>
+                     <t t-if="state.selected === 1">
+                        <div>
+                            <table style="border-collapse: separate; border-spacing: 0 10px; text-align: center;" >
+                                <thead style="font-weight:bold;">
+                                    <tr>
+                                        <th class="text-center" style="width: 20%" scope="col">Site Name</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Total Bales</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Bales In Transit</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Bales Received</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Bales Opened</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Bales Not Opened</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Pending Bales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                           <span>CMR-KHAMMAM</span>
+                                        </td>
+                                        <td>
+                                           <span>1872</span>
+                                        </td>
+                                        <td>
+                                           <span>555</span>
+                                        </td>
+                                        <td>
+                                           <span>576</span>
+                                        </td>
+                                        <td>
+                                           <span>342</span>
+                                        </td>
+                                        <td>
+                                           <span>333</span>
+                                        </td>
+                                        <td>
+                                           <span>290</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           <span>CMR-Srikakulam</span>
+                                        </td>
+                                        <td>
+                                           <span>2</span>
+                                        </td>
+                                        <td>
+                                           <span>10</span>
+                                        </td>
+                                        <td>
+                                           <span>10</span>
+                                        </td>
+                                        <td>
+                                           <span>6</span>
+                                        </td>
+                                        <td>
+                                           <span>4</span>
+                                        </td>
+                                        <td>
+                                           <span>2</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           <span>CMR-SURYAPET</span>
+                                        </td>
+                                        <td>
+                                           <span>189</span>
+                                        </td>
+                                        <td>
+                                           <span>85</span>
+                                        </td>
+                                        <td>
+                                           <span>109</span>
+                                        </td>
+                                        <td>
+                                           <span>113</span>
+                                        </td>
+                                        <td>
+                                           <span>122</span>
+                                        </td>
+                                        <td>
+                                           <span>142</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                     <t t-if="state.selected === 2">
+                        <div>
+                            <table style="border-collapse: separate; border-spacing: 0 10px; text-align: center;" >
+                                <thead style="font-weight:bold;">
+                                    <tr>
+                                        <th class="text-center" style="width: 20%" scope="col">Site Name</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Total Bales</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Bales In Transit</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Bales Received</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Bales Opened</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Bales Not Opened</th>
+                                        <th class="text-center" style="width: 13%" scope="col">Pending Bales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                           <span>CMR-KHAMMAM</span>
+                                        </td>
+                                        <td>
+                                           <span>12</span>
+                                        </td>
+                                        <td>
+                                           <span>5</span>
+                                        </td>
+                                        <td>
+                                           <span>5</span>
+                                        </td>
+                                        <td>
+                                           <span>2</span>
+                                        </td>
+                                        <td>
+                                           <span>3</span>
+                                        </td>
+                                        <td>
+                                           <span>2</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           <span>CMR-Srikakulam</span>
+                                        </td>
+                                        <td>
+                                           <span>288</span>
+                                        </td>
+                                        <td>
+                                           <span>180</span>
+                                        </td>
+                                        <td>
+                                           <span>109</span>
+                                        </td>
+                                        <td>
+                                           <span>206</span>
+                                        </td>
+                                        <td>
+                                           <span>41</span>
+                                        </td>
+                                        <td>
+                                           <span>112</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           <span>CMR-SURYAPET</span>
+                                        </td>
+                                        <td>
+                                           <span>123</span>
+                                        </td>
+                                        <td>
+                                           <span>65</span>
+                                        </td>
+                                        <td>
+                                           <span>55</span>
+                                        </td>
+                                        <td>
+                                           <span>83</span>
+                                        </td>
+                                        <td>
+                                           <span>102</span>
+                                        </td>
+                                        <td>
+                                           <span>72</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                     <t t-if="state.selected === 3">
+                        <div>
+                            <table style="border-collapse: separate; border-spacing: 0 2px; text-align: center;" >
+                                <thead style="display: table-row-group">
+                                    <tr>
+                                        <th class="text-center" style="width: 12%" scope="col">LR Number</th>
+                                        <th class="text-center" style="width: 16%" scope="col">Site Name</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Total Bales</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Bales in Pause</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Bales Received</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Bales Opened</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Bales Not Opened</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Pending Bales</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border-collapse: separate;">
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                           <span>LR0031</span>
+                                        </td>
+                                        <td>
+                                           <span>CMR Khammam</span>
+                                        </td>
+                                        <td>
+                                           <span>12</span>
+                                        </td>
+                                        <td>
+                                           <span>5</span>
+                                        </td>
+                                        <td>
+                                           <span>5</span>
+                                        </td>
+                                        <td>
+                                           <span>2</span>
+                                        </td>
+                                        <td>
+                                           <span>3</span>
+                                        </td>
+                                        <td>
+                                           <span>2</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           <span>LR0026</span>
+                                        </td>
+                                        <td>
+                                           <span>CMR Srikakulam</span>
+                                        </td>
+                                        <td>
+                                           <span>22</span>
+                                        </td>
+                                        <td>
+                                           <span>10</span>
+                                        </td>
+                                        <td>
+                                           <span>10</span>
+                                        </td>
+                                        <td>
+                                           <span>6</span>
+                                        </td>
+                                        <td>
+                                           <span>4</span>
+                                        </td>
+                                        <td>
+                                           <span>2</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                     <t t-if="state.selected === 4">
+                        <div>
+                            <table style="border-collapse: separate; border-spacing: 0 2px; text-align: center;" >
+                                <thead style="display: table-row-group">
+                                    <tr>
+                                        <th class="text-center" style="width: 12%" scope="col">LR Number</th>
+                                        <th class="text-center" style="width: 16%" scope="col">Site Name</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Total Bales</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Bales in Pause</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Bales Received</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Bales Opened</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Bales Not Opened</th>
+                                        <th class="text-center" style="width: 12%" scope="col">Pending Bales</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border-collapse: separate;">
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                           <span>LR0031</span>
+                                        </td>
+                                        <td>
+                                           <span>CMR Khammam</span>
+                                        </td>
+                                        <td>
+                                           <span>125</span>
+                                        </td>
+                                        <td>
+                                           <span>58</span>
+                                        </td>
+                                        <td>
+                                           <span>78</span>
+                                        </td>
+                                        <td>
+                                           <span>29</span>
+                                        </td>
+                                        <td>
+                                           <span>93</span>
+                                        </td>
+                                        <td>
+                                           <span>102</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           <span>LR0026</span>
+                                        </td>
+                                        <td>
+                                           <span>CMR Srikakulam</span>
+                                        </td>
+                                        <td>
+                                           <span>22</span>
+                                        </td>
+                                        <td>
+                                           <span>10</span>
+                                        </td>
+                                        <td>
+                                           <span>10</span>
+                                        </td>
+                                        <td>
+                                           <span>6</span>
+                                        </td>
+                                        <td>
+                                           <span>4</span>
+                                        </td>
+                                        <td>
+                                           <span>2</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           <span>LR0026</span>
+                                        </td>
+                                        <td>
+                                           <span>CMR-SURYAPET</span>
+                                        </td>
+                                        <td>
+                                           <span>233</span>
+                                        </td>
+                                        <td>
+                                           <span>106</span>
+                                        </td>
+                                        <td>
+                                           <span>118</span>
+                                        </td>
+                                        <td>
+                                           <span>55</span>
+                                        </td>
+                                        <td>
+                                           <span>195</span>
+                                        </td>
+                                        <td>
+                                           <span>88</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+             </div>
+         </section>
+    </t>
+</templates>

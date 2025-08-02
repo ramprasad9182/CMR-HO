@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="pos_payment_grouped_report">
+    <t t-call="web.html_container">
+      <!-- Set docs variable from the passed data -->
+      <t t-set="docs" t-value="doc"/>
+
+      <div class="page">
+        <h2>SITE WISE MODE OF PAYMENT</h2>
+        <!-- Display date range from the first doc if available -->
+        <t t-if="docs and docs[0]">
+          <p>From: <t t-esc="docs[0]['start_date']"/></p>
+          <p>To: <t t-esc="docs[0]['end_date']"/></p>
+        </t>
+
+        <table class="table table-bordered" style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr style="background-color:#f2f2f2; text-align:left; font-weight:bold;">
+              <!-- Static headers -->
+              <th style="padding:8px; border:1px solid #ddd;">Site</th>
+              <th style="padding:8px; border:1px solid #ddd;">Bill Type</th>
+              <!-- Dynamically generate headers for each payment mode -->
+              <t t-set="all_keys" t-value="[]"/>
+              <t t-foreach="docs" t-as="doc">
+                <t t-foreach="doc['report_data'].keys()" t-as="key">
+                  <t t-if="key not in all_keys">
+                    <t t-set="all_keys" t-value="all_keys + [key]"/>
+                  </t>
+                </t>
+              </t>
+              <t t-foreach="all_keys" t-as="mode">
+                <th style="padding:8px; border:1px solid #ddd;">
+                  <t t-esc="mode"/>
+                </th>
+              </t>
+              <th style="padding:8px; border:1px solid #ddd;">Grand Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <t t-if="docs and docs != []">
+              <!-- Loop over each doc in docs -->
+              <t t-foreach="docs" t-as="doc">
+                <tr>
+                  <!-- Site: Company name from doc -->
+                  <td style="padding:8px; border:1px solid #ddd;">
+                    <t t-esc="doc['company_name']"/>
+                  </td>
+                  <!-- Bill Type: Fixed text -->
+                  <td style="padding:8px; border:1px solid #ddd;">POS BILL</td>
+                  <!-- For each dynamic payment method, print the value if available, else 0.0 -->
+                  <t t-foreach="all_keys" t-as="mode">
+                    <td style="padding:8px; border:1px solid #ddd; text-align:right;">
+                      <t t-esc="round(doc['report_data'][mode], 2) if mode in doc['report_data'] else 0.0"/>
+                    </td>
+                  </t>
+                  <!-- Grand Total: Sum all values in report_data and round off to 2 decimals -->
+                  <td style="padding:8px; border:1px solid #ddd; text-align:right;">
+                    <t t-set="grand_total" t-value="sum(doc['report_data'].values())"/>
+                    <t t-esc="round(grand_total, 2)"/>
+                  </td>
+                </tr>
+              </t>
+            </t>
+            <t t-else="">
+              <tr>
+                <td colspan="100%" style="text-align:center;">No Data Found</td>
+              </tr>
+            </t>
+          </tbody>
+        </table>
+      </div>
+    </t>
+  </template>
+</odoo>

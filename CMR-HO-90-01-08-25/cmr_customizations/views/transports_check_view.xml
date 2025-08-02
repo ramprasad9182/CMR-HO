@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="transport_check_tree" model="ir.ui.view">
+        <field name="name">transport.check.tree</field>
+        <field name="model">transport.check</field>
+
+        <field name="arch" type="xml">
+            <tree
+                    string="Transport Check" create="0" multi_edit="1"
+            >
+
+                <field name="logistic_entry_number"/>
+                <field name="logistic_lr_date"/>
+
+                <field name="logistic_lr_number"/>
+                <field name="logistic_date" widget="date" optional="show"/>
+                <field name="transporter" widget="many2one_avatar_user"/>
+                <field name="consignment_number"/>
+                <field name="po_order_id" readonly="1"/>
+
+
+                <field name="state"
+                       decoration-success="state == 'sent'"
+                       decoration-info="state == 'draft'"
+
+                       widget="badge"
+                       optional="hide"/>
+
+                <field name="no_of_bales" optional="show"/>
+                <field name="item_details" optional="show"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!--    #### Transportation Check Search View #####-->
+    <record id="transport_check_search_view" model="ir.ui.view">
+        <field name="model">transport.check</field>
+        <field name="name">transport.check.search</field>
+        <field name="arch" type="xml">
+            <search string="Transport check">
+                <field name="transporter"/>
+                <field name="po_order_id"/>
+                <field name="logistic_entry_number"/>
+                <field name="state"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" context="{'default_state': 'draft'}" />
+
+            </search>
+        </field>
+    </record>
+
+
+    <record id="transport_check_form" model="ir.ui.view">
+        <field name="name">transport.check.form</field>
+        <field name="model">transport.check</field>
+        <field name="arch" type="xml">
+            <form string="Transport Check" create="0">
+                <header>
+
+                    <button name="action_confirm" id="action_confirm" data-hotkey="q"
+                            string="Confirm" class="btn-primary" type="object"
+                            invisible="state == 'sent'"/>
+
+                    <button name="reset_to_draft" id="reset_to_draft" data-hotkey="q"
+                            string="Reset to Draft" class="btn-primary" type="object"
+                            invisible="state != 'sent'"/>
+
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent"/>
+                </header>
+
+                <sheet>
+                    <group name="transport_header">
+                        <group name="transport_details">
+                            <field name="logistic_entry_number"
+                                   placeholder="Enter Logistic Entry Number .." readonly="1" forcesave="1"/>
+
+                            <field name="transporter"
+                                   widget="res_partner_many2one"
+                                   placeholder="Type to find a Transporter..." readonly="1" forcesave="1"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}" domain="[('group_contact.name','=','Transporter')]"/>
+
+                            <field name="logistic_lr_date"
+                                   readonly="1" forcesave="1"/>
+
+                            <field name="logistic_lr_number"
+                                   placeholder="Enter Logistic LR Number .." readonly="1" forcesave="1"/>
+
+                        </group>
+                        <group name="transport_date_details">
+
+                            <field name="logistic_date"
+                                   readonly="1" forcesave="1"/>
+
+                            <field name="consignment_number"
+                                   placeholder="Enter Consignment Number .."
+                                   readonly="state in ['sent']"/>
+
+                            <field name="po_order_id" readonly="1" forcesave="1" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+
+                            <field name="no_of_bales"
+                                   placeholder="Enter Number Of Bales.."
+                                   readonly="1" forcesave="1"/>
+                            <field name="product_id"
+                                   readonly="1" forcesave="1" domain="[('detailed_type', '=', 'consu')]" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+
+                            <field name="city"
+                                   placeholder="Enter City.."
+                                   readonly="1" forcesave="1"/>
+
+                            <field name="item_details"/>
+
+                            <field name="invoice_list"
+                                   placeholder="Enter Invoice list"
+                                   readonly="state in ['sent']"/>
+
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_to_transport_check" model="ir.actions.act_window">
+        <field name="name">Transport Check</field>
+        <field name="res_model">transport.check</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="transport_check_search_view"/>
+        <field name="context">{"search_default_state":'draft'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Transport Check
+            </p>
+        </field>
+    </record>
+</odoo>

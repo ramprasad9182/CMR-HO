@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_category_form_replication" model="ir.ui.view">
+        <field name="name">product.category.form.replication</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="before">
+                <div class="alert alert-success" role="alert" invisible="update_replication == False">
+                    <field name="warning_message" style="white-space: pre-wrap;"/>
+                </div>
+                <div class="alert alert-danger" role="alert" invisible="update_replication == True">
+                    <field name="warning_message" style="white-space: pre-wrap;"/>
+                </div>
+            </xpath>
+            <xpath expr="//form/sheet/group[@name='first']/field[@name='parent_id']" position="after">
+                <field name="nhcl_id" readonly="1" force_save="1"/>
+            </xpath>
+            <!--            <xpath expr="//form/sheet/group[@name='first']/field[@name='max_num']" position="after">-->
+            <xpath expr="//page[@name='margin']" position="after">
+                    <page string="Integration">
+                        <button name="get_stores_data" type="object" string="Get Stores" class="oe_highlight"/>
+
+                        <group>
+                            <field name="update_replication" readonly="1" force_save="1"/>
+                            <field name="update_status" readonly="1" force_save="1"/>
+                            <button name="send_replication_data" type="object" string="Create" class="oe_highlight" invisible="update_replication == True"/>
+                            <button name="update_product_category" type="object" string="Update" class="oe_highlight"/>
+                        </group>
+                        <field name="replication_id" readonly="0">
+                            <tree editable="bottom" create="true">
+                                <field name="store_id" width="40%"/>
+                                <field name="status" width="30%"/>
+                                <field name="date_replication" width="30%"/>
+                                <field name="update_status" width="30%"/>
+                                <field name="nhcl_terminal_ip"/>
+                                <field name="nhcl_port_no"/>
+                                <field name="nhcl_api_key"/>
+                            </tree>
+                        </field>
+                    </page>
+            </xpath>
+        </field>
+    </record>
+
+        <record id="product_category_tree_replication" model="ir.ui.view">
+        <field name="name">product.category.tree.replication</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_list_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="update_replication" readonly="1"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="multi_edit">1</attribute>
+            </xpath>
+        </field>
+        </record>
+</odoo>

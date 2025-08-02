@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Tree view for Grade Master with Department and Designation -->
+    <record id="view_grade_master_tree" model="ir.ui.view">
+        <field name="name">grade.master.tree</field>
+        <field name="model">grade.master</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action to open Grade Master -->
+    <record id="action_grade_master" model="ir.actions.act_window">
+        <field name="name">Grade Master</field>
+        <field name="res_model">grade.master</field>
+        <field name="view_mode">tree</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Menu item under Departments -->
+    <menuitem id="menu_grade_master"
+              name="Grade Master"
+              parent="hr.menu_config_employee"
+              action="action_grade_master"/>
+</odoo>

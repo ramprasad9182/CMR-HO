@@ -1,0 +1,82 @@
+<odoo>
+    <record id="logistic_screen_data_ir_sequence" model="ir.sequence">
+        <field name="name">LogisticScreen</field>
+        <field name="code">logistic.screen.data</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="ir_sequence_product_master" model="ir.sequence">
+        <field name="name">Product Sequence</field>
+        <field name="code">cmr.product</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="ir_sequence_cmr_customer" model="ir.sequence">
+        <field name="name">Customer Sequence</field>
+        <field name="code">cmr.customer</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="ir_sequence_cmr_vendor" model="ir.sequence">
+        <field name="name">Vendor Sequence</field>
+        <field name="code">cmr.vendor</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="ir_sequence_cmr_transport" model="ir.sequence">
+        <field name="name">Transport Sequence</field>
+        <field name="code">cmr.transport</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="ir_sequence_cmr_employee" model="ir.sequence">
+        <field name="name">Employee Sequence</field>
+        <field name="code">cmr.employee</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="ir_sequence_cmr_branch" model="ir.sequence">
+        <field name="name">Branch Sequence</field>
+        <field name="code">cmr.branch</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="ir_sequence_cmr_delivery" model="ir.sequence">
+        <field name="name">Delivery Sequence</field>
+        <field name="code">cmr.delivery</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="dev_stock_picking_tracking" model="ir.sequence">
+        <field name="name">Delivery Order Tracking</field>
+        <field name="code">stock.picking.tracking</field>
+        <field name="prefix">TRA/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+
+    </record>
+
+    <record id="dev_stock_picking_lr_number" model="ir.sequence">
+        <field name="name">Delivery Order LR Number</field>
+        <field name="code">stock.picking.lr_number</field>
+        <field name="prefix">LR/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="product_margin_approval_ir_sequence" model="ir.sequence">
+        <field name="name">ProductMarginApproval</field>
+        <field name="code">product.margin.approval</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_master_data" model="ir.sequence">
+        <field name="name">Master Data Sequence</field>
+        <field name="code">master.data</field>
+        <field name="prefix">MD/</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+</odoo>
