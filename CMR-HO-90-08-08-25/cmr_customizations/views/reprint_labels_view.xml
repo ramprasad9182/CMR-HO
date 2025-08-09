@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+      <record id="reprint_labels_action" model="ir.actions.act_window">
+        <field name="name">Re-Print Labels</field>
+        <field name="res_model">reprint.labels</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="reprint_labels_form" model="ir.ui.view">
+        <field name="name">Re-Print Labels</field>
+        <field name="model">reprint.labels</field>
+        <field name="arch" type="xml">
+            <form string="Re-Print Labels" create="0">
+                <sheet>
+                    <header>
+                        <button name="action_print_labels" type="object"
+                                string="Print Labels" class="btn-primary"/>
+
+                    </header>
+                    <group>
+                        <group>
+                            <field name="serial_numbers"
+                                   placeholder="Scan Serial Number" />
+                    </group>
+                                        <group/>
+                    </group>
+
+                    <notebook>
+                        <page string="Serial Numbers">
+                            <field name="serial_number_lines" readonly="1" force_save="1">
+                                <tree create="0" delete="0" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="internal_ref"/>
+                                    <field name="qty"/>
+                                    <field name="move_line" optional="hide"/>
+                                    <field name="lot_id" optional="hide"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="reprint_labels_menu"
+              name="Re-Print Labels"
+              parent="stock.menu_stock_inventory_control"
+              action="cmr_customizations.reprint_labels_action"
+              sequence="1"/>
+
+</odoo>

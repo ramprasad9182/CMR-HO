@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="view_tally_state_master_model_tree" model="ir.ui.view">
+        <field name="name">state.master.tree</field>
+        <field name="model">state.master</field>
+        <field name="arch" type="xml">
+            <tree string="State Master">
+                <field name="state_id"/>
+                <field name="tally_company_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_tally_state_master_model_form" model="ir.ui.view">
+        <field name="name">state.master.form</field>
+        <field name="model">state.master</field>
+        <field name="arch" type="xml">
+            <form string="State Master">
+                <sheet>
+                    <group>
+                        <field name="state_id"/>
+                         <field name="tally_company_name"/>
+                         <field name="tally_company_code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_nhcl_master_state_dynamic_data" model="ir.actions.act_window">
+        <field name="name">State Master</field>
+        <field name="res_model">state.master</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_nhcl_master_state_data"
+        name="State Master"
+        parent="cmr_customizations.nhcl_cmr_configuration"
+        action="action_nhcl_master_state_dynamic_data"
+        />
+
+</odoo>
+

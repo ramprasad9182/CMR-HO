@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="cmr_customizations.LogisticDashboard">
+        <div>
+           <style>
+               body {
+                  background-color: #ffffff !important;
+               }
+               .styled-table {
+                    border-collapse: separate;
+                    border-spacing: 10px;
+                    margin: 5px auto;
+                    width: fit-content;
+               }
+               .styled-table tr {
+                        height: 145px;
+
+               }
+               .styled-table td {
+                   background-color: #f2f2f2;
+                    width: 160px;
+               }
+
+               .info-title {
+                   font-size: 14px;
+                   font-weight: 600;
+                   margin-bottom: 25px;
+                   text-align:center;
+               }
+
+               .title {
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        color: #01666b;
+                        margin: 20px;
+                        letter-spacing: 1.2px;
+                    }
+           </style>
+            <center>
+                <h1 class="title">Logistic Dashboard</h1>
+            </center>
+            <table class="styled-table">
+                <tr class="tr">
+                    <td class="td">
+                        <section>
+                            <center><h3 class="info-title">Basement LR's</h3>
+                            <div>
+                                <span id="total_log_count" style="font-weight: 400; font-size: 24px; padding-top: 25px; text-align:center;">Loading..</span>
+                            </div>
+                            </center>
+                        </section>
+
+                    </td>
+                    <td class="td">
+                        <section>
+                            <center><h3 class="info-title">Received LR's</h3>
+                            <div>
+                                <span id="total_delivery_count" style="font-weight: 400; font-size: 24px; padding-top: 25px; text-align:center;">Loading..</span>
+                            </div>
+                            </center>
+                        </section>
+                    </td>
+                    <td class="td">
+                        <section>
+                            <center>
+                            <h3 class="info-title">Closed Parcels</h3>
+                            <div>
+                                <span id="total_open_parcel" style="font-weight: 400; font-size: 24px; padding-top: 25px; text-align:center;">Loading..</span>
+                            </div>
+                            </center>
+                        </section>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td">
+                        <section>
+                            <center>
+                            <h3 class="info-title">Transferred Parcels</h3>
+                            <div>
+                                <span id="total_transferred_bales" style="font-weight: 400; font-size: 24px; text-align:center;">Loading..</span>
+                            </div>
+                            </center>
+                        </section>
+                    </td>
+                    <td class="td">
+                        <section>
+                            <center>
+                            <h3 class="info-title">Upcoming LR's</h3>
+                            <div>
+                                <span id="total_upcoming_lr_count" style="font-weight: 400; font-size: 24px; padding-top: 25px; text-align:center;">Loading..</span>
+                            </div>
+                            </center>
+                        </section>
+                    </td>
+                    <td class="td">
+                        <section>
+                            <center>
+                            <h3 class="info-title">Shortage LR's</h3>
+                            <div>
+                                <span id="total_shortage_count" style="font-weight: 400; font-size: 24px; padding-top: 25px; text-align:center;">Loading..</span>
+                            </div>
+                            </center>
+                        </section>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </t>
+</templates>

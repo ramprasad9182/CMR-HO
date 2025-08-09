@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="text_tiles_invoice_tax_header">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+        </t>
+
+        <!-- Header Section -->
+        <div class="header"
+             style="text-align: center; margin-top: 10px;font-family: Arial, Verdana, sans-serif;"> <!-- Added margin-top -->
+            <div class="row"
+                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;padding-top:25px;font-family: Arial, Verdana, sans-serif;">
+
+                <!-- Left Section: Company Info -->
+                <div class="col-9"
+                     style="font-size: 15px; text-align: left; font-family: Arial, Verdana, sans-serif;margin-top: 10px;padding-left:30px;">
+                    <span style="font-weight: bold; font-size: 24px;font-family: Arial, Verdana, sans-serif;">
+                        <t t-esc="company.name"/>
+                    </span>
+                    <div>
+                        <span t-field="company.street"/>
+                        <span t-field="company.street2"/>
+                        <br/>
+                        <span t-field="company.state_id"/>
+                        <span t-field="company.zip"/>
+                        <br/>
+                        <span t-field="company.city"/>
+                        <br/>
+                        <b>Email:</b>
+                        <span t-field="company.email"/>
+                    </div>
+                </div>
+
+                <!-- Right Section: Tax invoice  Title -->
+                <div class="col-3" style="text-align: right;">
+                    <t t-if="company.logo">
+                        <img t-att-src="image_data_uri(company.logo)" alt="Logo"
+                             style="width: 100px; max-height: 100px;"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+        <div class="footer"
+             style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+            <hr style="width: 100%; margin: 0;"/>
+            <p style="font-size: 10px; margin: 0;">Print Date:
+                <t t-esc="time.strftime('%Y-%m-%d')"/>
+            </p>
+            <p style="font-size: 10px;margin-left:790px;">Page:
+                <span class="page"/>
+            </p>
+        </div>
+    </template>
+    <template id="text_tiles_report_template">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc" style="font-family: Verdana, Arial, sans-serif;">
+                <t t-call="cmr_customizations.text_tiles_invoice_tax_header"/>
+                <table class="table table-bordered" style="width: 100%; font-size: 10px; text-align:center;">
+                    <tr>
+                        <td style="text-align:left">CIN No:</td>
+                        <td rowspan="2">
+                            <strong>TAX INVOICE</strong>
+                        </td>
+
+                    </tr>
+                    <tr style="text-align:left">
+                        <td>GSTIN:
+                            <t t-esc="company.vat"/>
+                            <span t-field="company.state_id"/>
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-bordered"
+                       style="width: 100%; font-size: 10px; text-align:center;border:1px solid black;">
+                    <thead>
+                        <tr style="font-size:12px;">
+                            <td style="text-align:left">Invoice No</td>
+                            <td style="text-align:left">
+                                <t t-esc="doc.name"/>
+                            </td>
+                            <td style="text-align:left">Date</td>
+                            <td style="text-align:left">
+                                <t t-if="doc.invoice_date">
+                                    <t t-esc="doc.invoice_date.strftime('%d-%m-%Y')"/>
+                                </t>
+                                <t t-else="">
+                                    <span>N/A</span>
+                                </t>
+                                <!--                                <t t-set="today_date" t-value="datetime.date.today()"/>-->
+                                <!--                                <t t-esc="today_date.strftime('%d-%m-%Y')"/>-->
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="page">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="border:1px solid black;">
+                            <!-- Left Table -->
+                            <td style="width: 50%; vertical-align: top;">
+                                <table style="width: 100%; border-collapse: collapse;font-size:13px; display: flex; justify-content: center; width: auto;">
+
+                                    <tr>
+                                        <td>
+                                            <b>Bill To</b>
+                                        </td>
+                                        <td>
+                                            <b>:</b>
+                                        </td>
+                                        <td>
+                                            <b>
+                                                <t t-esc="doc.partner_id.name"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Address</td>
+                                        <td>
+                                            <b>:</b>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.partner_id.street"/>
+                                            <br/>
+                                            <t t-esc="doc.partner_id.street2"/>
+                                            <br/>
+                                            <t t-esc="doc.partner_id.city"/>
+                                            <t t-esc="doc.partner_id.state_id.name"/>
+                                            <t t-esc="doc.partner_id.zip"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>GSTIN</td>
+                                        <td>
+                                            <b>:</b>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.partner_id.vat"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>GST State</td>
+                                        <td>
+                                            <b>:</b>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.partner_id.state_id.name"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <!--                            border table -->
+                            <td style="width: 0; vertical-align: top; border: 1px solid black; border-right: 1px solid black;">
+                                <div style="width: 0; height: 100%; background-color: black;"></div>
+                            </td>
+
+
+                            <!-- Right Table -->
+                            <td style="width: 50%; vertical-align: top;">
+                                <table style="width: 100%; border-collapse: collapse; font-size:13px; justify-content: center;">
+
+                                    <tr>
+                                        <td>
+                                            <b>Ship To</b>
+                                        </td>
+                                        <td>
+                                            <b>:</b>
+                                        </td>
+                                        <td style="font-size:13px;">
+                                            <b>
+                                                <t t-esc="doc.partner_id.name"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <b>:</b>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.partner_id.street"/>
+                                            <br/>
+                                            <t t-esc="doc.partner_id.street2"/>
+                                            <br/>
+                                            <t t-esc="doc.partner_id.city"/>
+                                            <t t-esc="doc.partner_id.zip"/>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>GSTIN</td>
+                                        <td>
+                                            <b>:</b>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.partner_id.vat"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>GST State</td>
+                                        <td>
+                                            <b>:</b>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.partner_id.state_id.name"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="page2">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="border:1px solid black;">
+                            <!-- Left Table -->
+                            <td style="width: 50%; vertical-align: top;">
+                                <table style="width: 100%; border-collapse: collapse;margin-left:13px; font-size:13px; justify-content: center;">
+
+                                    <tr>
+                                        <t t-set="sale_orders"
+                                           t-value="doc.invoice_line_ids.mapped('sale_line_ids').mapped('order_id')"/>
+
+                                        <t t-if="sale_orders">
+                                            <t t-foreach="sale_orders" t-as="sale_order">
+                                                <td style="text-align:left;">Transporter</td>
+                                                <td>
+                                                    <t t-if="sale_order.transpoter_id">
+                                                        :
+                                                        <t t-esc="sale_order.transpoter_id.name"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span>:N/A</span>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <td style="text-align:left;">Transporter</td>
+                                            <td>:</td>
+                                        </t>
+
+                                        <td/>
+                                        <td rowspan="2" style="text-align:center; font-size:13px">Date
+                                            <!--                                            <t t-set="today_date" t-value="datetime.date.today()"/>-->
+                                            <!--                                            <t t-esc="today_date.strftime('%d-%m-%Y')"/>-->
+                                            <t t-if="doc.invoice_date">
+                                                :
+                                                <t t-esc="doc.invoice_date.strftime('%d-%m-%Y')"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span>:N/A</span>
+                                            </t>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <t t-set="pickings"
+                                           t-value="doc.invoice_line_ids.mapped('sale_line_ids').mapped('order_id.picking_ids')"/>
+
+                                        <t t-if="pickings">
+                                            <t t-foreach="pickings" t-as="picking">
+                                                <td style="text-align:left;">LR No</td>
+                                                <td>
+                                                    <t t-if="picking.lr_number">
+                                                        :
+                                                        <t t-esc="picking.lr_number"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        :
+                                                    </t>
+                                                </td>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <td style="text-align:left;">LR No</td>
+                                            <td>:</td>
+                                        </t>
+
+                                    </tr>
+                                </table>
+                            </td>
+                            <!--                            border table -->
+                            <td style="width: 0; vertical-align: top; border: 1px solid black; border-right: 1px solid black;">
+                                <div style="width: 0; height: 100%; background-color: black;"></div>
+                            </td>
+
+
+                            <!-- Right Table -->
+                            <td style="width: 50%; vertical-align: top;">
+                                <table style="width: 100%; border-collapse: collapse; font-size:13px; justify-content: center;">
+
+                                    <tr>
+                                        <td>
+                                            Doc No:
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td rowspan="2" style="text-align:center;">Date:
+                                            <!--                                            <t t-set="today_date" t-value="datetime.date.today()"/>-->
+                                            <!--                                            : <t t-esc="today_date.strftime('%d-%m-%Y')"/>-->
+                                            <t t-if="doc.invoice_date">
+                                                <t t-esc="doc.invoice_date.strftime('%d-%m-%Y')"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span>N/A</span>
+                                            </t>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Packet No :</td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <table class="table table-bordered"
+                       style="width: 100%; font-size: 13px; text-align:left;border:1px solid black;">
+                    <tr>
+                        <td>
+                            <strong>IRN:</strong>
+                        </td>
+                        <td>ed6c0d224f5d2463a95cfd9bec7a227cd4b413a5ead18e91f24918beb56a58e3</td>
+                        <td>ACK No :</td>
+                        <td></td>
+                        <td style="text-align:right;">Date:</td>
+                        <td style="text-align:right;">
+                            <t t-set="today_date" t-value="datetime.date.today()"/>
+                            <t t-esc="today_date.strftime('%d-%m-%Y')"/>
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-bordered"
+                       style="width: 100%; font-size: 13px; border-collapse: collapse; text-align: center; border: 1px solid black;">
+                    <thead style="background-color: #D3D3D3;">
+                        <tr style="border:1px solid black">
+                            <th>S No.</th>
+                            <th>Group/Item
+                            </th>
+                            <th>HSN Code</th>
+
+                            <th>Qty</th>
+                            <th>UOM</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <t t-set="serial" t-value="0"/>
+                        <t t-foreach="doc.invoice_line_ids" t-as="line">
+                            <tr>
+                                <td style="text-align:left;">
+                                    <!--                                    <t t-set="serial" t-value="serial + 1"/>-->
+                                    <!--                                    <t t-esc="serial"/>-->
+                                    <!--                                    <t t-out="line.sale_line_ids.lot_ids.name"/>-->
+                                    <t t-esc="line.product_id.default_code"/>
+                                </td>
+
+                                <td style="text-align:left;">
+                                    <!--                                    <t t-esc="line.product_id.name"/>-->
+                                    <t t-esc="line.product_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line.product_id.l10n_in_hsn_code"/>
+                                </td>
+                                <!--                            <td>RSP</td>-->
+                                <td>
+                                    <t t-esc=" '%0.2f' % line.quantity"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line.product_uom_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc=" '%0.2f' % line.price_subtotal"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <tr style="border: 1px solid black;">
+                            <td style="font-weight: bold;">Total</td>
+                            <td></td>
+                            <!--                            <td></td>-->
+                            <td></td>
+                            <td>
+                                <b>
+                                    <t t-esc=" '%0.2f' % sum(doc.invoice_line_ids.mapped('quantity'))"/>
+                                </b>
+
+                            </td>
+                            <td></td>
+                            <td>
+                                <b>
+                                    <t t-esc=" '%0.2f' % sum(doc.invoice_line_ids.mapped('price_subtotal'))"/>
+                                </b>
+                                <!--                                <t t-esc="'{:,.2f}'.format(sum(doc.invoice_line_ids.mapped('price_total')))"/>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">Challan No</td>
+                            <td style="text-align:left;">
+                                <t t-foreach="doc.invoice_line_ids.mapped('sale_line_ids.order_id.picking_ids')"
+                                   t-as="picking">
+                                    :
+                                    <t t-esc="picking.name"/>
+                                </t>
+
+
+                                <!--                                <t t-esc="doc.name"/>-->
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">So No</td>
+                            <td style="text-align:left;">
+                                <t t-foreach="doc.invoice_line_ids.mapped('sale_line_ids.order_id')" t-as="sale">
+                                    :
+                                    <t t-esc="sale.name"/>
+                                </t>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered"
+                       style="width: 100%; margin: 0; padding: 0; font-size: 13px; border: 1px solid black; text-align: center; border-collapse: collapse;">
+                    <thead style="background-color: #D3D3D3;">
+                        <tr>
+                            <th rowspan="2" style="border: 1px solid black;">HSN Code</th>
+                            <th rowspan="2" style="border: 1px solid black;">Taxable Value</th>
+                            <th rowspan="2" style="border: 1px solid black;">Qty.</th>
+                            <th rowspan="2" style="border: 1px solid black;">UOM</th>
+                            <th colspan="2" style="border: 1px solid black;">IGST</th>
+                            <th colspan="2" style="border: 1px solid black;">CGST</th>
+                            <th colspan="2" style="border: 1px solid black;">SGST</th>
+                            <th colspan="2" style="border: 1px solid black;">CESS</th>
+                        </tr>
+                        <tr>
+                            <th style="border: 1px solid black;">Rate</th>
+                            <th style="border: 1px solid black;">Amount</th>
+                            <th style="border: 1px solid black;">Rate</th>
+                            <th style="border: 1px solid black;">Amount</th>
+                            <th style="border: 1px solid black;">Rate</th>
+                            <th style="border: 1px solid black;">Amount</th>
+                            <th style="border: 1px solid black;">Rate</th>
+                            <th style="border: 1px solid black;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Initialize empty dictionary for HSN grouping -->
+                        <t t-set="hsn_dict" t-value="{}"/>
+
+                        <t t-foreach="doc.invoice_line_ids" t-as="line">
+                            <t t-if="line.product_id.l10n_in_hsn_code">
+                                <t t-set="hsn_code" t-value="line.product_id.l10n_in_hsn_code"/>
+
+                                <!-- Extract Unique Tax Percentages -->
+                                <t t-foreach="line.tax_ids" t-as="tax">
+                                    <t t-set="gst_percentage" t-value="int(tax.amount)"/>
+                                    <t t-set="gst_value" t-value="(line.price_subtotal * gst_percentage) / 100"/>
+                                    <t t-set="tax_type"
+                                       t-value="'IGST' if tax.tax_group_id.name == 'IGST' else 'CGST_SGST'"/>
+
+                                    <t t-set="key" t-value="hsn_code + '-' + str(gst_percentage) + '-' + tax_type"/>
+
+                                    <t t-if="key in hsn_dict">
+
+                                        <t t-set="existing_entry" t-value="hsn_dict[key]"/>
+                                        <t t-set="new_quantity" t-value="existing_entry['quantity'] + line.quantity"/>
+                                        <t t-set="new_price" t-value="existing_entry['price'] + line.price_subtotal"/>
+                                        <t t-set="new_gst" t-value="existing_entry['gst'] + gst_value"/>
+                                        <t t-set="new_uom"
+                                           t-value="existing_entry.get('uom', line.product_uom_id.name)"/>
+
+
+                                        <!-- Update dictionary -->
+                                        <t t-set="hsn_dict"
+                                           t-value="dict(list(hsn_dict.items()) + [(key, {'quantity': new_quantity, 'price': new_price, 'gst': new_gst, 'tax_rate': gst_percentage, 'tax_type': tax_type, 'uom': new_uom})])"/>
+                                    </t>
+                                    <t t-else="">
+                                        <!-- Create new entry for this HSN Code with the specific Tax Rate -->
+                                        <t t-set="hsn_dict"
+                                           t-value="dict(list(hsn_dict.items()) + [(key, {'quantity': line.quantity, 'price': line.price_subtotal, 'gst': gst_value, 'tax_rate': gst_percentage, 'tax_type': tax_type, 'uom': line.product_uom_id.name})])"/>
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+
+                        <!-- Display Grouped Data -->
+                        <t t-foreach="hsn_dict.items()" t-as="hsn_entry">
+                            <t t-set="hsn_key" t-value="hsn_entry[0]"/>
+                            <t t-set="val" t-value="hsn_entry[1]"/>
+                            <t t-set="hsn_code" t-value="hsn_key.split('-')[0]"/>
+                            <t t-set="tax_rate" t-value="hsn_key.split('-')[1]"/>
+                            <t t-set="tax_type" t-value="hsn_key.split('-')[2]"/>
+
+                            <tr>
+                                <td style="text-align:center;">
+                                    <t t-esc="hsn_code"/>
+                                </td>
+                                <td style="text-align:center;">
+                                    <t t-out="'%0.2f' % val['price']"/>
+                                </td>
+                                <td style="text-align:center;">
+                                    <t t-esc=" '%0.2f' % val['quantity']"/>
+                                </td>
+                                <td>
+                                    <t t-esc="val.get('uom', '')"/>
+                                </td>
+
+                                <!-- IGST -->
+                                <t t-if="tax_type == 'IGST'">
+                                    <td>
+                                        <t t-out="'%0.2f' % float(tax_rate)"/>
+                                        %
+                                    </td>
+                                    <td style="text-align:center;">
+                                        <t t-out="'%0.2f' % val.get('gst', 0)"/>
+                                    </td>
+                                    <td colspan="4"></td>  <!-- Empty CGST & SGST columns -->
+                                </t>
+
+                                <!-- CGST + SGST -->
+                                <t t-if="tax_type == 'CGST_SGST'">
+                                    <td colspan="2"></td>  <!-- Empty IGST columns -->
+                                    <td>
+                                        <t t-out="'%0.2f' % (float(tax_rate) / 2)"/>
+                                        %
+                                    </td>
+                                    <td style="text-align:center;">
+                                        <t t-out="'%0.2f' % (val.get('gst', 0) / 2)"/>
+                                    </td>
+                                    <td>
+                                        <t t-out="'%0.2f' % (float(tax_rate) / 2)"/>
+                                        %
+                                    </td>
+                                    <td style="text-align:center;">
+                                        <t t-out="'%0.2f' % (val.get('gst', 0) / 2)"/>
+                                    </td>
+                                </t>
+
+                                <!-- CESS (Placeholder, modify based on logic) -->
+                                <td colspan="2"></td>
+                            </tr>
+                        </t>
+
+
+                        <!--                                                <t t-foreach="doc.invoice_line_ids" t-as="line">-->
+                        <!--                                                    <tr style="border: 1px solid black;">-->
+                        <!--                                                        <td>-->
+                        <!--                                                            <t t-esc="line.product_id.l10n_in_hsn_code"/>-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            <t t-esc="line.price_subtotal"/>-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            <t t-esc="line.quantity"/>-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            <t t-esc="line.product_uom_id.name"/>-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            &lt;!&ndash;                                    <t t-foreach="line.tax_ids.filtered(lambda tax: 'GST' in tax.name)"&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                       t-as="gst_tax">&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                        <t t-esc="gst_tax.amount / 2"/>%&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                    </t>&ndash;&gt;-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            &lt;!&ndash;                                    <t t-foreach="line.tax_ids.filtered(lambda tax: 'GST' in tax.name)"&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                       t-as="gst_tax">&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                        <t t-esc="round((line.price_total - line.price_subtotal) / 2, 2) if gst_tax else 0.0"/>&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                    </t>&ndash;&gt;-->
+                        <!--                                                            <t t-foreach="doc.tax_totals['groups_by_subtotal']['Untaxed Amount']"-->
+                        <!--                                                               t-as="amount_by_group">-->
+                        <!--                                                                <t t-if="amount_by_group['tax_group_name'] == 'IGST'">-->
+                        <!--                                                                    <span class="text-right"-->
+                        <!--                                                                          t-out="'%0.2f' % float(amount_by_group['tax_group_amount']) or ''"/>-->
+                        <!--                                                                </t>-->
+                        <!--                                                            </t>-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            &lt;!&ndash;                                    <t t-foreach="line.tax_ids.filtered(lambda tax: 'GST' in tax.name)"&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                       t-as="gst_tax">&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                        <t t-esc="gst_tax.amount / 2"/>%&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                    </t>&ndash;&gt;-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            &lt;!&ndash;                                    <t t-foreach="line.tax_ids.filtered(lambda tax: 'GST' in tax.name)"&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                       t-as="gst_tax">&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                        <t t-esc="round((line.price_total - line.price_subtotal) / 2, 2) if gst_tax else 0.0"/>&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                    </t>&ndash;&gt;-->
+                        <!--                                                            <t t-foreach="doc.tax_totals['groups_by_subtotal']['Untaxed Amount']"-->
+                        <!--                                                               t-as="amount_by_group">-->
+                        <!--                                                                <t t-if="amount_by_group['tax_group_name'] == 'CGST'">-->
+                        <!--                                                                    <span class="text-right"-->
+                        <!--                                                                          t-out="'%0.2f' % float(amount_by_group['tax_group_amount']) or ''"/>-->
+                        <!--                                                                </t>-->
+                        <!--                                                            </t>-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            &lt;!&ndash;                                    <t t-foreach="line.tax_ids.filtered(lambda tax: 'GST' in tax.name)"&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                       t-as="gst_tax">&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                        <t t-esc="gst_tax.amount / 2"/>%&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                    </t>&ndash;&gt;-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            &lt;!&ndash;                                    <t t-foreach="line.tax_ids.filtered(lambda tax: 'GST' in tax.name)"&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                       t-as="gst_tax">&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                        <t t-esc="round((line.price_total - line.price_subtotal) / 2, 2) if gst_tax else 0.0"/>&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                    </t>&ndash;&gt;-->
+                        <!--                                                            <t t-foreach="doc.tax_totals['groups_by_subtotal']['Untaxed Amount']"-->
+                        <!--                                                               t-as="amount_by_group">-->
+                        <!--                                                                <t t-if="amount_by_group['tax_group_name'] == 'SGST'">-->
+                        <!--                                                                    <span class="text-right"-->
+                        <!--                                                                          t-out="'%0.2f' % float(amount_by_group['tax_group_amount']) or ''"/>-->
+                        <!--                                                                </t>-->
+                        <!--                                                            </t>-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            &lt;!&ndash;                                    <t t-foreach="line.tax_ids.filtered(lambda tax: 'GST' in tax.name)"&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                       t-as="gst_tax">&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                        <t t-esc="gst_tax.amount / 2"/>%&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                    </t>&ndash;&gt;-->
+                        <!--                                                        </td>-->
+                        <!--                                                        <td>-->
+                        <!--                                                            &lt;!&ndash;                                    <t t-foreach="line.tax_ids.filtered(lambda tax: 'GST' in tax.name)"&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                       t-as="gst_tax">&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                        <t t-esc="round((line.price_total - line.price_subtotal) / 2, 2) if gst_tax else 0.0"/>&ndash;&gt;-->
+                        <!--                                                            &lt;!&ndash;                                    </t>&ndash;&gt;-->
+                        <!--                                                        </td>-->
+                        <!--                                                    </tr>-->
+                        <!--                                                </t>-->
+                        <tr style="border: 1px solid black;background-color: #D3D3D3;">
+                            <td style="font-weight: bold; text-align:left;">Total</td>
+                            <td>
+                                <b>
+                                    <t t-esc="sum(doc.invoice_line_ids.mapped('price_subtotal'))"/>
+                                </b>
+                                <!--                                <t t-esc="'{:,.2f}'.format(sum(doc.invoice_line_ids.mapped('price_total')))"/>-->
+                            </td>
+                            <td>
+                                <b>
+                                    <t t-esc="'{:,.2f}'.format(sum(doc.invoice_line_ids.mapped('quantity')))"/>
+                                </b>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <t t-foreach="doc.tax_totals['groups_by_subtotal']['Untaxed Amount']"
+                                   t-as="amount_by_group">
+                                    <t t-if="amount_by_group['tax_group_name'] == 'IGST'">
+                                        <b>
+                                            <span class="text-right"
+                                                  t-out="'%0.2f' % float(amount_by_group['tax_group_amount']) or ''"/>
+                                        </b>
+                                    </t>
+                                </t>
+                            </td>
+                            <td></td>
+                            <td>
+                                <t t-if="len(doc.tax_totals['groups_by_subtotal']['Untaxed Amount']) > 1">
+                                    <b>
+                                        <t t-out="'%0.2f' % float(doc.tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount']) or ''"/>
+                                    </b>
+                                </t>
+                            </td>
+                            <td></td>
+                            <td>
+                                <t t-if="len(doc.tax_totals['groups_by_subtotal']['Untaxed Amount']) > 1">
+                                    <b>
+                                        <t t-out="'%0.2f' % float(doc.tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount']) or ''"/>
+                                    </b>
+                                </t>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <table class="table table-bordered"
+                       style="width: 100%; font-size: 13px; border-collapse: collapse;border: 1px solid black;">
+
+                    <tr>
+
+                        <td style="font-size:15px;font-weight: bold;text-align:right ">Grand Total</td>
+                        <td style="font-size:15px;font-weight: bold;text-align:center ">
+                            <t t-esc="'{:,.2f}'.format(sum(doc.invoice_line_ids.mapped('price_total')))"/>
+                        </td>
+                    </tr>
+                </table>
+                <div style="width: 100%; text-align: right; font-size: 10px; margin: 5px;">
+                    <b>For
+                        <t t-esc="company.name"/>
+                    </b>
+                </div>
+
+                <!-- Signature Lines using Table for Better PDF Compatibility -->
+                <br/>
+                <br/>
+                <br/>
+                <table style="width: 100%; border: none; text-align: center; margin-top: 10px;">
+                    <tr>
+                        <!-- Prepared By -->
+                        <td style="width: 25%;">
+                            <hr style="width: 80%; margin-bottom: 5px;"/>
+                            <b style="font-size: 10px;">Prepared By</b>
+                        </td>
+
+                        <!-- Checked By -->
+                        <td style="width: 25%;">
+                            <hr style="width: 80%; margin-bottom: 5px;"/>
+                            <b style="font-size: 10px;">Checked By</b>
+                        </td>
+
+                        <!-- Delivery By -->
+                        <td style="width: 25%;">
+                            <hr style="width: 80%; margin-bottom: 5px;"/>
+                            <b style="font-size: 10px;">Delivery By</b>
+                        </td>
+
+                        <!-- Authorized Signatory -->
+                        <td style="width: 25%;">
+                            <hr style="width: 80%; margin-bottom: 5px;"/>
+                            <b style="font-size: 10px;">Authorized Signatory</b>
+                        </td>
+                    </tr>
+                </table>
+                <p style="font-family:Verdana, Arial,sans-serif;font-size:12px;padding-left:35px;"><t
+                        t-esc="user.name"/>,
+                    <t t-esc="today_date.strftime('%d-%m-%Y')"/>
+                </p>
+            </t>
+        </t>
+    </template>
+    <record id="tax_invoice_report" model="ir.actions.report">
+        <field name="name">Text Tiles Tax Invoice</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cmr_customizations.text_tiles_report_template</field>
+        <field name="report_file">cmr_customizations.text_tiles_report_template</field>
+        <field name="binding_model_id" ref="model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'TaxInvoice Text Tiles'</field>
+    </record>
+
+</odoo>
