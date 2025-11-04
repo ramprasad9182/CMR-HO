@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_print_label_form" model="ir.ui.view">
+        <field name="name">print.label</field>
+        <field name="model">print.label</field>
+        <field name="arch" type="xml">
+            <form string="Print Barcode Labels">
+                 <group colspan="2">
+                <!-- Left side: fields -->
+                <group>
+                    <field name="picking_id" invisible="1"/>
+                    <field name="label_type" widget="radio"/>
+                </group>
+
+                <!-- Right side: PDF preview -->
+                <group>
+                    <field name="preview_pdf" widget="pdf_viewer" filename="preview.pdf"
+                           nolabel="1" colspan="2" readonly="1" style="min-height:600px;"/>
+                </group>
+            </group>
+                <footer>
+                    <button name="action_preview_label" type="object" string="Preview" class="btn-success"/>
+                    <button name="action_print_label" type="object" string="Print" class="btn-primary"/>
+
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_print_label" model="ir.actions.act_window">
+        <field name="name">print label</field>
+        <field name="res_model">print.label</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

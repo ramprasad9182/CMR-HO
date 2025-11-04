@@ -1,0 +1,58 @@
+<odoo>
+    <record id="view_license_key_form" model="ir.ui.view">
+        <field name="name">license.key.form</field>
+        <field name="model">license.key</field>
+        <field name="arch" type="xml">
+            <form string="License Screen">
+                <header>
+                    <button name="button_open_license_key_wizard" type="object" string="Generate Key"  class="btn-primary" invisible="state in ['closed']"/>
+                    <button name="action_for_send_license_key_mail" type="object" string="Send Email" confirm="Do You Want to Send the mail"  invisible="state in ['open']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,close" />
+            </header>
+                <sheet>
+                    <group>
+                         <group>
+                            <field name="doc_number" readonly="state in ['open','closed']"/>
+                            <field name="doc_date" readonly="state in ['closed']"/>
+                            <field name="user_type" readonly="state in ['closed']"/>
+                            <field name="store_id" options="{'no_create': True, 'no_open': True}" readonly="state in ['closed']"/>
+                             <field name="cashier_count" readonly="state in ['closed']"/>
+                             <field name="backend_count" readonly="state in ['closed']"/>
+                        </group>
+                        <group>
+                            <field name="email"/>
+                            <field name="license_count" readonly="state in ['closed']"/>
+                             <field name="expiry_date" readonly="state in ['closed']"/>
+                            <field name="note" invisible="1"/>
+                            <field name="encryption_key" invisible="1"/>
+                            <field name="license_key"/>
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+     <record id="view_license_key_tree" model="ir.ui.view">
+        <field name="name">license.key.tree</field>
+        <field name="model">license.key</field>
+        <field name="arch" type="xml">
+            <tree string="License Key Tree View">
+                <field name="doc_number"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_license_key" model="ir.actions.act_window">
+        <field name="name">License Key Generation</field>
+        <field name="res_model">license.key</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_license_key_settings" name="License Key Generation" parent="cmr_customizations.nhcl_cmr_configuration"
+              sequence="12"
+              action="action_license_key"/>
+</odoo>
+

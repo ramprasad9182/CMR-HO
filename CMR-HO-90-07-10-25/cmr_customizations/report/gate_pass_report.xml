@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="gate_pass_template">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-out="0"/>
+        </div>
+    </template>
+
+    <template id="nhcl_gate_pass_temp">
+        <t t-call="cmr_customizations.gate_pass_template">
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <div class="page">
+                <div class="row">
+                    <div class="col-12">
+                        <div style="text-align:center;font-size:40px;">
+                            <h8>
+                                <strong>
+                                    Gate Pass
+                                </strong>
+                            </h8>
+                        </div>
+                        <table class="table-striped table table-bordered"
+                               style="page-break-inside: avoid;border:1px solid black;padding-bottom:30px;width:100%;table-layout:fixed;font-size:18px;font-family:Verdana, Arial,sans-serif;">
+                            <tr style="font-family:Verdana, Arial,sans-serif;">
+                                <th style="border-right:1px solid white;" colspan="6">
+                                    Gate Pass No:
+                                    <t t-esc="o.name"/>
+                                </th>
+                                <th colspan="6">
+                                    Gate Pass Date:
+                                    <t t-esc="o.scheduled_date"/>
+                                </th>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;">
+                                <td style="height:80px;" colspan="4">
+                                    <div style="font-size:12px;font-family:Verdana, Arial,sans-serif;">
+                                        Dispatch From
+                                        <br/>
+                                        <b>
+                                            <span t-field="company.name"/>
+                                        </b>
+                                        <br/>
+                                        <span t-field="company.street"/>
+                                        <span t-field="company.street2"/>
+                                        <br/>
+                                        <span t-field="company.state_id.name"/>
+                                        <span t-field="company.zip"/>
+                                        <br/>
+                                        <b>GSTIN NO:
+                                            <span t-field="company.vat"/>
+                                        </b>
+                                    </div>
+                                    <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="4" style="text-align:center; vertical-align: middle;">
+                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                        <img t-att-src="image_data_uri(company.logo)" alt="Logo"
+                                             style="width:100px; max-height:100px;"/>
+                                    </div>
+                                </td>
+
+                                <td colspan="4">
+                                    <div style="font-size:12px;font-family:Verdana, Arial,sans-serif;">
+                                        Dispatch To
+                                        <br/>
+                                        <b>
+                                            <span t-field="o.nhcl_company.nhcl_store_name.company_id.name"/>
+
+                                        </b>
+                                        <br/>
+                                        <span t-field="o.nhcl_company.nhcl_store_name.company_id.street"/>
+                                        <span t-field="o.nhcl_company.nhcl_store_name.company_id.street2"/>
+                                        <br/>
+                                        <span t-field="o.nhcl_company.nhcl_store_name.company_id.state_id.name"/>
+                                        <span t-field="o.nhcl_company.nhcl_store_name.company_id.zip"/>
+                                        <br/>
+                                        <b>GSTIN NO:
+                                            <span t-field="o.nhcl_company.nhcl_store_name.company_id.vat"/>
+                                        </b>
+                                    </div>
+                                    <!--                                    <t t-esc="o.rating"/>-->
+                                </td>
+                            </tr>
+                            <tr style="text-align:left;font-family:Verdana, Arial,sans-serif;">
+                                <td style="border-right:1px solid white;" colspan="4">
+                                    Driver Name:
+                                    <t t-esc="o.picking_ids and o.picking_ids[0].driver_name"/>
+
+
+                                </td>
+                                <td style="border-right:1px solid white;" colspan="4">
+                                    Vehicle No:
+                                    <t t-esc="o.picking_ids and o.picking_ids[0].vehicle_number"/>
+                                </td>
+                                <td style="border-left:1px solid white;" colspan="4">
+                                    Ref Person:
+                                    <t t-esc="o.picking_ids and o.picking_ids[0].transpoter_id.name"/>
+                                </td>
+                            </tr>
+                            <tr style="height:40px;font-family:Verdana, Arial,sans-serif;">
+                                <th style="text-align:left;" colspan="5">Description</th>
+                                <th colspan="2">No Of Qty</th>
+                                <th colspan="2"/>
+                                <th colspan="1"/>
+                                <th colspan="1"/>
+                                <th colspan="1"/>
+                            </tr>
+
+                            <tr style="text_align:center;font-family:Verdana, Arial,sans-serif;">
+                                <td colspan="5">
+                                    BAGS
+                                </td>
+
+                                <td colspan="2" style="text-align:center;">
+                                    <t t-set="total_lines" t-value="len(o.picking_ids)"/>
+                                    <!--                                                                         <t t-foreach="o.move_line_ids" t-as="line">-->
+                                    <!--                                                                         </t>-->
+                                    <t t-esc="total_lines"/>
+                                </td>
+                                <td colspan="2">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                            </tr>
+                            <tr style="text_align:center;font-family:Verdana, Arial,sans-serif;">
+                                <td colspan="5">
+                                    TRAYS
+                                </td>
+
+                                <td colspan="2" style="text-align:center;">
+                                    0
+                                </td>
+                                <td colspan="2">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                            </tr>
+                            <tr style="text_align:center;font-family:Verdana, Arial,sans-serif;">
+                                <td colspan="5">
+                                    CARTONS
+                                </td>
+
+                                <td colspan="2" style="text-align:center;">
+                                    0
+                                </td>
+                                <td colspan="2">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                            </tr>
+                            <tr style="text_align:center;font-family:Verdana, Arial,sans-serif;">
+                                <td colspan="5">
+                                    LOOSE
+                                </td>
+
+                                <td colspan="2" style="text-align:center;">
+                                    0
+                                </td>
+                                <td colspan="2">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                                <td colspan="1">
+                                </td>
+                            </tr>
+
+
+                            <tr style="height:40px;font-family:Verdana, Arial,sans-serif;">
+                                <th colspan="5"/>
+                                <th colspan="2">
+                                    <t t-set="total_lines" t-value="len(o.picking_ids)"/>
+                                    <t t-esc="total_lines"/>
+                                </th>
+                                <th colspan="2"/>
+                                <th colspan="1"/>
+                                <th colspan="1"/>
+                                <th colspan="1"/>
+                            </tr>
+                            <tr style="height:40px;font-family:Verdana, Arial,sans-serif;">
+                                <td style="border-right:1px solid white;" colspan="8">Ref Bill:<br/>Remarks HA:
+                                </td>
+                                <td style="border-right:1px solid white;" colspan="2">
+                                    Bales:0
+                                    <br/>
+                                    Weight:0.00
+                                </td>
+                                <td colspan="2"/>
+                            </tr>
+                            <tr style="height:120px;font-family:Verdana, Arial,sans-serif;">
+                                <th style="padding-top:90px;" colspan="3">Security Sign:</th>
+                                <th colspan="3">Receiver's Sign</th>
+                                <th colspan="3">Driver's Sign</th>
+                                <th colspan="3">Authorised Signatory</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="gate_pass_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="cmr_customizations.nhcl_gate_pass_temp"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="paperformat_gate_pass" model="report.paperformat">
+        <field name="name">Gate Pass</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">18</field>
+        <field name="margin_bottom">18</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_spacing">10</field>
+        <field name="dpi">96</field>
+    </record>
+    <record id="nhcl_gate_pass" model="ir.actions.report">
+        <field name="name">gate pass</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cmr_customizations.gate_pass_report_template</field>
+        <field name="report_file">cmr_customizations.gate_pass_report_template</field>
+        <field name="print_report_name">'pass'</field>
+        <field name="paperformat_id" ref="cmr_customizations.paperformat_gate_pass"/>
+        <field name="binding_model_id" ref="stock_picking_batch.model_stock_picking_batch"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

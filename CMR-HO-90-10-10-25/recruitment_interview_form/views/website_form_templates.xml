@@ -1,0 +1,509 @@
+<odoo>
+    <template id="interview_form_page" name="Interview Form Page">
+        <t t-call="website.layout">
+            <!-- ✅ Add Bootstrap Icons CDN here -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+            <!-- Select2 CSS -->
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+
+            <!--            &lt;!&ndash; Select2 JS (place before your JS file or inside it after DOM is ready) &ndash;&gt;-->
+            <!--            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>-->
+
+            <style>/* Section spacing */ .form-section { border-top: 1px solid rgba(0, 0, 0, 0.05); /* Light transparent
+                line */ padding-top: 30px; margin-top: 30px; } /* Better field spacing */ .form-group { margin-bottom:
+                1.5rem; } /* Light card with soft shadow */ .card { border: 1px solid rgba(0, 0, 0, 0.05);
+                background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06); } /* Section
+                headers */ .form-section h5 { font-weight: 600; border-left: 4px solid #0d6efd; padding-left: 12px;
+                color: #333; margin-bottom: 20px; } /* Input focus style */ .form-control:focus, .form-select:focus {
+                border-color: #0d6efd; box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15); } /* Better section gap */
+                .section-gap { margin-bottom: 40px; }
+            </style>
+            <div class="container mt-5 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card shadow-lg rounded">
+                            <div class="card-body p-4">
+
+                                <div class="text-center mb-4">
+                                    <img src="/recruitment_interview_form/static/src/img/company_logo.png"
+                                         alt="Company Logo" style="max-height: 120px;"/>
+                                </div>
+                                <h2 class="text-center mb-4">Candidate Interview Application</h2>
+                                <form id="interview_form" action="/form/submit" method="POST"
+                                      enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="form_id" t-att-value="form.id"/>
+                                    <div id="profile_id" class="form-section">
+                                        <h5>Upload Profile</h5>
+                                        <div class="row">
+                                            <!-- Photo Upload -->
+                                            <div class="col-md-6">
+                                                <label for="passport_photo" class="form-label fw-bold">Passport Size
+                                                    Photo
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="file" name="photo_file" id="photo_file"
+                                                       class="form-control" accept="image/*"
+                                                       required="required"/>
+                                                <small class="form-text text-muted">
+                                                    You can upload or take a photo using your camera.
+                                                </small>
+                                                <div id="photo_preview_container" class="mt-2 d-flex align-items-center"
+                                                     style="display: none;">
+                                                    <img id="photo_preview" class="img-thumbnail me-2 d-none"
+                                                         width="100"/>
+                                                    <button type="button" id="remove_photo_btn"
+                                                            class="btn btn-sm btn-outline-danger d-none" title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!--  Name  -->
+                                    <div id="basic_details" class="form-section">
+                                        <h5>Basic Information</h5>
+                                        <div class="row">
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="name" class="form-label">
+                                                    Name as per Aadhar
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="text" name="name" class="form-control"
+                                                       placeholder="John Doe"
+                                                       required="required"/>
+                                            </div>
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="email" class="form-label">
+                                                    Email Address
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="email" name="email" class="form-control"
+                                                       required="required"
+                                                       placeholder="john@example.com"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="partner_mobile">
+                                                    Mobile Number
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="text" id="partner_mobile" name="partner_mobile"
+                                                       class="form-control" maxlength="10" pattern="\d{10}"
+                                                       title="Enter a valid 10-digit mobile number"
+                                                       placeholder="Mobile Number" required="required"/>
+                                            </div>
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="alternate">Alternate Mobile Number</label>
+                                                <input type="text" class="form-control" name="partner_phone"
+                                                       id="alternate"
+                                                       maxlength="10" pattern="\d{10}"
+                                                       title="Enter a valid 10-digit mobile number"
+                                                       placeholder="Alternate Mobile Number"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <!--  Date of Birth  -->
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="dob">Date of Birth
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="date" name="dob" id="dob" class="form-control"
+                                                       required="required"/>
+                                            </div>
+                                            <!--  Age  -->
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="age">Age
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="number" name="age" id="age" class="form-control" min="1"
+                                                       max="100" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group mb-3 col-md-6">
+                                            <label for="gender">Gender
+                                                <span style="color: red;">*</span>
+                                            </label>
+                                            <select name="gender" id="gender" class="form-control" required="required">
+                                                <option value="">Select...</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
+                                            </select>
+                                        </div>
+                                        <!--  Marital Status  -->
+                                        <div class="form-group mb-3 col-md-6">
+                                            <label for="marital_status">Marital Status
+                                                <span style="color: red;">*</span>
+                                            </label>
+                                            <select name="marital_status" id="marital_status" class="form-control"
+                                                    required="required">
+                                                <option value="">Select...</option>
+                                                <option value="single">Single</option>
+                                                <option value="married">Married</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--  Permanent Address  -->
+                                    <div id="address_fields" class="form-section">
+                                        <h5>Permanent Address</h5>
+                                        <div class="row">
+                                            <!--  Street  -->
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="permanent_street">Street
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" name="permanent_street"
+                                                       id="permanent_street" placeholder="Street" required="required"/>
+                                            </div>
+                                            <!--  Street 2  -->
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="permanent_street2">Street 2
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" name="permanent_street2"
+                                                       id="permanent_street2" placeholder="Street 2"
+                                                       required="required"/>
+                                            </div>
+                                            <!--  City  -->
+                                            <div class="form-group mb-3 col-md-3">
+                                                <label for="permanent_city">City
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" name="permanent_city"
+                                                       id="permanent_city" placeholder="City" required="required"/>
+                                            </div>
+                                            <!--  State  -->
+                                            <div class="form-group mb-3 col-md-3">
+                                                <label for="permanent_state_id">State
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <select name="permanent_state_id" id="permanent_state_id"
+                                                        class="form-select" required="required">
+                                                    <option value="">Select State</option>
+                                                    <t t-foreach="states" t-as="state">
+                                                        <option t-att-value="state.id">
+                                                            <t t-esc="state.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <!--  ZIP  -->
+                                            <div class="form-group mb-3 col-md-3">
+                                                <label for="permanent_zip">ZIP Code
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" name="permanent_zip"
+                                                       id="permanent_zip" placeholder="ZIP Code" required="required"/>
+                                            </div>
+                                            <!--  Country  -->
+                                            <div class="form-group mb-3 col-md-3">
+                                                <label for="permanent_country_id">Country
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <select name="permanent_country_id" id="permanent_country_id"
+                                                        class="form-select" required="required">
+                                                    <option value="">Select Country</option>
+                                                    <t t-foreach="countries" t-as="country">
+                                                        <option t-att-value="country.id"
+                                                                t-att-selected="country.id == default_country_id">
+                                                            <t t-esc="country.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!--  Multiple Company Selection  -->
+                                    <div id="other_details" class="form-section form-group mt-4">
+                                        <h5 class="mb-3">Other Information</h5>
+                                        <label class="form-label" for="preferred_companies">
+                                            Preferred Companies
+                                            <span style="color: red;">*</span>
+                                        </label>
+                                        <select id="preferred_companies"
+                                                name="company_ids"
+                                                class="form-control js-company-multiselect"
+                                                multiple="multiple">
+                                            <t t-foreach="companies" t-as="company">
+                                                <option t-att-value="company.id">
+                                                    <t t-esc="company.name"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+
+
+                                    <!--  Job Position  -->
+                                    <div class="row">
+                                        <!--  Job Position  -->
+                                        <div class="form-group mb-3 col-md-6">
+                                            <label for="job_id" class="form-label">
+                                                Which position are you applying
+                                                <span style="color: red;">*</span>
+                                            </label>
+                                            <select name="job_id" class="form-select" required="required">
+                                                <option value="">-- Select Job Position --</option>
+                                                <t t-foreach="jobs" t-as="job">
+                                                    <option t-att-value="job.id">
+                                                        <t t-esc="job.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <!--  Department  -->
+                                        <div class="form-group mb-3 col-md-6">
+                                            <label for="department_id" class="form-label">
+                                                Department
+                                                <span style="color: red;">*</span>
+                                            </label>
+                                            <select name="department_id" class="form-select" required="required">
+                                                <option value="">-- Select Department --</option>
+                                                <t t-foreach="departments" t-as="dept">
+                                                    <option t-att-value="dept.id">
+                                                        <t t-esc="dept.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--  Experience Type Dropdown  -->
+                                    <div class="form-group">
+                                        <label for="experience_type">
+                                            Experience Type
+                                            <span style="color: red;">*</span>
+                                        </label>
+                                        <select name="experience_type" class="form-control" id="experience_type"
+                                                required="required">
+                                            <option value="">Select Experience</option>
+                                            <option value="fresher">Fresher</option>
+                                            <option value="experienced">Experienced</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Experience Fields (conditionally required by JS) -->
+                                    <div id="experience_fields">
+                                        <div class="row">
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="total_experience_years">
+                                                    Total Experience (Years)
+                                                    <span style="color:red;">*</span>
+                                                </label>
+                                                <input type="number" class="form-control" name="total_experience_years"
+                                                       id="total_experience_years" step="0.1"/>
+                                            </div>
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="retail_experience_years">
+                                                    Total Relevant (Fashion) Experience (Years)
+                                                    <span style="color:red;">*</span>
+                                                </label>
+                                                <input type="number" class="form-control" name="retail_experience_years"
+                                                       id="retail_experience_years" step="0.1"/>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Salary Expectations -->
+                                    <div id="salary_fields">
+                                        <div class="row">
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="current_salary">
+                                                    Current Salary
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="number" class="form-control" name="current_salary"
+                                                       id="current_salary" step="0.01" placeholder="e.g., 350000"/>
+                                            </div>
+                                            <div class="form-group mb-3 col-md-6">
+                                                <label for="expected_salary">
+                                                    Expected Salary
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="number" class="form-control" name="expected_salary"
+                                                       id="expected_salary" step="0.01" placeholder="e.g., 400000"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Professional Section -->
+                                    <div class="form-section" id="professional_section">
+                                        <h5 class="mt-4">Previous Employment Details</h5>
+                                        <div id="professional_fields">
+                                            <div class="row professional-entry mb-3">
+                                                <div class="col-md-4">
+                                                    <label>Company
+                                                        <span style="color: red;">*</span>
+                                                    </label>
+                                                    <input type="text" name="company_name_0" class="form-control"
+                                                           placeholder="Company Name"/>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Designation
+                                                        <span style="color: red;">*</span>
+                                                    </label>
+                                                    <input type="text" name="designation_0" class="form-control"
+                                                           placeholder="Designation"/>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Years of Experience
+                                                        <span style="color: red;">*</span>
+                                                    </label>
+                                                    <input type="number" name="years_experience_0" class="form-control"
+                                                           step="0.1" min="0" placeholder="Years of Experience"/>
+                                                </div>
+                                                <div class="col-md-6 mt-2">
+                                                    <label>From Date
+                                                        <span style="color: red;">*</span>
+                                                    </label>
+                                                    <input type="date" name="from_date_0" class="form-control"/>
+                                                </div>
+                                                <div class="col-md-6 mt-2">
+                                                    <label>To Date
+                                                        <span style="color: red;">*</span>
+                                                    </label>
+                                                    <input type="date" name="to_date_0" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end mb-3">
+                                            <button type="button" class="btn btn-secondary" id="add_professional_btn">+
+                                                Add More
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="professional_count" id="professional_count"
+                                               value="1"/>
+                                    </div>
+
+                                    <div class="form-section">
+                                        <h5 class="mt-4">Reference Details</h5>
+                                        <div id="reference-details-section">
+                                            <div class="row reference-entry mb-3">
+                                                <div class="col-md-6">
+                                                    <label>Name</label>
+                                                    <input type="text" name="ref_name_0" class="form-control"
+                                                           placeholder="Reference Name"/>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Phone Number</label>
+                                                    <input type="text" name="ref_phone_0" class="form-control"
+                                                           placeholder="Phone Number" pattern="\d{10}"
+                                                           title="Enter a 10-digit number"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end mb-3">
+                                            <button type="button" class="btn btn-secondary" id="add_reference_btn">+ Add
+                                                Reference
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="reference_count" id="reference_count" value="1"/>
+                                    </div>
+                                    <div class="form-section">
+                                        <h5 class="mt-4">Educational Details</h5>
+                                        <div id="education-details-section">
+                                            <div class="row education-entry mb-3">
+                                                <div class="col-md-4">
+                                                    <label>Education Level
+                                                        <span style="color: red;">*</span>
+                                                    </label>
+                                                    <select name="degree_0" class="form-select" required="required">
+                                                        <option value="">Education Level</option>
+                                                        <option value="ssc">SSC</option>
+                                                        <option value="inter">Inter</option>
+                                                        <option value="graduate">Graduate</option>
+                                                        <option value="bachelor">Bachelor Degree</option>
+                                                        <option value="masters">Masters Degree</option>
+                                                        <option value="doctoral">Doctoral Degree</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>From Date:
+                                                        <span style="color: red;">*</span>
+                                                    </label>
+                                                    <input type="date" name="date_from_0" class="form-control"
+                                                           placeholder="From Date" required="required"/>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>To Date:
+                                                        <span style="color: red;">*</span>
+                                                    </label>
+                                                    <input type="date" name="date_to_0" class="form-control"
+                                                           placeholder="To Date" required="required"/>
+                                                </div>
+                                                <div class="col-md-4 mt-2">
+                                                    <label>Year of Passing
+                                                        <span style="color: red;">*</span>
+                                                    </label>
+                                                    <input type="text" name="year_of_passing_0" class="form-control"
+                                                           placeholder="Year of Passing" required="required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end mb-3">
+                                            <button type="button" class="btn btn-secondary" id="add_education_btn">+ Add
+                                                More
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="education_count" id="education_count" value="1"/>
+                                    </div>
+
+
+                                    <!-- Resume Upload -->
+                                    <div id="resume_id" class="form-section">
+                                        <h5>Upload Resume</h5>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="resume" class="form-label fw-bold">Resume
+                                                    <span style="color: red;">*</span>
+                                                </label>
+                                                <input type="file" name="resume_file" id="resume_file"
+                                                       class="form-control"
+                                                       accept=".pdf,.doc,.docx,application/pdf,application/msword,
+               application/vnd.openxmlformats-officedocument.wordprocessingml.document" required="required"/>
+                                                <div id="resume_preview_container"
+                                                     class="mt-2 d-flex align-items-center"
+                                                     style="display: none;">
+                                                    <a id="resume_preview_link" href="#" target="_blank"
+                                                       class="me-2 text-primary"></a>
+                                                    <button type="button" id="remove_resume_btn"
+                                                            class="btn btn-sm btn-outline-danger" title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!--  Submit Button  -->
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary px-4">Submit Application</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="error_page" name="Interview Form Error Page">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5">
+                <div class="alert alert-danger text-center" role="alert">
+                    <h2 class="mb-3">Oops! Something went wrong</h2>
+                    <p>The form you are trying to access is not available or no longer exists.</p>
+                    <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

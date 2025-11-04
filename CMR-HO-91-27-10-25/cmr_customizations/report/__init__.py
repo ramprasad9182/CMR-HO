@@ -1,0 +1,4 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from . import sale_person_incentive_detailed_report
+from . import sale_person_incentive_summary_report

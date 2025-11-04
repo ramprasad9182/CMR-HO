@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_purchase_indent">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <p>
+                    <strong style="font-size:35px;">
+                        Shipping Address
+                    </strong>
+                </p>
+                <br/>
+                <div class="row">
+                    <div class="col-8" style="text-align: left;">
+                        <t t-esc="o.company_id.name"/>
+                        <br/>
+                        <t t-esc="o.company_id.street"/>
+                        <br/>
+                        <t t-esc="o.company_id.street2"/>
+                        <br/>
+                        <t t-esc="o.company_id.city"/>
+                        <br/>
+                        <t t-esc="o.company_id.state_id.name"/>
+                        <br/>
+                        <t t-esc="o.company_id.zip"/>
+                        <br/>
+                        <t t-esc="o.company_id.country_id.name"/>
+                        <br/>
+                    </div>
+                    <div class="col-4" style="text-align: left;">
+                        <t t-esc="o.request_owner_id.partner_id.company_name"/>
+                        <br/>
+                        <t t-esc="o.request_owner_id.partner_id.street"/>
+                        <br/>
+                        <t t-esc="o.request_owner_id.partner_id.street2"/>
+                        <br/>
+                        <t t-esc="o.request_owner_id.partner_id.city"/>
+                        <br/>
+                        <t t-esc="o.request_owner_id.partner_id.state_id.name"/>
+                        <br/>
+                        <t t-esc="o.request_owner_id.partner_id.zip"/>
+                        <br/>
+                        <t t-esc="o.request_owner_id.partner_id.country_id.name"/>
+                    </div>
+                </div>
+                <br/>
+                <p>
+                    <strong style="font-size:35px;">
+                        Purchase Indent <t t-esc="o.name"/>
+                    </strong>
+                </p>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-8" style="text-align: left;">
+                                Request Owner:<t t-esc="o.request_owner_id.name"/>,
+                                <br/>
+                                Category :<t t-esc="o.category_id.name"/>,
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+                        <table class="table-striped table table-bordered"
+                               style="table-layout:fixed;border:1px solid black;">
+                            <tr>
+                                <th>S.no</th>
+                                <th>Products</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>UOM</th>
+                                <th>Tax</th>
+                                <th>Total(Tax Exc.)</th>
+                                <th>Total(Tax Incl.)</th>
+                            </tr>
+                            <t t-set="i" t-value="1"/>
+                            <t t-foreach="o.product_line_ids" t-as="line">
+                                <tr style="text_align:center;">
+                                    <td>
+                                        <t t-esc="i"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line.product_id.name"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line.description"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line.quantity"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line.product_uom_id.name"/>
+                                    </td>
+                                    <td>
+                                        <t t-foreach="line.nhcl_taxes_id" t-as="tax">
+                                            <t t-esc="tax.name"/>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line.nhcl_price_subtotal"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line.nhcl_price_untaxed"/>
+                                    </td>
+                                </tr>
+                                <t t-set="i" t-value="i+1"/>
+                            </t>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="report_purchase_indent_lang">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=o.request_owner_id.lang or o.env.lang)"/>
+                <t t-call="cmr_customizations.report_purchase_indent" t-lang="o.env.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_purchase_indent" model="ir.actions.report">
+        <field name="name">Purchase indent</field>
+        <field name="model">approval.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cmr_customizations.report_purchase_indent_lang</field>
+        <field name="report_file">cmr_customizations.report_purchase_indent_lang</field>
+        <field name="binding_model_id" ref="approvals.model_approval_request"/>
+        <field name="binding_type">report</field>
+
+    </record>
+</odoo>
+

@@ -1,0 +1,71 @@
+<odoo>
+
+      <!-- Form View -->
+    <record id="store_wise_report_view_form" model="ir.ui.view">
+        <field name="name">store.target.report.form</field>
+        <field name="model">store.target.report</field>
+        <field name="arch" type="xml">
+            <form string="Store Report" create="0">
+                <h1 style="color:black;font-weight:1000;text-align:center;">Store Target Report</h1>
+                <sheet>
+                     <header>
+                        <button name="action_fetch_data" type="object"
+                                string="Submit" class="btn-primary" context="{'active_id':active_id}"/>
+                        <button name="action_to_reset" type="object"
+                                string="Reset" class="btn-secondary"/>
+                        <button name="get_excel_sheet" type="object"
+                                string="Excel" class="btn-success"/>
+                         <button name="action_print_pdf" type="object" string="Print PDF" class="btn-primary"/>
+
+                    </header>
+                    <group style="border: 2px solid #990099; padding: 10px;">
+                        <group>
+                            <field name="store_id" string="Store" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="day_month_selection"/>
+                    </group>
+                    <group>
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                    </group>
+                    </group>
+                    <notebook>
+                            <page string="Report Lines">
+                            <field name="line_ids" mode="tree" context="{'default_report_id': active_id}" readonly="1">
+                                <tree create="0" delete="0" editable="bottom" string="Report Lines" >
+                                    <field name="report_id" column_invisible="1"/>
+                                    <field name="s_no" width="50px"/>
+                                    <field name="division_name" width="150px" force_save="1"/>
+                                    <field name="regular" width="150px"  force_save="1" column_invisible="parent.day_month_selection in ['month']" sum="regular"/>
+                                    <field name="festival" width="150px"  force_save="1" column_invisible="parent.day_month_selection in ['month']" sum="festival"/>
+                                     <field name="regular_excess_month" force_save="1" width="150px"  column_invisible="parent.day_month_selection in ['day']"  sum="regular_month"/>
+                                     <field name="festival_excess_month" force_save="1" width="150px"  column_invisible="parent.day_month_selection in ['day']" sum="festival_month"/>
+                                    <field name="target_price" sum="total"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+<!--                <div class="oe_chatter">-->
+<!--                    <field name="message_follower_ids"/>-->
+<!--                    <field name="activity_ids"/>-->
+<!--                    <field name="message_ids"/>-->
+<!--                </div>-->
+            </form>
+        </field>
+    </record>
+
+    <record id="store_wise_report_view_action" model="ir.actions.act_window">
+        <field name="name">Store Target Report</field>
+        <field name="res_model">store.target.report</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="store_wise_report_view_menu"
+              name="Store Target Report"
+              action="store_wise_report_view_action"
+              parent="stock.menu_warehouse_report"
+              sequence="10"/>
+</odoo>

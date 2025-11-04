@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="picking_form_inherit_opened_received_dasha" model="ir.ui.view">
+        <field name="name">stock.form.is_opened.is_received.dasha</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_id']" position="after">
+                <field name="is_opened" widget="boolean_toggle"/>
+                <field name="is_received" widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

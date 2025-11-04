@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="stock_picking_view_for_last_serial_number" model="ir.ui.view">
+        <field name="name">view.picking.form.inherit.last.serial</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_id']" position="replace">
+                <field name="owner_id" groups="stock.group_tracking_owner" invisible="1"/>
+            </xpath>
+            <xpath expr="//group[1]" position="after">
+                <group string="Transport Details" invisible="stock_type not in ['inter_state','intra_state']" >
+                    <group>
+                        <field name="transpoter_id" readonly="state == 'done'" required="stock_picking_type  in ['regular']" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                        <field name="transpoter_route_id" readonly="state == 'done'"
+                               domain="[('transpoter_id','=',transpoter_id)]" required="stock_picking_type  in ['regular']" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                        <field name="lr_number" readonly="state == 'done'" required="stock_picking_type  in ['regular']"/>
+                        <field name="driver_name" readonly="state == 'done'" required="stock_picking_type  in ['regular']"/>
+                    </group>
+                    <group>
+                        <field name="no_of_parcel" readonly="state == 'done'" required="stock_picking_type  in ['regular']"/>
+                        <field name="tracking_number" readonly="state == 'done'" force_save="1"/>
+                        <field name="nhcl_tracking_number" readonly="1" force_save="1"/>
+                        <field name="vehicle_number" readonly="state == 'done'" required="stock_picking_type  in ['regular']"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+                <attribute name="readonly">purchase_id != False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="nhcl_last_serial_number" readonly="1" force_save="1"
+                       invisible="picking_type_code != 'incoming'"/>
+                <field name="label_click_count" readonly="1" force_save="1"/>
+                <field name="purchase_id" invisible="1"/>
+                <field name="is_landed_cost" invisible="stock_type not in ['ho_operation','data_import','sub_contract']"
+                       readonly="state == 'done'"
+                       style="border-bottom: 1px solid #714B67;padding-top: 6px;margin-bottom: 10px; width:50%"
+                       placeholder="    "/>
+                <field name="is_landed_cost_confirm" invisible="1" force_save="1" readonly="1"/>
+                <field name="is_outgoing" invisible="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="attributes">
+                <attribute name="readonly">origin != False</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="readonly">purchase_id != False</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_open_label_type']" position="replace">
+                <button name="action_open_label_type" type="object" string="Print Labels" class="btn-primary"
+                        invisible="label_click_count != 0 or state != 'done' or stock_type != 'ho_operation'"/>
+                <button name="action_open_label_type"
+                        type="object"
+                        string="Print Labels"
+                        class="btn-primary" invisible="label_click_count &lt; 1 or stock_type != 'ho_operation'"
+                        groups="cmr_customizations.group_print_labels_access"/>
+            </xpath>
+            <xpath expr="//button[@name='action_open_label_type']" position="after">
+                <field name="has_landed_cost" invisible="1"/>
+                <button name="action_open_landed_cost" type="object" string="Landed Cost" class="btn-secondary"  invisible="state != 'done' or is_landed_cost == 'no' or has_landed_cost"/>
+<!--                <button name="print_barcodes_preview" type="object" string="Brand" class="btn-secondary"/>-->
+<!--                <button name="print_ready_made_barcodes_preview" type="object" string="Ready Made" class="btn-secondary"/>-->
+                <button name="action_open_barcode_print_wizard"
+                        type="object"
+                        string=" CMR Print Labels"
+                        class="btn-primary" invisible="stock_picking_type == 'delivery' or state != 'done'"/>
+                <field name="allow_import_order" invisible="1"/>
+                    <button name="%(import_move_line_action)d"
+                            string="Import Products"
+                            type="action"
+                            class="btn-primary" invisible="allow_import_order == False or state in ['done','cancel']"/>
+            </xpath>
+            <xpath expr="//button[@name='button_validate']" position="attributes">
+                <attribute name="invisible">is_outgoing or state == 'done'</attribute>
+            </xpath>
+             <xpath expr="//button[@name='action_open_label_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_assign']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree" position="attributes">
+                <attribute name="delete">false</attribute>
+                <attribute name="create">false</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']"
+                   position="before">
+                <field name="s_no"/>
+            </xpath>
+            <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']"
+                   position="after">
+                <field name="return_parent_qty" optional="hide" readonly="1" force_save="1" sum="Return Qty"/>
+                <field name="return_pend_qty" optional="hide" readonly="1" force_save="1" sum="Return Pend Qty"/>
+                <field name="type_product" column_invisible="parent.picking_type_code != 'incoming'"/>
+                <field name="move_brand_barcode" column_invisible="parent.stock_type != 'data_import'" required="parent.stock_type == 'data_import'"/>
+                <field name="move_cp" column_invisible="parent.stock_type != 'data_import'" required="parent.stock_type == 'data_import'"/>
+                <field name="move_mrp" column_invisible="parent.stock_type != 'data_import'" required="parent.stock_type == 'data_import'"/>
+                <field name="move_rsp" column_invisible="parent.stock_type != 'data_import'" required="parent.stock_type == 'data_import'"/>
+                <field name="dummy_lot_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                       widget="many2many_tags" readonly="1" force_save="1" optional="hide"/>
+                <field name="move_design_id" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']"
+                   position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='quantity']"
+                   position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//form/header" position="inside">
+                <button name="reset_product_lines" type="object" string="Reset Lines" invisible="state == 'done'"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group" position="inside">
+                <field name="stock_barcode" readonly="state == 'done'" invisible="stock_picking_type == 'receipt'"
+                       style="border: 4px solid #714B67;padding-top: 6px;margin-bottom: 10px;"
+                       placeholder="Please, Scan Barcode Here......"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='location_dest_id']" position="after">
+                <field name="stock_picking_type"/>
+                <field name="vendor_refund" options="{'no_create': True, 'no_open': True, 'no_edit':True}" invisible="stock_picking_type != 'goods_return'" readonly="state == 'done'" force_save="1"/>
+                <field name="stock_type" placeholder="Please Stock Type..." readonly="purchase_id != False"
+                       required="picking_type_code == 'incoming'"/>
+                <field name="stock_bill_reference" readonly="state == 'done'"/>
+                <field name="dummy_stock_type" placeholder="Please Stock Type..." invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="scan_or_import" widget="radio" invisible="picking_type_code != 'outgoing' or nhcl_company_bool == True"/>
+                <field name="nhcl_company_bool" invisible="1"/>
+                <field name="verify_barcode"
+                       style="border: 4px solid #714B67;padding-top: 5px;margin-bottom: 8px;" invisible="(picking_type_code != 'outgoing' or nhcl_company_bool == True) or scan_or_import == 'import'"
+                       readonly="state == 'done'"/>
+                <field name="verification_success" invisible="picking_type_code != 'outgoing' or nhcl_company_bool == True" widget="badge" decoration-success="verification_success == 'matched'"/>
+            </xpath>
+             <xpath expr="//field[@name='label_click_count']" position="after">
+                <button name="action_import_excel" type="object" string="Import Excel" class="btn-primary" invisible="(picking_type_code != 'outgoing' or nhcl_company_bool == True) or scan_or_import == 'scan'"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Transport Routes" name="tranport_routes"
+                      invisible="stock_type not in ['inter_state','intra_state']">
+                    <field name="transport_location_line" readonly="1" force_save="1">
+                        <tree create='false'>
+                            <field name="source_location_id"/>
+                            <field name="destination_location_id"/>
+                            <field name="distance"/>
+                            <field name="transport_charges"/>
+                            <field name="time_hour"/>
+                            <field name="start_time"/>
+                            <field name="end_time"/>
+                            <field name="tracking_number"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Transport Entry" invisible="stock_type not in ['inter_state','intra_state']">
+                    <field name="transport_entry_ids" readonly="1" force_save="1"/>
+                </page>
+                <page name="verification" string="Verification" invisible="picking_type_code != 'outgoing'">
+                    <field name="stock_verification_ids">
+                        <tree editable="bottom" create="false">
+                            <field name="stock_product_id"
+                                   options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                            <field name="stock_serial"/>
+                            <field name="stock_qty" sum="Quantity"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="barcode" string="Barcode" invisible="picking_type_code != 'outgoing'">
+                    <button name="print_barcodes_stock_picking" data-hotkey="q"
+                            string="Print Barcode Sheet" class="btn-success" type="object"
+                            invisible="stock_picking_type == 'receipt' or state != 'done'"/>
+                    <field name="stock_picking_delivery_ids">
+                        <tree editable="bottom" create="false">
+                            <field name="serial_no"/>
+                            <field name="lr_number"/>
+                            <field name="sequence"/>
+                            <field name="barcode"/>
+
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_vpicktree" model="ir.ui.view">
+        <field name="name">view.picking.tree.cmr</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/header" position="inside">
+                <button name="button_import_receipts" type="object" string="Import" display="always"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="model_stock_picking_action_open_backdate_wizard" model="ir.actions.server">
+        <field name="name">Backdate Picking</field>
+        <field name="model_id" ref="cmr_customizations.model_stock_picking_backdate_wiz"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="groups_id" eval="[(4, ref('cmr_customizations.stock_picking_backdate_assign_group'))]"/>
+        <field name="state">code</field>
+        <field name="binding_view_types">list,form</field>
+        <field name="code">
+            action = model.change_to_backdate_wizard()
+        </field>
+    </record>
+
+    <record id="cmr_view_stock_move_line_operation_tree" model="ir.ui.view">
+        <field name="name">view.stock.move.line.internal</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="internal_ref_lot" readonly="state == 'done'" force_save="1"/>
+                <field name="type_product"/>
+            </xpath>
+            <xpath expr="//field[@name='lot_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_uom_id']" position="after">
+                <field name="acutal_line_cp" sum="Total"/>
+                <field name="cost_price" sum="Total" readonly="1" force_save="1"/>
+                <field name="mr_price" sum="Total" readonly="1" force_save="1"/>
+                <field name="rs_price" sum="Total" readonly="1" force_save="1"/>
+                <!--                <field name="product_aging" readonly="1" force_save="1"/>-->
+                <field name="segment" readonly="1" force_save="1"/>
+                <!--    <field name="transfer_percent" sum="Total"/> -->
+                <field name="categ_1" readonly="categ_1 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="categ_2" readonly="categ_2 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="categ_3" readonly="categ_3 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="categ_4" readonly="categ_4 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="categ_5" readonly="categ_5 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="categ_6" readonly="categ_6 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="categ_7" readonly="categ_7 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="categ_8" readonly="categ_8 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="descrip_1" readonly="descrip_1 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="descrip_2" readonly="descrip_2 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="descrip_3" readonly="descrip_3 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="descrip_4" readonly="descrip_4 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="descrip_5" readonly="descrip_5 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="descrip_6" readonly="descrip_6 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="descrip_7" readonly="descrip_7 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="descrip_8" readonly="descrip_8 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+                <field name="descrip_9" readonly="descrip_9 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="your_module_stock_move_line_tree_readonly" model="ir.ui.view">
+            <field name="name">stock.move.line.tree.readonly</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="delete">false</attribute>
+                    <attribute name="create">false</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    <record id="cmr_view_production_lot_tree" model="ir.ui.view">
+        <field name="name">view.stock.lot</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="picking_id" readonly="1" force_save="1"/>
+                <field name="grc_partner_id" optional="hide"/>
+                <field name="type_product" readonly="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="actual_cp" sum="Total" readonly="1" force_save="1"/>
+                <field name="cost_price" sum="Total" readonly="1" force_save="1"/>
+                <field name="mr_price" sum="Total"/>
+                <field name="rs_price" sum="Total" readonly="1" force_save="1"/>
+                <field name="segment" readonly="1" force_save="1"/>
+<!--                <field name="product_aging" column_invisible="1"/>-->
+                <!--    <field name="transfer_price" sum="Total"/> -->
+                <!--    <field name="transfer_percent" sum="Total"/> -->
+                <field name="category_1" readonly="category_1 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="category_2" readonly="category_2 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="category_3" readonly="category_3 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="category_4" readonly="category_4 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="category_5" readonly="category_5 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="category_6" readonly="category_6 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="category_7" readonly="category_7 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="category_8" readonly="category_8 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+
+                <field name="description_1" readonly="description_1 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="description_2" readonly="description_2 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="description_3" readonly="description_3 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="description_4" readonly="description_4 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="description_5" readonly="description_5 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="description_6" readonly="description_6 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="description_7" readonly="description_7 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="description_8" readonly="description_8 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+                <field name="description_9" readonly="description_9 != False" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" placeholder="Please Select ...."
+                       optional="hide"/>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cmr_view_production_lot_form" model="ir.ui.view">
+        <field name="name">view.stock.lot.categ.des</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="name" placeholder="e.g. LOT/0001/20121" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='location_id']" position="after">
+                <field name="type_product" readonly="1" force_save="1"
+                      options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                <field name="segment" placeholder="Please Segment..." readonly="1" force_save="1"/>
+                <field name="picking_id" readonly="1" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                <field name="serial_type" readonly="1" force_save="1"/>
+                <field name="nhcl_done_qty"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Category And Description" name="category_n_description">
+                    <group>
+                        <group>
+                            <field name="category_1" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..." readonly="1" force_save="1"/>
+                            <field name="category_2" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="category_3" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="category_4" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="category_5" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="category_6" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="category_7" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...." readonly="1" force_save="1"/>
+                            <field name="category_8" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select ...."/>
+
+                        </group>
+                        <group>
+                            <field name="description_1" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..." readonly="1" force_save="1"/>
+<!--                            <field name="product_aging" options="{'no_create': True, 'no_open': True, 'no_edit':True}" invisible="0"/>-->
+                            <field name="description_2" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="description_3" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="description_4" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="description_5" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="description_6" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="description_7" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="description_8" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                            <field name="description_9" options="{'no_create': True, 'no_open': True, 'no_edit':True}"
+                                   placeholder="Please Select..."/>
+                        </group>
+                    </group>
+                </page>
+                <page name="pricing" string="Pricing">
+                    <group>
+                        <field name="actual_cp" readonly="1" force_save="1"/>
+                        <field name="cost_price" readonly="1" force_save="1"/>
+                        <field name="mr_price" readonly="1" force_save="1"/>
+                        <field name="rs_price" readonly="1" force_save="1"/>
+                        <!--    <field name="transfer_price"/> -->
+                        <!--    <field name="transfer_percent"/> -->
+                        <field name="nhcl_margin_lot" readonly="1" force_save="1"/>
+                        <field name="nhcl_updated_margin_lot" readonly="1" force_save="1"/>
+                        <field name="shortage" readonly="1" force_save="1"/>
+                    </group>
+                </page>
+                <page string="Product Description">
+                    <group>
+                        <field name="web_product"/>
+                        <field name="product_description"/>
+                    </group>
+
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="cmr_search_product_lot_filter" model="ir.ui.view">
+        <field name="name">view.stock.lot.search.des</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="ref"/>
+                <field name="picking_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="landed_cost_price_inherit_view">
+        <field name="name">stock.landed.cost.price.form.view</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='valuation_adjustment_lines']/tree/field[@name='final_cost']" position="after">
+                <field name="actual_cp_lc" readonly="1" force_save="1"/>
+                <field name="nhcl_cost_price" readonly="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='picking_ids']" position="attributes">
+                <attribute name="required">1</attribute>
+                <attribute name="readonly">1</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_transfer_replication_inherit_ho_view" model="ir.ui.view">
+        <field name="name">stock.picking.batch.transfer.replication.form.ho.inherit</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+        <xpath expr="//header" position="inside">
+            <button name="post_lot_serial_numbers" type="object" string="Click Me" class="btn-primary" invisible="state != 'done'"/>
+        </xpath>
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="nhcl_receipt_validate" widget="badge" decoration-success="nhcl_receipt_validate == 'yes'" decoration-warning="nhcl_receipt_validate == 'no'"/>
+                <field name="warehouse_name" invisible="1"/>
+                <field name="nhcl_fetch_values" invisible="1"/>
+                <field name="batch_pick_type" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="before">
+                <button name="get_prices_and_attributes_ho" type="object" string="Get Data" class="btn-primary" invisible="state == 'done'"/>
+            </xpath>
+            <xpath expr="//field[@name='picking_ids']" position="attributes">
+            <attribute name="domain">[('partner_id.name','=', warehouse_name),('id', 'in', allowed_picking_ids)]</attribute>
+        </xpath>
+<!--            <xpath expr="//field[@name='picking_ids']" position="attributes">-->
+<!--                <attribute name="widget">many2many_no_remove</attribute>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+
+    <record id="view_move_line_tree_sum" model="ir.ui.view">
+        <field name="name">stock.move.line.sum</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock_picking_batch.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="before">
+                <field name="s_no"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="delete">false</attribute>
+                <attribute name="create">false</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_move_tree_inherited_sum" model="ir.ui.view">
+        <field name="name">stock.move.sum</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock_picking_batch.view_picking_move_tree_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_uom_qty']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_manafacturing_import_wizard_form" model="ir.ui.view">
+        <field name="name">manafacturing.import.wizard</field>
+        <field name="model">manafacturing.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Excel">
+                <group>
+                    <field name="file_type"/>
+                     <field name="file_data" widget="binary" filename="file_name"/>
+                     <field name="file_name"/>
+                </group>
+                <footer>
+                    <button string="Import" type="object" name="action_import" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_manafcturing_import" model="ir.actions.act_window">
+        <field name="name">Import Excel</field>
+        <field name="res_model">manafacturing.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="nhcl_view_picking_type_form" model="ir.ui.view">
+        <field name="name">view.picking.form.inherit</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sequence_code']" position="after">
+                <field name="stock_picking_type" required="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_verification_import" model="ir.ui.view">
+        <field name="name">stock.verification.import.form</field>
+        <field name="model">stock.verification.import</field>
+        <field name="arch" type="xml">
+            <form string="Import Stock Verification">
+                <group>
+                    <field name="file_type"/>
+                    <field name="file_data" widget="binary" filename="file_name"/>
+                    <field name="file_name"/>
+                </group>
+                <footer>
+                    <button string="Import" type="object" name="action_import" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_verification_import" model="ir.actions.act_window">
+        <field name="name">Import Excel</field>
+        <field name="res_model">stock.verification.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="view_stock_move_tree_inherit" model="ir.ui.view">
+        <field name="name">stock.move</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="family"/>
+                <field name="category"/>
+                <field name="class_level_id"/>
+                <field name="brick"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_move_search_inherit" model="ir.ui.view">
+        <field name="name">stock.move.search.inherit</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="replace">
+                <group expand="0" string="Group By">
+                    <filter string="Operation Type" name="groupby_picking_type_id" domain="[]"
+                            context="{'group_by': 'picking_type_id'}"/>
+                    <filter name="filter_by_family" string="Division" domain="[]" context="{'group_by': 'family'}"/>
+                    <filter name="filter_by_category" string="Section" domain="[]" context="{'group_by': 'category'}"/>
+                    <filter name="filter_by_class" string="Department" domain="[]"
+                            context="{'group_by': 'class_level_id'}"/>
+                    <filter name="filter_by_brick" string="Category" domain="[]" context="{'group_by': 'brick'}"/>
+                    <filter string="Product" name="by_product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="Picking" name="groupby_picking_id" domain="[]"
+                            context="{'group_by': 'picking_id'}"/>
+                    <filter string="Source Location" name="groupby_location_id" domain="[]"
+                            context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
+                    <filter string="Destination Location" name="groupby_dest_location_id" domain="[]"
+                            context="{'group_by': 'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Creation Date" name="groupby_create_date" domain="[]"
+                            context="{'group_by': 'create_date'}" groups="base.group_no_one"/>
+                    <filter string="Scheduled Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="stock.stock_move_action" model="ir.actions.act_window">
+        <field name="context" eval="{
+            'search_default_done': 1,
+            'search_default_filter_by_family': 1,
+            'search_default_filter_by_class': 1,
+            'search_default_filter_by_brick': 1,
+            'search_default_filter_by_category': 1,
+            'search_default_by_product': 1,
+            'search_default_groupby_picking_type_id': 1,
+        }"/>
+
+    </record>
+
+    <record id="view_stock_move_line_tree_inherit" model="ir.ui.view">
+        <field name="name">stock.move.line</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="family" force_save="1"/>
+                <field name="category"/>
+                <field name="class_level_id"/>
+                <field name="brick"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_search_inherit" model="ir.ui.view">
+        <field name="name">stock.move.line.search.inherit</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='groupby_product_id']" position="before">
+                 <filter name="filter_by_picking_type_id" string="Operation Type" domain="[]" context="{'group_by': 'picking_type_id'}"/>
+                 <filter name="filter_by_family" string="Division" domain="[]" context="{'group_by': 'family'}"/>
+                 <filter name="filter_by_category" string="Section" domain="[]" context="{'group_by': 'category'}"/>
+                 <filter name="filter_by_class" string="Department" domain="[]"
+                            context="{'group_by': 'class_level_id'}"/>
+                 <filter name="filter_by_brick" string="Category" domain="[]" context="{'group_by': 'brick'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock.stock_move_line_action" model="ir.actions.act_window">
+        <field name="context" eval="{
+            'search_default_done': 1,
+            'search_default_filter_by_family': 1,
+            'search_default_filter_by_class': 1,
+            'search_default_filter_by_brick': 1,
+            'search_default_filter_by_category': 1,
+            'search_default_by_product': 1,
+            'search_default_filter_by_picking_type_id': 1,
+            'search_default_groupby_product_id': 1,
+        }"/>
+
+    </record>
+
+
+</odoo>

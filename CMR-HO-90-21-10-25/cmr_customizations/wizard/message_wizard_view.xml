@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="message_wizard_popup" model="ir.ui.view">
+        <field name="name">message.wizard</field>
+        <field name="model">message.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Message">
+                <field name="message" readonly="1"/>
+                <footer>
+                    <button string="OK" class="btn-primary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_discount_wizard_form" model="ir.ui.view">
+        <field name="name">account.move.discount.wizard.form</field>
+        <field name="model">account.move.discount.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Apply Discount">
+                <group>
+                    <field name="discount_amount"/>
+                </group>
+                <footer>
+                    <button string="Apply" type="object" name="apply_discount" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

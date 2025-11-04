@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherited the product.template form view for adding new fields related to the traceability-->
+    <record id="product_template_form_view_custom_inherit" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.product.type</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="before">
+                <field name="nhcl_type" required="1" placeholder="Please Article Type..."/>
+                <field name="segment" placeholder="Please Segment..." required="1"/>
+                <field name="item_type" placeholder="Please Item Type..." required="1"/>
+            </xpath>
+            <xpath expr="//field[@name='categ_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page string="Product Description">
+                    <group>
+                        <field name="web_product"/>
+                        <field name="product_description"/>
+                    </group>
+
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='general_information']//field[@name='product_tag_ids']" position="attributes">
+                    <attribute name="required">1</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('oe_title')]/h1/div[hasclass('d-flex')]/field[@name='name']"
+                   position="attributes">
+                <attribute name="readonly">nhcl_type == 'ho_operation'</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='general_information']/group/group[@name='group_general']/field[@name='detailed_type']"
+                   position="before">
+                <field name="nhcl_product_type" placeholder="Please Brand Type..." invisible="0"
+                       required="nhcl_type == 'ho_operation'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_inherit_hsn_required" model="ir.ui.view">
+        <field name="name">product.template.hsn.required</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="l10n_in.product_template_hsn_code"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_in_hsn_code']" position="attributes">
+                <attribute name="required">nhcl_type == 'ho_operation'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_supplier_inherit_invisible" model="ir.ui.view">
+        <field name="name">product.template.supplier.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='seller_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='variant_seller_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_supplier_inherit_taxes_read" model="ir.ui.view">
+        <field name="name">product.template.taxes.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='taxes_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='supplier_taxes_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_cmr_product_supplierinfo_inherit" model="ir.ui.view">
+        <field name="name">product.supplierinfo.inherit</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+                <attribute name="domain">[('group_contact.name', 'in', ['Vendor','Branch','Agent'])]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_cmr_product_category_max" model="ir.ui.view">
+        <field name="name">product.category.max</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group[@name='first']/field[@name='parent_id']" position="after">
+                <field name="max_num" readonly="1" force_save="1"/>
+                <field name="user_ids" widget="many2many_tags" invisible="parent_id != False"
+                       required="parent_id == False"/>
+                <field name="zone_id" invisible="parent_id != False" required="parent_id == False" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+            </xpath>
+            <xpath expr="//form/sheet/group[@name='first']/field[@name='parent_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//form/sheet" position="inside">
+                <notebook>
+                    <page string="RSP Margin" invisible="parent_id != False" name="margin">
+                        <field name="is_confirm" readonly="1" force_save="1" invisible="1"/>
+                        <button name="readonly_line" string="Submit" type="object" class="oe_highlight"
+                                confirm="Are you sure to Confirm data"/>
+                        <field name="product_category_margin_ids">
+                            <tree editable="bottom" delete="0">
+                                <field name="from_range" width="40%"
+                                       readonly="from_range != False and parent.is_confirm != False"/>
+                                <field name="to_range" width="30%"
+                                       readonly="to_range != False and parent.is_confirm != False"/>
+                                <field name="margin" width="30%"
+                                       readonly="margin != False and parent.is_confirm != False"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="MRP Margin" invisible="parent_id != False" name="margin">
+                        <field name="is_confirm" readonly="1" force_save="1"/>
+                        <button name="readonly_line" string="Submit" type="object" class="oe_highlight"
+                                confirm="Are you sure to Confirm data"/>
+                        <field name="product_category_mrp_ids">
+                            <tree editable="bottom" delete="0">
+                                <field name="from_range" width="40%"
+                                       readonly="from_range != False and parent.is_confirm != False"/>
+                                <field name="to_range" width="30%"
+                                       readonly="to_range != False and parent.is_confirm != False"/>
+                                <field name="margin" width="30%"
+                                       readonly="margin != False and parent.is_confirm != False"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_product_product_tree_inherit_vendor_qty" model="ir.ui.view">
+        <field name="name">product.product.tree.inherit.vendor.qty</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock.product_product_stock_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='incoming_qty']" position="after">
+                <field name="vendor_qty"/>
+                <field name="delivered_qty"/>
+                <field name="vendor_returned_qty"/>
+                <field name="customer_returned_qty"/>
+                <field name="pos_delv_qty"/>
+                <field name="pos_exchange_qty"/>
+                 <field name="family_categ_id" widget="many2one"/>
+                <field name="class_categ_id" widget="many2one"/>
+                <field name="brick_categ_id" widget="many2one"/>
+                <field name="category_name_id" widget="many2one" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="nhcl_product_attribute_form_combination" model="ir.ui.view">
+        <field name="name">product.attribute.form.combination</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_custom']" position="before">
+                <field name="nhcl_attribute_name"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="nhcl_product_attribute_value_combination_list" model="ir.ui.view">
+        <field name="name">product.attribute.value.combination</field>
+        <field name="model">product.attribute.value</field>
+        <field name="inherit_id" ref="product.product_attribute_value_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="nhcl_attribute_name"/>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="view_product_category_group_filter_cmr" model="ir.ui.view">
+        <field name="name">product.product.search.stock.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock.product_search_form_view_stock_report"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='real_stock_negative']" position="before">
+                <filter name="family_categ_id" string="Division" context="{'group_by': 'family_categ_id'}"/>
+                <filter name="class_categ_id" string="Section" context="{'group_by': 'class_categ_id'}"/>
+                <filter name="brick_categ_id" string="Department" context="{'group_by': 'brick_categ_id'}"/>
+                <filter name="category_name_id" string="Category" context="{'group_by': 'category_name_id'}"/>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock.action_product_stock_view" model="ir.actions.act_window">
+        <field name="context" eval="{
+            'search_default_family_categ_id': 1,
+            'search_default_class_categ_id': 1,
+            'search_default_brick_categ_id': 1,
+            'search_default_category_name_id': 1,
+            'default_detailed_type': 'product',
+
+        }"/>
+    </record>
+
+</odoo>
+

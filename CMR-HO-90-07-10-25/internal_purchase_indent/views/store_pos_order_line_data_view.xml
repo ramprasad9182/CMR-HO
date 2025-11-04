@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_store_pos_order_line_tree" model="ir.ui.view">
+        <field name="name">store.pos.order.line.tree</field>
+        <field name="model">store.pos.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="Store Pos Order">
+                <field name="store_pos_ref"/>
+                <field name="product_name"/>
+                <field name="lot_name"/>
+                <field name="quantity"/>
+                <field name="amount"/>
+                <field name="reward_name"/>
+                <field name="vendor_return_disc_price"/>
+                <field name="is_used" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_store_pos_order_line" model="ir.actions.act_window">
+        <field name="name">Store Pos Order</field>
+        <field name="res_model">store.pos.order.line</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_store_pos_order_line" name="Store POS Order"
+              parent="menu_internal_purchase_indent_one" action="action_store_pos_order_line"/>
+
+</odoo>

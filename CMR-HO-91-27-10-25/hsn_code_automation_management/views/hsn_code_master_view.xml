@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hsn_code_master_action" model="ir.actions.act_window">
+        <field name="name">HSN Code Master</field>
+        <field name="res_model">hsn.code.master</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hsn_code_master_view_tree" model="ir.ui.view">
+        <field name="name">hsn_code_master.view.tree</field>
+        <field name="model">hsn.code.master</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="id" column_invisible="True"/>
+                <field name="hsn_code"/>
+                <field name="sale_tax_id" widget="many2many_tags"/>
+                <field name="purchase_tax_id" widget="many2many_tags"/>
+                <field name="igst_sale_tax_id" widget="many2many_tags"/>
+                <field name="igst_purchase_tax_id" widget="many2many_tags"/>
+                <field name="hsn_description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hsn_code_view_form" model="ir.ui.view">
+        <field name="name">hsn_code_master.view.form</field>
+        <field name="model">hsn.code.master</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <field name="hsn_code" widget="l10n_in_hsn_autocomplete"/>
+                        <field name="company_id" invisible="True"/>
+                        <field name="sale_tax_id" widget="many2many_tags"/>
+                        <field name="purchase_tax_id" widget="many2many_tags"/>
+                        <field name="igst_sale_tax_id" widget="many2many_tags"/>
+                        <field name="igst_purchase_tax_id" widget="many2many_tags"/>
+                        <field name="hsn_description"/>
+                        <field name="category_id"> </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
+ 

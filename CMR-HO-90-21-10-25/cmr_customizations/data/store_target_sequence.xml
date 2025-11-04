@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+
+        <record id="seq_store_wise_data" model="ir.sequence">
+            <field name="name">Store Wise Data</field>
+            <field name="code">store.wise.data</field>
+            <field name="prefix">ST/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_store_wise_report" model="ir.sequence">
+            <field name="name">Store Wise Data</field>
+            <field name="code">store.target.report</field>
+            <field name="prefix">STR/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="hr_sepration_personal_rule" model="ir.rule">
+            <field name="name">Employee Sepration</field>
+            <field ref="pways_hr_sepration_management.model_hr_employee_sepration" name="model_id"/>
+            <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id.user_id','=',False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        
+    </data>
+</odoo>

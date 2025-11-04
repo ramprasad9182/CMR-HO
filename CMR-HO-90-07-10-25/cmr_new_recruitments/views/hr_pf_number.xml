@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form_in_pfinherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.pfnumber</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="l10n_in_hr_payroll.hr_employee_view_form_in_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_in_pan']" position="after">
+                <field name="pf_num" placeholder="Provident Fund Number"/>
+                <field name="insurance_num" placeholder="Insurance Number"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

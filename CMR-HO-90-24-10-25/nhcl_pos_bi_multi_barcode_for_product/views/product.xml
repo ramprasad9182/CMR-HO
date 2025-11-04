@@ -1,0 +1,153 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+        <record id="product_template_barcode_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.form.view.inherite</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default_code']" position="after">
+                    <field name="company_barcode_id" invisible="1"/>
+                    <field name="multi_barcode_for_product" invisible="1"/>
+                </xpath>
+                <xpath expr="//page[@name='general_information']//field[@name='barcode']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='general_information']" position="after">
+                    <page string="Multi Barcodes">
+                        <field name="product_barcode" nolabel="1" context="{'search_by_vat': True}" readonly="1" force_save="1">
+                            <tree create="false" force_save="1" editable="bottom">
+                                <field name="product_tmpl_id" column_invisible="1"
+                                       context="{'default_product_tmpl_id': parent.id,}"/>
+                                <field name="product_id" column_invisible="1"/>
+                                <field name="barcode" required="1"/>
+                                <field name="nhcl_inward_qty"/>
+                                <field name="nhcl_inward_date"/>
+                                <field name="nhcl_supplier_name"/>
+                                <field name="nhcl_outward_qty"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name="unbranded" string="Barcode">
+                        <group>
+                            <group>
+                                <field name="barcode" readonly="barcode != False"/>
+                                <field name="mrp_price" required="1"/>
+                                <field name="percentage" invisible="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_product_product_form_inherit" model="ir.ui.view">
+            <field name="name">product.product.form.extended</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button class="oe_highlight" name="generate_ean"
+                            type="object" string="Generate Barcode" invisible="barcode != False"/>
+                </xpath>
+                <xpath expr="//field[@name='default_code']" position="after">
+                    <field name="company_barcode_id" invisible="1"/>
+                    <field name="multi_barcode_for_product" invisible="1"/>
+                </xpath>
+                <xpath expr="//page[@name='general_information']//field[@name='barcode']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='general_information']" position="after">
+                    <page string="Multi Barcodes">
+                        <field name="product_barcode" nolabel="1" context="{'search_by_vat': True}" readonly="1">
+                            <tree create="false" forcesave="1">
+                                <field name="product_tmpl_id" column_invisible="1"/>
+                                <field name="product_id" column_invisible="1"
+                                       context="{'default_product_id': parent.id,}"/>
+                                <field name="barcode" required="1"/>
+                                <field name="nhcl_inward_qty"/>
+                                <field name="nhcl_inward_date"/>
+                                <field name="nhcl_supplier_name"/>
+                                <field name="nhcl_outward_qty"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name="unbranded" string="Barcode">
+                        <group>
+                            <group>
+                                <field name="barcode" readonly="barcode != False"/>
+                                <field name="mrp_price" required="1"/>
+                                <field name="percentage" invisible="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="product_barcode_view" model="ir.ui.view">
+            <field name="name">Product Barcode</field>
+            <field name="model">product.barcode</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="product_id" invisible="1"/>
+                        <field name="barcode" readonly="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="multi_barcode_for_product" invisible="1"/>
+                        <!--						<field name="model_ids" invisible="multi_barcode_for_product == False" required = 'multi_barcode_for_product ==  True'/>-->
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_product_template_inherit_search" model="ir.ui.view">
+            <field name="name">product.template.search.expand</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="attributes">
+                    <attribute name="filter_domain">['|', '|', '|','|', ('default_code', 'ilike', self),
+                        ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode',
+                        'ilike', self),('product_barcode.barcode', 'ilike', self)]
+                    </attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_product_product_inherit_search" model="ir.ui.view">
+            <field name="name">product.product.search.expand</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="attributes">
+                    <attribute name="filter_domain">['|', '|','|', ('default_code', 'ilike', self), ('name', 'ilike',
+                        self), ('barcode', 'ilike', self),('product_barcode.barcode', 'ilike', self)]
+                    </attribute>
+                </field>
+            </field>
+        </record>
+        <record id="product_normal_form_view_barcode_template_varient" model="ir.ui.view">
+        <field name="name">product.product.form.inherit.barcode.template</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group" position="inside">
+                <field name="nhcl_product_type" invisible="1"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button class="oe_highlight" name="generate_ean"
+                        type="object" string="Generate Barcode" invisible="barcode != False"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group[@name='codes']/field[@name='barcode']"
+                   position="replace">
+                <field name="barcode" readonly="barcode != False"/>
+                <field name="nhcl_product_type" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</odoo>

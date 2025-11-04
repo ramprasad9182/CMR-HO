@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Paper Format -->
+    <record id="offer_letter_cmr_direct" model="report.paperformat">
+        <field name="name">Cmr</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">45</field>
+        <field name="margin_bottom">30</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_spacing">5</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <!-- Report Action -->
+    <record id="nhcl_offer_letter_action_direct" model="ir.actions.report">
+        <field name="name">Offer Letter</field>
+        <field name="model">employee.letter</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cmr_new_recruitments.offer_letter_template_direct</field>
+        <field name="report_file">cmr_new_recruitments.offer_letter_template_direct</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="offer_letter_cmr_direct"/>
+    </record>
+
+    <!-- Header Template -->
+    <template id="nhcl_temp_header_direct">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <div class="header" style="padding: 10px 0; margin-bottom: 50px;"></div>
+    </template>
+
+    <!-- Main Offer Letter Template -->
+    <template id="offer_letter_main_temp_direct">
+        <t t-call="cmr_new_recruitments.nhcl_temp_header_direct"/>
+
+        <div class="page"
+             style="padding: 30px; font-family: Cambria, serif; font-size: 14pt; letter-spacing: 0.75px; line-height: 1.6;">
+            <div style="text-align: center; font-size: 22pt; font-weight: bold; margin-bottom: 40px; letter-spacing: 1px;">
+                <u>OFFER LETTER</u>
+            </div>
+
+            <div class="offer-body">
+                <p>
+                    <strong>Date:
+                        <t t-esc="o.todays_date.strftime('%d-%m-%Y')"/>
+                    </strong>
+                </p>
+                <p>
+                    <strong>Name:
+                        <t t-out="o.employee_id.name"/>,
+                    </strong>
+                </p>
+
+                <p>
+                    <strong>Address:</strong>
+                    <br/>
+
+                    <div style="margin-left: 65px;">
+                         <strong>
+                        <t t-if="o.employee_id.permanent_street">
+                            <t t-esc="o.employee_id.permanent_street"/>
+                            <br/>
+                        </t>
+                        <t t-if="o.employee_id.permanent_street2">
+                            <t t-esc="o.employee_id.permanent_street2"/>
+                            <br/>
+                        </t>
+                        <t t-if="o.employee_id.permanent_city">
+                            <t t-esc="o.employee_id.permanent_city"/>
+                            <br/>
+                        </t>
+                        <t t-if="o.employee_id.permanent_state_id">
+                            <t t-esc="o.employee_id.permanent_state_id.name"/>
+                            <br/>
+                        </t>
+                        <t t-if="o.employee_id.permanent_zip">
+                            <t t-esc="o.employee_id.permanent_zip"/>
+                        </t>
+                        </strong>
+                    </div>
+
+                </p>
+
+
+                <p>
+                    <strong>Sub: Offer Letter for the Position of
+                        <t t-out="o.designation_id.name or 'Store Manager'"/>,
+                    </strong>
+                </p>
+                <p>
+                    <strong>Dear <t t-out="o.employee_id.name"/>,
+                    </strong>
+                </p>
+
+                <p>This is in reference to the various discussions you had with us and based on mutual interaction and
+                    discussion that we have had, we are pleased to offer you as below.
+                </p>
+
+                <p>
+                    <strong>Designation:
+                        <t t-out="o.designation_id.name"/>,
+                    </strong>
+                </p>
+
+                <!-- Current/Private Address -->
+                <p>
+                    <strong>Location:</strong>
+                    <br/>
+                    <div style="margin-left: 65px;">
+                        <strong>
+                        <t t-if="o.employee_id.company_id.street">
+                            <t t-esc="o.employee_id.company_id.street"/>
+                            <br/>
+                        </t>
+                        <t t-if="o.employee_id.company_id.street2">
+                            <t t-esc="o.employee_id.company_id.street2"/>
+                            <br/>
+                        </t>
+                        <t t-if="o.employee_id.company_id.city">
+                            <t t-esc="o.employee_id.company_id.city"/>
+                            <br/>
+                        </t>
+                        <t t-if="o.employee_id.company_id.state_id">
+                            <t t-esc="o.employee_id.company_id.state_id.name"/>
+                            <br/>
+                        </t>
+                        <t t-if="o.employee_id.company_id.zip">
+                            <t t-esc="o.employee_id.company_id.zip"/>
+                            <br/>
+                        </t>
+                        <t t-if="o.employee_id.company_id.country_id">
+                            <t t-esc="o.employee_id.company_id.country_id.name"/>
+                        </t>
+                        </strong>
+                    </div>
+                </p>
+
+
+                <p>
+    <strong>Cost to Company:
+    <t t-esc="'{:,.0f}'.format(o.ctc)"/>/- per annum.</strong>
+</p>
+
+
+                <p>Your gross potential earning compensation &amp; benefits program applicable as per the statutory
+                    compliances and as per company policy. Your compensation is confidential and if the need arises, you
+                    may discuss it only with Management.
+                </p>
+
+                <p>
+                    <strong>Your date of joining shall be on or before <t
+                            t-esc="o.date_of_joining.strftime('%d-%m-%Y')"/>.
+                    </strong>
+                </p>
+
+                <p>Your initial posting will be in Visakhapatnam. You may, however, be required to move / relocate to
+                    any other office/store/warehouse in any location where the organisation has its offices and
+                    operation either on a temporary or permanent.
+                </p>
+
+                <p>This offer is made to you based on the information/document furnished by you. If any information
+                    and/or document is found to be incorrect, has a discrepancy, or is manipulated/fabricated/forged,
+                    then this offer shall be withdrawn by the company forthwith. The company shall have the right to
+                    conduct background verification.
+                </p>
+
+                <p>You will be governed by the rules and regulations of the company on all matters related to the place,
+                    time &amp; nature of work. A detailed appointment order will be issued to you in this regard.
+                </p>
+
+                <p>On reporting, please bring six recent passport size photographs, photocopy of all educational
+                    certificates, proof of age, PAN card, proof of residence, Aadhar card, IT Declaration/Form 16, and
+                    relieving letter of the last employer.
+                </p>
+
+                <p>Please return a signed copy of this letter as a token of the offer, confirming your date of
+                    joining.
+                </p>
+
+                <p>We look forward to a mutually rewarding relationship.</p>
+
+                <p>
+                    <strong>For CMR TEXTILES AND JEWELLERS PRIVATE LIMITED.</strong>
+                </p>
+
+                <p style="margin-top: 60px;">
+                    <strong>Authorized Signature.</strong>
+                </p>
+            </div>
+        </div>
+    </template>
+
+    <!-- Master Wrapper -->
+    <template id="offer_letter_template_direct">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="cmr_new_recruitments.offer_letter_main_temp_direct"/>
+            </t>
+        </t>
+    </template>
+</odoo>

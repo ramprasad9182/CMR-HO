@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+    <record id="email_template_license_key" model="mail.template">
+        <field name="name">License Key Email</field>
+        <field name="model_id" ref="user_implementation.model_license_key"/>
+        <field name="subject">Your License Key - {{object.doc_number}}</field>
+        <field name="email_to">{{object.email}}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                    <div style="background-color: #714B67; padding:0.6rem;padding-left: 35px;text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;width:100%">
+                        <p>
+                            Hi Sir/Madam
+                        </p>
+                        <div>
+                            <p>Congratulations! Your License Key has been Generated for the Company.</p>
+                            <p>Please find the license details as follows:</p><br/>
+                            <p><strong>Document Number: </strong><t t-out="object.doc_number"/></p>
+                            <p><strong>Request Date: </strong><t t-out="object.doc_date"/></p>
+                            <p><strong>License Key: </strong><t t-out="object.license_key"/></p>
+                            <p><strong>Expiry Date: </strong><t t-out="object.expiry_date"/></p>
+                            <p><strong>Cashier: </strong> <t t-out="object.cashier_count"/></p>
+                            <p><strong>Backend Users: </strong> <t t-out="object.backend_count"/></p>
+                            <p><strong>Sales Employees: </strong> <t t-out="object.salesperson_count"/></p>
+                            <p><strong>License Count: </strong> <t t-out="object.license_count"/></p>
+                        </div>
+                    </div>
+                    <br/>
+                    Regards,
+                    <br/>
+                    <t t-out="user.name"/>
+                    <br/>
+                    <t t-if="user.company_id.nhcl_company_bool">
+                        <t t-out="user.company_id.name"/>
+                    </t>
+                    <t t-else="">
+                        <t t-out="user.company_id.name"/>
+                    </t>
+                    <br/>
+                </div>
+        </field>
+    </record>
+    </data>
+</odoo>

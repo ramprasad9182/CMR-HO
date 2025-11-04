@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="loyalty_program_replication_inherit_view" model="ir.ui.view">
+            <field name="name">loyalty.program.replication.form.view.inherit</field>
+            <field name="model">loyalty.program</field>
+            <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="before">
+                <div class="alert alert-success" role="alert" invisible="update_replication == False">
+                    <field name="warning_message" style="white-space: pre-wrap;"/>
+                </div>
+                <div class="alert alert-danger" role="alert" invisible="update_replication == True">
+                    <field name="warning_message" style="white-space: pre-wrap;"/>
+                </div>
+            </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Integration">
+                        <group>
+                        <field name="update_replication" readonly="1" force_save="1"/>
+                            <button name="send_loyalty_program_replication_data" type="object" string="Submit" class="oe_highlight"/>
+                            <button name="update_loyalty_program_data" type="object" string="Update" class="oe_highlight"/>
+                            <button name="get_replication_store_list" type="object" string="Get Stores" class="oe_highlight" invisible="1"/>
+                            <button name="get_serial_number_stores" string="Get Stores" type="object" class="oe_highlight" invisible="update_replication==True"/>
+
+                        </group>
+                        <field name="loyalty_program_id" >
+                            <tree create="0" editable="bottom" delete="0" edit="0">
+                                <field name="store_id" width="40%" />
+                                <field name="status" width="30%"/>
+                                <field name="date_replication" width="30%" />
+                                <field name="nhcl_terminal_ip" />
+                                <field name="nhcl_port_no" />
+                                <field name="nhcl_api_key" />
+                                <field name="is_replicate"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='pos_config_ids']" position="after">
+                    <field name="nhcl_company_ids" string="Stores" widget="many2many_tags" readonly="1" domain="[('nhcl_company_bool','=',False)]" options="{'no_create': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='mail_template_id']" position="attributes">
+                    <attribute name="required">program_type in ('gift_card', 'ewallet')</attribute>
+                </xpath>
+                <xpath expr="//field[@name='pos_report_print_id']" position="attributes">
+                    <attribute name="required">program_type == 'gift_card'</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+
+
+    <record id="loyalty_program_inherit_tree_view" model="ir.ui.view">
+        <field name="name">loyalty.program.tree.view.inherit</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="update_replication"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

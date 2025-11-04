@@ -1,0 +1,91 @@
+<odoo>
+    <record id="view_hr_applicant_form_custom" model="ir.ui.view">
+        <field name="name">hr.applicant.form.name.aadhaar</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="company_id"/>
+                <field name="multi_company_ids" widget="many2many_tags"/>
+                <field name="experience_type"/>
+                <!--                <field name="present_company"/>-->
+                <field name="retail_experience_years"/>
+<!--                                <field name="current_salary"/>-->
+               <label for="permanent_street">Private Address</label>
+                <div class="o_address_format">
+                    <field name="permanent_street" placeholder="Street..." class="o_address_street"/>
+                    <field name="permanent_street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="permanent_city" placeholder="City" class="o_address_city"/>
+                    <field name="permanent_state_id" class="o_address_state" placeholder="State"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'default_country_id': permanent_country_id}"/>
+                    <field name="permanent_zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="permanent_country_id" placeholder="Country" class="o_address_country"
+                           options="{'no_open': True, 'no_create': True}"/>
+                </div>
+
+                <field name="dob"/>
+                <field name="gender"/>
+                <field name="marital_status"/>
+                <field name="age"/>
+            </xpath>
+
+             <xpath expr="//group[@name='recruitment_contract']/label[@for='salary_expected']" position="before">
+
+<!--                <label for="salary_type"/>-->
+<!--                <div class="o_row">-->
+<!--                    <field name="salary_type"/>-->
+<!--                </div>-->
+
+                 <label for="current_salary"/>
+                 <div class="o_row">
+                     <field name="current_salary"/>
+                 </div>
+
+<!--                <label for="current_ctc" invisible="salary_type in ['salary']"/>-->
+<!--                <div class="o_row" invisible="salary_type in ['salary']">-->
+<!--                    <field name="current_ctc"/>-->
+<!--                </div>-->
+
+<!--                <label for="expected_ctc" invisible="salary_type in ['salary']"/>-->
+<!--                <div class="o_row" invisible="salary_type in ['salary']">-->
+<!--                    <field name="expected_ctc"/>-->
+<!--                    <span invisible="not expected_ctc_extra">+</span>-->
+<!--                    <field name="expected_ctc_extra" placeholder="Extra advantages..."/>-->
+<!--                </div>-->
+
+<!--                <label for="proposed_ctc" invisible="salary_type in ['salary']"/>-->
+<!--                <div class="o_row" invisible="salary_type in ['salary']">-->
+<!--                    <field name="proposed_ctc"/>-->
+<!--                    <span invisible="not proposed_ctc_extra">+</span>-->
+<!--                    <field name="proposed_ctc_extra" placeholder="Extra advantages..."/>-->
+<!--                </div>-->
+
+            </xpath>
+
+            <!-- Set attrs on salary_expected field -->
+<!--            <xpath expr="//field[@name='salary_expected']" position="attributes">-->
+<!--                <attribute name="invisible">salary_type == 'ctc'</attribute>-->
+<!--            </xpath>-->
+
+            <!-- Set attrs on salary_expected_extra field -->
+<!--            <xpath expr="//field[@name='salary_expected_extra']" position="attributes">-->
+<!--                <attribute name="invisible">salary_type == 'ctc'</attribute>-->
+<!--            </xpath>-->
+
+            <!-- Set attrs on label for salary_expected -->
+<!--            <xpath expr="//label[@for='salary_expected']" position="attributes">-->
+<!--                <attribute name="invisible">salary_type == 'ctc'</attribute>-->
+<!--            </xpath>-->
+
+            <!-- Hide proposed salary row when salary_type != ctc -->
+<!--            <xpath expr="//div[field[@name='salary_proposed']]" position="attributes">-->
+<!--                <attribute name="invisible">salary_type == 'ctc'</attribute>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//label[@for='salary_proposed']" position="attributes">-->
+<!--                <attribute name="invisible">salary_type == 'ctc'</attribute>-->
+<!--            </xpath>-->
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="LR.template" owl="1">
+       <div>
+          <t t-call="x_multi.MultiSelect"/>
+       </div>
+    </t>
+    <t t-name="owl.OwlLRDashboard" owl="1">
+         <section class="section_LR">
+             <div class="title"><span>LR Number Dashboard </span></div>
+             <div class="row">
+                 <div class="border m-0 p-0 bg-white"/>
+                 <div class="col-lg-3 sidebar" style="background-color: #fff; padding: 1rem;">
+                     <div class="bulk-sidebar">
+                        <t t-set="lastMainParent" t-value="''"/>
+                         <t t-set="lastSubParent" t-value="''"/>
+                         <t t-foreach="menuItems" t-as="item" t-key="item.id">
+                            <t t-if="item.mainParent !== lastMainParent">
+                                <div class="sidebar-title main-parent">
+                                    <t t-esc="item.mainParent"/>
+                                </div>
+                                <t t-set="lastMainParent" t-value="item.mainParent"/>
+                                <t t-set="lastSubParent" t-value="''"/> <!-- Reset subParent on new mainParent -->
+                            </t>
+
+                             <t t-if="item.subParent !== lastSubParent">
+                                <div class="sidebar-title sub-parent">
+                                    <t t-esc="item.subParent"/>
+                                </div>
+                                 <t t-set="lastSubParent" t-value="item.subParent"/>
+                            </t>
+
+                             <div class="sidebar-item"
+                                  t-att-class="state.selected === item.id ? 'active' : ''"
+                                  t-on-click="() => selectMenu(item.id)">
+                                <t t-esc="item.label"/>
+                            </div>
+                        </t>
+                     </div>
+                </div>
+                <div class="col" style="padding: 1rem; bg-white">
+                <div class="row"></div>
+                     <t t-if="state.selected === 1">
+                         <div>
+                             <span class="sub-title"> LR Number Transfer Overview</span>
+                         </div>
+                         <div class="filter-row">
+                                <div class="filter-group" style="width:240px;">
+                                    <MultiSelect
+                                            options="state.companyOptions"
+                                            value="state.selectedCompanyIds"
+                                            onChange.bind="onCompaniesChange"
+                                            placeholder="'All Companies (Delivery Address)'"/>
+                                </div>
+                                <div class="filter-group" style="width:240px;">
+                                    <MultiSelect
+                                      options="state.LrNumbersOptions"
+                                      value="state.LrNumbersIds"
+                                      onChange.bind="onLrNumbersChange"
+                                      placeholder="'All LR Numbers'"/>
+                                </div>
+                                <div class="filter-group" style="width:100px;">
+                                    <select class="o_input d-flex flex-wrap" t-on-change="onPeriodChange"
+                                          style="padding-left:5px;">
+                                      <option value="7">Last 7 Days</option>
+                                      <option value="15">Last 15 Days</option>
+                                      <option value="21">Last 21 Days</option>
+                                      <option value="30">Last 30 Days</option>
+                                      <option value="45">Last 45 Days</option>
+                                      <option value="90" t-att-selected="state.selectedPeriod===90?true:undefined">Last 90 days</option>
+                                      <option value="180">Last 180 Days</option>
+                                    </select>
+                                </div>
+                                <div class="record-count">
+                                     Total LR Records : <t t-esc="state.TotalLrTransfer"/>
+                                </div>
+                         </div>
+                         <div class="report-table-wrapper">
+                             <table class="report-table header-table">
+                                <thead style="font-weight:bold;">
+                                  <tr>
+                                    <th class="text-center" style="width:20%">LR Number</th>
+                                      <th class="text-center" style="width:13%">Total Bales</th>
+                                      <th class="text-center" style="width:13%">Bales In Transit</th>
+                                      <th class="text-center" style="width:13%">Bales Received</th>
+                                      <th class="text-center" style="width:13%">Bales Opened</th>
+                                      <th class="text-center" style="width:13%">Bales Not Opened</th>
+                                      <th class="text-center" style="width:13%">Pending Bales</th>
+                                  </tr>
+                                </thead>
+                                 <tbody>
+<!--                                     <t t-if="state.LrTransfer">-->
+<!--                                        <tr><td class="text-center" colspan="7">Loading…</td></tr>-->
+<!--                                      </t>-->
+                                     <t t-if="(state.LrTransfer || []).length === 0">
+                                        <tr><td class="text-center" colspan="7">No data</td></tr>
+                                     </t>
+                                     <t t-else="">
+                                         <t t-foreach="state.LrTransfer || []" t-as="r" t-key="r.group_key">
+                                              <tr>
+                                                  <td class="text-center"><t t-esc="r.category_name"/>
+                                                      <div/></td>
+                                                  <td class="text-center"><t t-esc="r.total_bales"/></td>
+                                                  <td class="text-center"><t t-esc="r.bales_in_transit"/></td>
+                                                  <td class="text-center"><t t-esc="r.bales_received"/></td>
+                                                  <td class="text-center"><t t-esc="r.bales_opened"/></td>
+                                                  <td class="text-center"><t t-esc="r.bales_not_opened"/></td>
+                                                  <td class="text-center"><t t-esc="r.pending_bales"/></td>
+                                              </tr>
+                                         </t>
+                                     </t>
+                                 </tbody>
+                              </table>
+                         </div>
+                     </t>
+                     <t t-if="state.selected === 2">
+                         <div><span class="sub-title "> LR Number Return Overview</span></div>
+                         <div class="filter-row">
+                             <div class="filter-group" style="width:240px;">
+                                <MultiSelect
+                                        options="state.companyOptions"
+                                        value="state.rCompanyIds"
+                                        onChange.bind="onCompaniesReturnChange"
+                                        placeholder="'All Companies (Company Wise)'" />
+                             </div>
+                             <div class="filter-group" style="width:240px;">
+                                <MultiSelect
+                                        options="state.LrNumbersOptions"
+                                        value="state.rLrNumbers "
+                                        onChange.bind="onLrNumbersReturnChange"
+                                        placeholder="'All Categories'" />
+                             </div>
+                             <div class="filter-group" style="width:100px;">
+                                  <select class="o_input d-flex flex-wrap" t-on-change="onReturnPeriodChange"
+                                          style="padding-left:5px;">
+                                      <option value="">Select Period</option>
+                                      <option value="7">Last 7 Days</option>
+                                      <option value="30">Last 30 Days</option>
+                                      <option value="90">Last 90 days</option>
+                                      <option value="180">Last 180 Days</option>
+                                      <option value="365">Last 365 Days</option>
+                                      <option value="1068">Last 3 Years</option>
+                                  </select>
+                             </div>
+                             <div class="record-count">
+                                     Total LR Records: <t t-esc="state.TotalLrReturn"/>
+                             </div>
+                         </div>
+                         <div class="report-table-wrapper">
+                             <table class="report-table header-table">
+                                <thead style="font-weight:bold;">
+                                  <tr>
+                                      <th class="text-center" style="width:20%">LR Number</th>
+                                      <th class="text-center" style="width:13%">Total Bales</th>
+                                      <th class="text-center" style="width:13%">Bales In Transit</th>
+                                      <th class="text-center" style="width:13%">Bales Received</th>
+                                      <th class="text-center" style="width:13%">Bales Opened</th>
+                                      <th class="text-center" style="width:13%">Bales Not Opened</th>
+                                      <th class="text-center" style="width:13%">Pending Bales</th>
+                                  </tr>
+                                </thead>
+                                 <tbody>
+                                     <t t-if="(state.LrReturn || []).length === 0">
+                                        <tr><td class="text-center" colspan="7">No data</td></tr>
+                                     </t>
+                                     <t t-else="">
+                                         <t t-foreach="state.LrReturn || []" t-as="r" t-key="r.group_key || r.category_id">
+                                              <tr>
+                                                  <td class="text-center"><t t-esc="r.category_name"/>
+                                                      <div/></td>
+                                                  <td class="text-center"><t t-esc="r.total_bales"/></td>
+                                                  <td class="text-center"><t t-esc="r.bales_in_transit"/></td>
+                                                  <td class="text-center"><t t-esc="r.bales_received"/></td>
+                                                  <td class="text-center"><t t-esc="r.bales_opened"/></td>
+                                                  <td class="text-center"><t t-esc="r.bales_not_opened"/></td>
+                                                  <td class="text-center"><t t-esc="r.pending_bales"/></td>
+                                              </tr>
+                                         </t>
+                                     </t>
+                                 </tbody>
+                              </table>
+                         </div>
+                     </t>
+                </div>
+             </div>
+         </section>
+    </t>
+</templates>

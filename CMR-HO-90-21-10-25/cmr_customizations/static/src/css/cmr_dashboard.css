@@ -1,0 +1,542 @@
+/* ===================== PAGE SCROLL UNLOCK (scoped) ===================== */
+/* 1) Ensure the root can scroll */
+html, body { height: 100%; overflow: auto !important; }
+
+/* 2) When #logistics is on the page, relax Odoo containers so body can scroll */
+.o_web_client:has(#logistics) {
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow: auto !important;   /* allow page scroll */
+}
+
+.o_action_manager:has(#logistics),
+.o_action_manager:has(#logistics) .o_action,
+.o_action_manager:has(#logistics) .o_content {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important; /* don't trap scroll here */
+}
+
+/* 3) Your dashboard keeps its layout but doesn't create inner scrollbars */
+#logistics .dashboard-wrap { height: auto !important; min-height: 0 !important; overflow: visible !important; }
+#logistics .dashboard     { height: auto !important; min-height: 0 !important; overflow: visible !important; }
+
+/* 4) Keep your 3→2→1 grid and fixed order (unchanged) */
+#logistics .dashboard{
+  display: grid !important; gap: 14px; align-items: start; padding: 0 30px;
+  grid-template-columns: repeat(3, minmax(260px, 1fr));
+  grid-template-areas: "col1 col2 col3" "footer footer footer";
+}
+@media (max-width:1280px){
+  #logistics .dashboard{
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    grid-template-areas: "col1 col2" "col3 col3" "footer footer";
+  }
+}
+@media (max-width:880px){
+  #logistics .dashboard{
+    grid-template-columns: 1fr;
+    grid-template-areas: "col1" "col2" "col3" "footer";
+    isolation: isolate; /* avoid z-index bleed on small screens */
+  }
+}
+/* 5) Map areas + safety */
+#logistics .col-1 { grid-area: col1; }
+#logistics .col-2 { grid-area: col2; }
+#logistics .col-3 { grid-area: col3; }
+#logistics .dashboard-footer { grid-area: footer; position: static; }
+#logistics .dashboard-column{
+  display:flex; flex-direction:column; gap:12px;
+  min-width:0 !important; width:auto !important; flex:none !important;
+  float:none !important; position:static !important; transform:none !important; z-index:auto !important;
+}
+#logistics .card{ box-sizing:border-box; min-width:0; max-width:100%; }
+
+/* If you previously set a sticky footer, keep it non-sticky with page scroll */
+#logistics .dashboard-footer.is-sticky { position: static !important; }
+
+.dashboard-footer.is-sticky { position: sticky; bottom: 0; z-index: 5; }
+
+.footer-row {display: flex;gap: 10px;align-items: center;overflow-x: auto;white-space: nowrap;}
+
+@supports (padding: max(0px)) {
+  .dashboard-footer { padding-bottom: max(8px, env(safe-area-inset-bottom)); }}
+
+.row {display: flex;align-items: center;justify-content: space-between;margin: 6px 0;}
+
+.progress {flex: 1;height: 8px;background: #e5e7eb;border-radius: 4px;margin-left: 10px;}
+
+.status-row { display:flex; align-items:center; margin:10px 0; font-size:14px; font-weight:500; }
+.status-row span { width:120px; min-width:120px; color:#374151; }
+.status-bar { flex:1; background:#e5e7eb; border-radius:50px; height:10px; overflow:hidden; }
+.status-bar .fill { height:100%; border-radius:50px; transition:width 300ms ease-in-out; }
+.fill.blue { background:#2563eb; }
+.fill.light-blue { background:#38bdf8; }
+.fill.orange { background:#f97316; }
+.fill.red { background:#ef4444; }
+
+.progress-bar {
+    height: 8px;
+    border-radius: 4px;
+}
+
+.progress-bar.blue {
+    background: #3b82f6;
+}
+
+.progress-bar.orange {
+    background: #f97316;
+}
+
+.status-row { display: flex;align-items: center; margin: 8px 0;font-size: 14px;font-weight: 500;}
+
+.status-row span {width: 100px; /* label width */color: #374151;}
+
+.status-bar {flex: 1;background-color: #e5e7eb;border-radius: 50px;height: 10px;}
+
+.fill {
+    height: 100%;
+    border-radius: 50px;
+}
+
+.fill.blue {
+    background-color: #2563eb; /* deep blue */
+}
+
+.fill.light-blue {
+    background-color: #38bdf8; /* cyan blue */
+}
+
+.fill.orange {
+    background-color: #f97316;
+}
+
+.fill.red {
+    background-color: #ef4444;
+}
+
+.card {background: white;border-radius: 12px;padding: 20px;box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);text-align: left;}
+
+.card h3 {margin-bottom: 16px;font-size: 16px;font-weight: 600;color: #111827;}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    padding: 8px 0;
+}
+
+.info-row span {
+    color: #374151;
+}
+
+.info-row strong {
+    font-weight: 600;
+    color: #111827;
+}
+
+.divider {
+    height: 1px;
+    background-color: #e5e7eb;
+    margin: 0;
+}
+.card1 {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.card1 h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.details-row1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.detail1 {
+    flex: 1;
+    text-align: center;
+}
+
+.detail1 span {
+    display: block;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.detail1 strong {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.vertical-divider1 {
+    width: 1px;
+    background-color: #e5e7eb;
+    height: 40px;
+}
+
+.status-row .count {
+  width: 56px;            /* reserve space for 4–5 digits */
+  min-width: 56px;
+  text-align: right;
+  font-weight: 600;
+  color: #111827;         /* or var(--o-gray-900) */
+}
+
+.tp-total { font-weight: 700; margin-bottom: 6px; text-align:center; }
+.tp-chart { display:flex; align-items:flex-end; gap:16px; }
+.tp-col   { width:80px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; }
+.tp-bar   { width:36px; background:#38bdf8; border-radius:8px; transition:height .25s ease; }
+.tp-count { font-size:12px; font-weight:600; margin-bottom:6px; }
+.tp-label { margin-top:8px; font-size:12px; text-align:center; color:#374151; }
+
+.card2 {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.card2 h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.card2-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.big-number2{
+  margin:20;
+  font-size:22px;
+  font-weight:700;
+  line-height:1;
+  min-width:56px;
+}
+
+.bar-chart2{
+  display:flex;
+  margin-left:auto;
+  align-items:flex-end;
+  gap:10px;
+  width:40%;
+  height:50px;                /* <-- critical so % heights work */
+}
+
+.bar2{
+  flex:1;                     /* equal widths */
+  min-width:10px;
+  background:#d1d5db;         /* visible color */
+  border-radius:6px 6px 0 0;
+  transition:height 250ms ease;
+}
+
+
+.card3 {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.05);
+    max-width: 300px;
+}
+
+.card3 h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.division-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.division-row:last-child {
+    border-bottom: none;
+}
+
+.lr-count {
+    font-weight: bold;
+    color: #333;
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  --card-bg: #f8fafc;          /* 96–98% light */
+  --card-border: #e6e8ec;      /* subtle hairline */
+  --text: #0f172a;             /* high-contrast text */
+  --text-dim: #334155;         /* labels */
+  --accent: #2563eb;           /* primary (not used here but shared) */
+
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --pad-s: 14px;               /* inner padding */
+  --gap: 8px;                  /* vertical gaps */
+}
+
+/* ---------- Card shell ---------- */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+.card--s { padding: var(--pad-s); min-width: 240px; min-height: 120px; }
+
+.card__header { margin-bottom: 8px; }
+.card__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.card__body { display: flex; flex-direction: column; gap: 6px; }
+
+/* ---------- Rows ---------- */
+.metric-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  line-height: 1.6;
+}
+.metric-row__label {
+  color: var(--text-dim);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.metric-row__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+}
+.metric-row__value--lg { font-size: 17px; }
+
+/* ---------- Divider ---------- */
+.divider {
+  height: 1px;
+  background: var(--card-border);
+  margin: 2px 0;
+}
+
+/* ---------- Optional states ---------- */
+.card.is-loading .metric-row__label,
+.card.is-loading .metric-row__value { visibility: hidden; }
+
+.card.is-loading .skeleton {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg,#eef1f5 25%,#f6f8fb 37%,#eef1f5 63%);
+  background-size: 400% 100%;
+  animation: skel 1.4s ease infinite;
+}
+@keyframes skel { 0% {background-position: 100% 0;} 100% {background-position: 0 0;} }
+
+.card.is-empty .card__body {
+  min-height: 64px;
+  display: grid;
+  place-items: center;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.card.is-error .card__body { color: #b91c1c; }
+
+/* two-up wrapper */
+.card-pair--two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;                    /* space between the two cards */
+}
+
+/* stack on narrow panes if needed */
+@media (max-width: 620px) {
+  .card-pair--two { grid-template-columns: 1fr; }
+}
+
+/* label-only rows for the left card */
+.text-row {
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+ /* 3/3 key–value table */
+
+.kv-table--tight { display: block; }
+
+/* rows: compact, even rhythm */
+.kv-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 8px 0;                 /* tight like the mock */
+  line-height: 1.5;
+}
+
+/* continuous horizontal separators */
+.kv-row + .kv-row { border-top: 1px solid var(--card-border); }
+
+/* cells */
+.kv-key {
+  font-size: 14px;
+  color: var(--text-dim);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* RIGHT column with continuous vertical divider */
+.kv-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+  padding-right: 12px;
+  border-left: 1px solid var(--card-border);  /* vertical line */
+  min-width: 90px;                             /* keeps right column aligned */
+}
+
+/* header pair styling */
+.kv-row--head .kv-key { font-weight: 600; color: var(--text); }
+.kv-row--head .kv-value { font-weight: 700; }
+
+ /* 1-4 ---------- Split header ---------- */
+
+.split-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* two equal halves */
+  column-gap: 12px;
+  align-items: end;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--card-border); /* separator under header */
+  margin-bottom: 2px;
+}
+
+.split-cell { min-width: 0; } /* allow ellipsis if needed */
+.split-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.split-value {
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+.split-value--lg { font-size: 18px; }
+
+/* right half with continuous vertical divider & right alignment */
+.split-cell--right {
+  padding-left: 12px;
+  border-left: 1px solid var(--card-border);  /* vertical divider */
+  text-align: right;
+}
+.split-cell--right .split-title { text-align: right; }
+
+
+
+
+/* 2/4 two equal halves inside the card */
+.split-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 12px;
+  align-items: start;
+}
+
+/* central vertical divider */
+.half--right {
+  border-left: 1px solid var(--card-border);
+  padding-left: 12px;
+}
+
+/* headers inside each half */
+.half-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+/* compact rows reuse your kv-table styles */
+.kv-table--tight { display: block; }
+.kv-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 8px 0;
+  line-height: 1.5;
+}
+.kv-row + .kv-row { border-top: 1px solid var(--card-border); }
+.kv-key  { font-size: 14px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kv-value{ font-size: 14px; font-weight: 700; color: var(--text); text-align: right; }
+
+/* remove the inner label/value divider for this card (we only want the central divider) */
+.half--no-inner-divider .kv-value { border-left: 0; padding-left: 0; }
+
+/* reuse your kv-table base; only tweaks below */
+
+/* No vertical divider between label/value for this card */
+.kv-table--no-vline .kv-value { border-left: 0; padding-left: 0; }
+
+/* stronger emphasis for the first value (Open) */
+.kv-value--em { font-weight: 700; }
+
+/* keep compact row rhythm and a thin line between rows */
+.kv-row + .kv-row { border-top: 1px solid var(--card-border); }
+
+
+/* Progress bar */
+.progress { width: 100%; }
+.progress--sm .progress__track { height: 10px; }  /* match mock height */
+
+.progress__track {
+  width: 100%;
+  background: #e9edf3;            /* subtle track */
+  border-radius: 999px;            /* fully rounded ends */
+  overflow: hidden;                /* clip the fill */
+  box-shadow: inset 0 0 0 1px var(--card-border);
+}
+
+.progress__fill {
+  height: 100%;
+  background: var(--accent);       /* primary blue from tokens */
+  border-radius: inherit;
+  transition: width 240ms ease;    /* smooth when you wire JS */
+}
+
+/* Table row under the bar (reuse existing kv styles) */
+.kv-table--no-vline .kv-value { border-left: 0; padding-left: 0; }
+.kv-table.kv-table--tight .kv-row { padding: 8px 0; }
+.kv-table.kv-table--tight .kv-row + .kv-row { border-top: 1px solid var(--card-border); } /* not used here but consistent */

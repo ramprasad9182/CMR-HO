@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="tally_dashboard">
+        <style>
+           body {
+              background-color: #ffffff !important;
+           }
+           .styled-table {
+            border-collapse: separate;
+            border-spacing: 5px;
+            margin: 10px;
+            width: fit-content;
+            }
+            .styled-table tr {
+                height: 195px;
+            }
+            .sidebar-title {
+              font-weight: bold;
+              margin-top: 1rem;
+              padding: 5px;
+              padding-left: 15px;
+              color: #444;
+            }
+            .sidebar-item {
+              padding: 8px 12px;
+              font-size:14px;
+                color: black;
+              cursor: pointer;
+              padding-left:35px;
+            }
+            .sidebar-item:hover {
+             background-color: #F5F5F5;
+            }
+            .sidebar-item.active {
+              background-color: #f2f7fc;
+              color: #2b6340;
+            }
+           .styled-table td {
+           padding: 7;
+           text-align: center;
+           color: #333;
+           width: 250px;
+           border-radius: 0.5px;
+           }
+           .info-tab {
+           background-color: #f2f2f2;
+           font-size: 10px;
+           font-weight: bold;
+           margin-bottom: 10px;
+           text-align:left;
+           margin-left:5px;
+           }
+           .info-title {
+           font-weight: 600;
+            color: #888888;
+            font-size: 18px;
+            text-align:left;
+            padding-bottom:35px;
+            padding-left:10px;
+           }
+           .info-number {
+           font-weight:600;
+           font-size: 32px;
+           text-align: left;
+           text-align:center;
+           }
+           .trans-tab {
+           background-color: #f2f2f2;
+           }
+            .master-tab{
+            background-color: #f2f2f2;
+            }
+            .master-title {
+             color: #888888;
+            font-size: 22px;
+            margin-bottom: 10px;
+            text-align:center;
+            font-weight: 600;
+            }
+            .master-number {
+            display: flex;
+            justify-content: space-between;
+            font-size: 28px;
+            font-weight: 500;
+            margin-top: 22px;
+            margin-bottom: 22px;
+            transform: scaleY(1.27);
+            transform-origin: center;
+            }
+            .master-number > * {
+            flex: 1 1 200px;
+            max-width: 130px;
+            }
+            .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #01666b;
+            margin: 15px;
+            letter-spacing: 1.2px;
+            }
+            .master-third {
+            display:flex;
+            gap: 33px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-left: 20px;
+            }
+            .sidebar {
+            background-color: #ffff; /* Odoo light background */
+            border-right: 1px solid #e0e0e0;
+            width: 240px;
+            height: 80vh;
+            overflow-y: auto;
+            }
+            .table-title{
+            font-size: 20px;
+            font-weight: bold;
+            margin-left:20px;
+            color: #2580c2;
+            text-align: Left;
+            }
+            .clickable-div {
+            cursor: pointer; /* Makes the cursor appear clickable */
+            }
+       </style>
+        <div class="title"><span>Dashboard For SAP Integration  </span></div>
+        <div class="row">
+            <div class="border m-0 p-0 bg-white"/>
+            <div class="col-lg-3 sidebar" style="background-color: #fff; padding: 1rem;">
+                 <div class="bulk-sidebar">
+                     <t t-set="lastParent" t-value="''"/>
+                     <t t-foreach="menuItems" t-as="item" t-key="item.id">
+                         <t t-if="item.parent !== lastParent">
+                         <div class="sidebar-title">
+                            <t t-esc="item.parent"/>
+                         </div>
+                             <t t-set="lastParent" t-value="item.parent"/>
+                         </t>
+                         <div class="sidebar-item"
+                              t-att-class="state.selected === item.id ? 'active' : ''"
+                              t-on-click="() => selectMenu(item.id)">
+                            <t t-esc="item.label"/>
+                         </div>
+                     </t>
+                 </div>
+            </div>
+            <div class="col" style="padding: 1rem; bg-white">
+                <t t-if="state.selected === 1">
+                    <div>
+                        <table class="styled-table">
+                            <tr class="master-tab">
+                                 <td class="td">
+                                    <div class="master-title">
+                                        Account Group
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.group.total"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.group.approved"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.group.pending"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div style="color: #f72f2f">Pending</div>
+                                    </div>
+                                </td>
+                                <td class="td">
+                                    <div class="master-title">
+                                        Chart Of Accounts
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.account.total"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.account.approved"></span>
+                                        </div>
+                                        <div >
+                                            <span t-esc="state.account.pending"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div style="color: #f72f2f">Pending </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+                <t t-if="state.selected === 3">
+                    <table class="styled-table">
+                        <tr class="master-tab">
+                            <td class="td">
+                                <div class="master-title">
+                                    Customers
+                                </div>
+                                <div class="master-number">
+                                    <div>
+                                        <span t-esc="state.customer.total"></span>
+                                    </div>
+                                    <div>
+                                        <span t-esc="state.customer.approved"></span>
+                                    </div>
+                                    <div >
+                                        <span t-esc="state.customer.pending"></span>
+                                    </div>
+                                </div>
+                                <div class="master-third">
+                                    <div style="color: #02a149">Total</div>
+                                    <div style="color: #0094d4">Processed</div>
+                                    <div style="color: #f72f2f"
+                                         >Pending</div>
+                                </div>
+                            </td>
+                            <td class="td">
+                                <div class="master-title">
+                                    Vendors
+                                </div>
+                                <div class="master-number">
+                                    <div>
+                                        <span t-esc="state.vendor.total"></span>
+                                    </div>
+                                    <div>
+                                        <span t-esc="state.vendor.approved"></span>
+                                    </div>
+                                    <div >
+                                        <span t-esc="state.vendor.pending"></span>
+                                    </div>
+                                </div>
+                                <div class="master-third">
+                                    <div style="color: #02a149">Total</div>
+                                    <div style="color: #0094d4">Processed</div>
+                                    <div  style="color: #f72f2f;padding-right:5px;">Pending</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+                <t t-if="state.selected === 2">
+                    <table class="styled-table">
+                        <tr class="master-tab">
+                             <td class="td">
+                                <div class="master-title">
+                                    Companies
+                                </div>
+                                <div class="master-number">
+                                    <div>
+                                        <span t-esc="state.company.total"></span>
+                                    </div>
+                                    <div>
+                                        <span t-esc="state.company.approved"></span>
+                                    </div>
+                                    <div >
+                                        <span t-esc="state.company.pending"></span>
+                                    </div>
+                                </div>
+                                <div class="master-third">
+                                    <div style="color: #02a149">Total</div>
+                                    <div style="color: #0094d4">Processed</div>
+                                    <div  style="color: #f72f2f; padding-right:5px;">Pending</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </t><t t-if="state.selected === 4">
+                    <table class="styled-table">
+                        <tr class="master-tab">
+                             <td class="td">
+                                <div class="master-title">
+                                    Journal Entries
+                                </div>
+                                <div class="master-number">
+                                    <div>
+                                        <span t-esc="state.journal.total"></span>
+                                    </div>
+                                    <div>
+                                        <span t-esc="state.journal.approved"></span>
+                                    </div>
+                                    <div >
+                                        <span t-esc="state.journal.pending"></span>
+                                    </div>
+                                </div>
+                                <div class="master-third">
+                                    <div style="color: #02a149">Total</div>
+                                    <div style="color: #0094d4">Processed</div>
+                                    <div  style="color: #f72f2f; padding-right:5px;">Pending</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+          </div>
+        </div>
+    </t>
+</templates>

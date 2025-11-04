@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="stock_picking_wizard_view" model="ir.ui.view">
+            <field name="name">Import Order Lines</field>
+            <field name="model">move.line.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="import_option" widget="radio"/>
+                        <field name="picking_file"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="import_prod_option" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="product_details_option" widget="radio"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Import" name="import_move_line" class="oe_highlight" type="object"/>
+                        or
+                        <button name="cancel" string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="import_move_line_action" model="ir.actions.act_window">
+            <field name="name">Import Move Lines</field>
+            <field name="res_model">move.line.wizard</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="stock_picking_wizard_view"/>
+            <field name="view_mode">form</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+{
+    "name": "HSN Code Automation Management",
+    "version": "1.0",
+    "summary": "Simplify HSN code and GST integration for seamless product application and automated tax calculation, tailored to company categories and state regulations.",
+    "sequence": 2,
+    "category": "Account",
+    "website": "https://www.vperfectcs.com",
+    "author": "VperfectCS",
+    "maintainer": "VperfectCS",
+    "images": ["static/description/banner.jpg"],
+    "depends": ["account", "sale_management", "purchase", "l10n_in", "l10n_in_edi",'product'],
+    "external_dependencies": {"python": ["bs4"]},
+    "data": [
+        "security/ir.model.access.csv",
+        "views/hsn_code_master_view.xml",
+        "views/hsn_category_view.xml",
+        "views/res_company_view.xml",
+        "views/menu.xml",
+    ],
+    "license": "LGPL-3",
+    "installable": True,
+    "application": True,
+    "auto_install": False,
+    "price": 99,
+    "currency": "USD",
+}

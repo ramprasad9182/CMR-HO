@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="crm_serial_no_confirm_popup_view" model="ir.ui.view">
+        <field name="name">Auto Serial No Generation</field>
+        <field name="model">nhcl.serial.no.popup</field>
+        <field name="arch" type="xml">
+            <form string="Auto Serial No Confirmation">
+                <div>
+                    <strong>Please confirm that you want to generate serial numbers automatically.
+                        Once the Serial Numbers are generated, you cannot reverse the process! </strong>
+                </div>
+                <footer>
+                    <button string="Confirm" name="button_confirm" type="object"
+                            class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,264 @@
+body {
+    background-color: #ffffff !important;
+}
+.sub-parent {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+.sidebar-title {
+    font-weight: bold;
+    margin-top: 1rem;
+    padding: 5px 5px 5px 15px ;
+    color: #444;
+}
+.sidebar-item {
+    padding: 8px 12px 0 35px; /* top-right-bottom-left */
+    font-size:14px;
+    color: black;
+    cursor: pointer;
+}
+.sidebar-item:hover {
+    background-color: #F5F5F5;
+}
+.sidebar-item.active {
+    background-color: #f2f7fc;
+    color: #2b6340;
+}
+.title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    margin: 8px;
+    letter-spacing: 0.8px;
+}
+.sub-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    letter-spacing: 0.8px;
+}
+.report-table-wrapper {
+    width: 98%;
+    overflow-x: auto;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    max-height: 550px; /* Enable vertical scroll */
+    overflow-y: auto;
+}
+
+/* Main table styling */
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 14px;
+    color: #333;
+    text-align: center; /* Center all text inside the table */
+}
+
+/* Table head */
+.report-table thead {
+    background-color: #f3f6f9;
+    color: #3a3f44;
+    font-weight: 600;
+    position: sticky;
+    height: 40px;
+    top: 0;
+    z-index: 1;
+}
+
+/* Headings & cell spacing */
+.report-table th,
+.report-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+/* Hover row effect */
+.report-table tr:hover {
+    background-color: #f9fbfd;
+}
+
+/* Status styles */
+.report-table td.status-pass {
+    color: #198754;
+    font-weight: 600;
+}
+
+.report-table td.status-fail {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Optional: narrow first column */
+.report-table th:first-child,
+.report-table td:first-child {
+    width: 50px;
+}
+
+.sidebar {
+    background-color: #fff;
+    border-right: 1px solid #e0e0e0;
+    width: 240px;
+    height: 80vh;
+    overflow-y: auto;
+}
+
+
+/* --- Keep the table area stable even with 0 rows --- */
+.report-table-wrapper {
+  position: relative;            /* anchor overlays */
+  min-height: 520px;             /* reserve space for body; tweak as you like */
+}
+
+/* Stable column widths; plays nicely with sticky thead */
+.report-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Optional: if you ever want a subtle reserved space even without overlays */
+.report-table tbody:empty {
+  display: block;                /* avoid collapse */
+  height: 140px;                 /* reserve body height */
+}
+.report-table tbody:empty::before {
+  content: "";                   /* keep it blank; overlay will show the message */
+}
+
+/* --- Overlays so text appears without changing layout --- */
+.table-empty-overlay,
+.table-loading-overlay {
+  position: absolute;
+  inset: 0;                      /* top/right/bottom/left: 0 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  border-radius: 12px;           /* match your wrapper radius */
+  pointer-events: none;          /* clicks go to the table if needed */
+}
+
+/* slightly different backgrounds so user can tell states apart */
+.table-loading-overlay {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: saturate(180%) blur(1.5px);
+}
+.table-empty-overlay {
+  background: rgba(255,255,255,0.3);
+}
+
+.table-overlay-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-group { flex: 0 0 auto; }
+
+.filter-row label {
+    display: flex;
+    font-weight: 600;
+    margin-right: 5px;
+    font-family: Arial, sans-serif;
+}
+.filter-dropdown {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 160px;
+}
+.record-count {
+    margin-left: auto;
+    margin-right: 100px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* --- Added styles for MultiSelect --- */
+.o-ms {
+    min-width: 200px;
+    position: relative;
+}
+.o-ms-field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    min-height: 36px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 4px 6px;
+    background-color: #fff;
+    cursor: text;
+}
+.o-ms-input {
+    border: none;
+    outline: none;
+    width: 60px;
+    flex: 1;
+    font-size: 14px;
+}
+.o-ms-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #f1f1f1;
+    border: 1px solid #e5e5e5;
+    font-size: 12px;
+}
+.o-ms-chip-x {
+    text-decoration: none;
+    color: #888;
+    font-weight: bold;
+    cursor: pointer;
+}
+.o-ms-panel {
+    position: absolute;
+    z-index: 1000;
+    margin-top: 4px;
+    max-height: 240px;
+    overflow-y: auto;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    box-shadow: 0 6px 22px rgba(0,0,0,.06);
+    padding-left:5px;
+}
+.o-ms-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+.o-ms-item:hover {
+    background: #f6f6f6;
+}
+.o-ms-tick {
+    opacity: .7;
+}
+.o-ms-empty {
+    padding: 10px;
+    color: #888;
+    text-align: center;
+    font-size: 13px;
+}

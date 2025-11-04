@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="ir_cron_check_end_date" model="ir.cron">
+            <field name="name">Advertisement Order Alert's</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">model._check_end_date_for_alerts()</field>
+            <field name="interval_type">days</field>
+            <field name="interval_number">1</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_send_payment_alerts" model="ir.cron">
+            <field name="name">Payment Alert's</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">model.alert_on_payment_terms()</field>
+            <field name="interval_type">days</field>
+            <field name="interval_number">1</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_product_margin_approval_reminder" model="ir.cron">
+            <field name="name">Product Margin Approval Reminder</field>
+            <field name="model_id" ref="model_product_margin_approval"/>
+            <field name="state">code</field>
+            <field name="code">model.create_manager_activity()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>

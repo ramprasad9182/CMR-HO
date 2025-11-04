@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_order_inherit_domain_product" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.domain</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="transpoter_id" required="stock_type == 'regular'" readonly="state not in ['draft','sent']" force_save="1"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                <field name="nhcl_sale_type" string="Transfer Type" required="True" readonly="state not in ['draft','sent']" force_save="1"/>
+                <field name="nhcl_indent_id" string="Indent ID" invisible="nhcl_sale_type != 'store'" force_save="1"
+                       options="{'no_create': True}" readonly="state not in ['draft','sent']"/>
+                <field name="mapped_company_id" invisible="1"/>
+                <field name="detail_visible" invisible="1"/>
+                <button name="load_po_lines" type="object"
+                        string="Get Details" class="btn-success" invisible="detail_visible"/>
+
+            </xpath>
+            <xpath expr="//form/sheet/group/group[@name='order_details']/field[@name='payment_term_id']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+
+            </xpath>
+            <xpath expr="//form/sheet/group/group[@name='partner_details']/field[@name='partner_id']" position="after">
+                <field name="so_type" placeholder="Please SO Type..." readonly="state not in ['draft','sent']"/>
+                <field name="stock_type" placeholder="Please SO Type..." readonly="state not in ['draft','sent']"
+                       force_save="1" required="1"/>
+                <field name="operation_type" placeholder="Please Operation Type..."
+                       readonly="state not in ['draft','sent']"/>
+                <field name="dummy_so_type" invisible="1" placeholder="Please SO Type..." required="1"
+                       readonly="state not in ['draft','sent']"/>
+                <label for="picking_document" string="Document"/>
+                <div>
+                    <field name="picking_document" placeholder="Please Select Receipt..."
+                           domain="[('picking_type_code','=','incoming'), ('state','=','done'), ('stock_type','=','ho_operation')]"
+                           class="oe_inline"
+                           invisible="so_type not in ['inter_state','intra_state'] or operation_type != 'document'"
+                           options="{'no_create': True, 'no_open': True, 'no_edit':True}" readonly="state == 'sale'"/>
+                    <button name="get_picking_lines" type="object" string="Get Lines" class="oe_inline btn-primary"
+                            invisible="so_type not in ['inter_state','intra_state'] or operation_type != 'document' or state == 'sale'"/>
+                </div>
+            </xpath>
+            <xpath expr="//form/sheet/group/group" position="inside">
+                <field name="entered_qty" readonly="state == 'sale'" invisible="operation_type != 'scan'"/>
+                <field name="barcode_scanned" readonly="state == 'sale'"
+                       style="border: 4px solid #714B67;padding-top: 6px;margin-bottom: 10px;"
+                       placeholder="Please, Scan Barcode Here......" invisible="operation_type != 'scan'"/>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='order_lines']/field[@name='order_line']"
+                   position="attributes">
+                <attribute name="readonly">so_type not in ['advertisement','others']</attribute>
+                <attribute name="force_save">1</attribute>
+                <attribute name="widget">one2many_search</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_uom_qty']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='qty_delivered']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='qty_invoiced']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='order_lines']/field[@name='order_line']//tree"
+                   position="inside">
+                <button name="remove_sale_order_line" type="object" class="fa fa-trash"
+                        invisible="parent.operation_type == 'document'"/>
+            </xpath>
+            <xpath expr="//field[@name='product_template_id']" position="before">
+                <field name="s_no" optional="hide"/>
+            </xpath>
+            <!--            <xpath expr="//form/sheet/notebook/page[@name='order_lines']/field[@name='order_line']//tree"-->
+            <!--                   position="inside">-->
+            <!--                <button name="remove_sale_order_line" type="object" class="fa fa-trash"/>-->
+            <!--            </xpath>-->
+            <xpath expr="//tree/field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('nhcl_type','=',parent.dummy_so_type)]</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
+                <attribute name="domain">[('nhcl_type','=',parent.dummy_so_type)]</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_template_id']" position="after">
+                <field name="lot_ids" widget="many2many_tags"
+                       options="{'no_create': True, 'no_open': True, 'no_edit':True}" readonly="1" force_save="1"/>
+                <field name="branded_barcode"/>
+                <field name="family_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}" readonly="1" force_save="1" optional="hide"/>
+                <field name="category_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}" readonly="1" force_save="1" optional="hide"/>
+                <field name="class_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}" readonly="1" force_save="1" optional="hide"/>
+                <field name="brick_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}" readonly="1" force_save="1" optional="hide"/>
+                <field name="type_product" column_invisible="1"/>
+                <field name="sale_serial_type" column_invisible="1"/>
+                <field name="l10n_in_hsn_code"/>
+            </xpath>
+            <xpath expr="//form/header" position="inside">
+                <button name="reset_product_lines" type="object" string="Reset Lines" invisible="state == 'sale'"/>
+                <button name="%(import_order_line_action)d"
+						string="Import Products"
+                        type="action"
+                        class="btn-primary" invisible="allow_import_order == False or operation_type != 'import' or state == 'sale'"/>
+					<field name="allow_import_order" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+                <attribute name="domain">[('group_contact.name', 'in', ['Customer','Branch'])]</attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Store Indent Details" invisible="nhcl_sale_type != 'store'">
+                    <field name="sale_indent_details_ids">
+                        <tree editable="bottom" create="false" delete="false">
+                            <field name="product_id"/>
+                            <field name="pi_quantity"/>
+                            <field name="allocated_quantity"/>
+                            <field name="order_date" optional="hide"/>
+                            <field name="company_id" optional="hide"/>
+
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <!--    Sale Order Filter by SO Type View-->
+    <record id="view_sale_order_filter_cmr" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='campaign_id']" position="after">
+                <filter name="po_advertisement" string="Advertisement" domain="[('so_type', '=', 'advertisement')]"/>
+                <filter name="po_ho_operation" string="HO Operation" domain="[('so_type', '=', 'ho_operation')]"/>
+                <filter name="po_inter_state" string="Inter State" domain="[('so_type', '=', 'inter_state')]"/>
+                <filter name="po_others" string="Others" domain="[('so_type', '=', 'others')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+        <field name="context">{'search_default_my_quotation': 1,'delete': False,}</field>
+    </record>
+
+
+    <record id="sale_order_line_tree" model="ir.ui.view">
+        <field name="name">sale.order.line.tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">17</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_id']" position="after">
+                <field name="state" optional="hide"/>
+                <field name="invoice_status" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="analytic_account_id" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='order_partner_id']" position="after">
+                <field name="family_id"/>
+                <field name="category_id"/>
+                <field name="class_id"/>
+                <field name="brick_id"/>
+                <field name="product_id"/>
+                <field name="product_template_id" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='product_uom']" position="before">
+                <field name="price_unit" sum="Price Unit" optional="show"/>
+                <field name="discount" optional="hide"/>
+                <field name="lot_ids" widget="many2many_tags" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='price_subtotal']" position="after">
+                <field name="tax_id" widget="many2many_tags" optional="hide"/>
+                <field
+                        name="price_tax"
+                        widget="monetary"
+                        optional="hide"
+                        sum="Price Tax"
+                />
+                <field name="price_total" optional="hide" sum="Price Total"/>
+            </xpath>
+            <xpath expr="//tree" position="inside">
+                <field name="date_order" widget="date" optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='salesman_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_delivered']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_invoiced']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_to_invoice']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_uom_qty']" position="attributes">
+                <attribute name="sum">Product Qty</attribute>
+            </xpath>
+            <xpath expr="//field[@name='price_subtotal']" position="attributes">
+                <attribute name="sum">Price Subtotal</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_sale_order_line_pivot">
+        <field name="name">sale.order.line.pivot</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Order Lines" sample="1">
+                <field name="product_id" type="row"/>
+                <field name="date_order" type="col"/>
+                <field name="price_subtotal" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sale_order_line_search" model="ir.ui.view">
+        <field name="name">sale.order.line.search</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_sales_order_line_filter"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='to_invoice']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='order_id']" position="after">
+                <field name="lot_ids"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_sales_order_lines']" position="after">
+                <separator/>
+                <filter
+                        name="flt_state_draft"
+                        string="Quotation"
+                        domain="[('state','=','draft')]"
+                />
+                <filter
+                        name="flt_state_sent"
+                        string="Quotation Sent"
+                        domain="[('state','=','sent')]"
+                />
+                <filter
+                        name="flt_state_sale"
+                        string="Sales Order"
+                        domain="[('state','=','sale')]"
+                />
+                <filter
+                        name="flt_state_done"
+                        string="Locked"
+                        domain="[('state','=','done')]"
+                />
+                <filter
+                        name="flt_state_cancel"
+                        string="Cancelled"
+                        domain="[('state','=','cancel')]"
+                />
+                <separator/>
+                <filter
+                        name="flt_invoice_status_no"
+                        string="Nothing to Invoice"
+                        domain="[('invoice_status','=','no')]"
+                />
+                <filter
+                        name="flt_invoice_status_upselling"
+                        string="Upselling Opportunity"
+                        domain="[('invoice_status','=','upselling')]"
+                />
+                <filter
+                        name="flt_invoice_status_to_invoice"
+                        string="To Invoice"
+                        domain="[('invoice_status','=','to invoice')]"
+                />
+                <filter
+                        name="flt_invoice_status_invoiced"
+                        string="Fully Invoiced"
+                        domain="[('invoice_status','=','invoiced')]"
+                />
+                <separator/>
+                <filter name="flt_date_order" string="Order Date" date="date_order"/>
+            </xpath>
+            <xpath expr="//group/filter[@name='product']" position="before">
+                <filter name="family_id" string="Division" context="{'group_by': 'family_id'}"/>
+                <filter name="category_id" string="Section" context="{'group_by': 'category_id'}"/>
+                <filter name="class_id" string="Department" context="{'group_by': 'class_id'}"/>
+                <filter name="brick_id" string="Category" context="{'group_by': 'brick_id'}"/>
+                <filter
+                        name="groupby_invoice_status"
+                        string="Invoice Status"
+                        context="{'group_by' : 'invoice_status'}"
+                />
+                <filter
+                        name="groupby_account_analytic"
+                        string="Analytic Account"
+                        context="{'group_by' : 'analytic_account_id'}"
+                />
+                <filter
+                        name="groupby_date_order"
+                        string="Order Date"
+                        context="{'group_by' : 'date_order'}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_orders_lines" model="ir.actions.act_window">
+        <field name="name">Order Lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="search_view_id" ref="sale_order_line_search"/>
+        <field name="view_id" ref="sale_order_line_tree"/>
+        <field name="domain">[('display_type', 'not in', ['line_section', 'line_note'])]</field>
+        <field name="context" eval="{
+            'search_default_family_id': 1,
+            'search_default_category_id': 1,
+            'search_default_class_id': 1,
+            'search_default_brick_id': 1,
+            'search_default_product': 1,}"/>
+    </record>
+
+    <menuitem
+            id="sale_order_line_menu"
+            name="Order Lines"
+            action="action_orders_lines"
+            parent="sale.sale_order_menu"
+            sequence="21"
+    />
+
+</odoo>

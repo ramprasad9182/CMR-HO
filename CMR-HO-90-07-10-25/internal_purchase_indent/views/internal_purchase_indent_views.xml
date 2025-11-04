@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_internal_purchase_indent_tree_one" model="ir.ui.view">
+        <field name="name">internal.purchase.indent.tree</field>
+        <field name="model">internal.purchase.indent</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Indents">
+                <field name="name"/>
+                <field name="approval_request_id"/>
+                <field name="vendor"/>
+                <field name="product_category" optional="hide" widget="many2many_tags"/>
+                <field name="product_variant" widget="many2many_tags" optional="hide"/>
+                <field name="purchase_order_ids" widget="many2many_tags" optional="hide"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-success="state == 'done'"
+                       decoration-muted="state == 'cancel'" decoration-primary="state == 'progress'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_internal_purchase_indent_form_one" model="ir.ui.view">
+        <field name="name">internal.purchase.indent.form</field>
+        <field name="model">internal.purchase.indent</field>
+        <field name="arch" type="xml">
+            <form string="Internal Purchase Indent">
+                <header>
+                    <button name="action_load_po_lines" invisible="state != 'draft'" type="object"
+                            string="Load PO Lines" class="btn-primary"/>
+                    <button name="action_confirm" invisible="state != 'progress'" type="object"
+                            string="Confirm" class="btn-primary"/>
+
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state not in ['draft', 'progress', 'done'] or not id" data-hotkey="x"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,progress,done"/>
+
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="request_owner_id" readonly="state in ['progress','done','draft']"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="store" widget="many2many_tags" readonly="state in ['progress','done']" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="from_date" readonly="state in ['progress','done']"/>
+                            <field name="to_date" readonly="state in ['progress','done']"/>
+                            <field name="indent_filter_type" readonly="state in ['progress','done']"/>
+                            <field name="purchase_order_ids" readonly="state in ['progress','done']"  widget="many2many_tags" domain="[('company_id','=',store)]" invisible="indent_filter_type=='product_category'"
+                                                                options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="product_category" readonly="state in ['progress','done']" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" invisible="indent_filter_type=='purchase'"/>
+                            <field name="product_variant" widget="many2many_tags" invisible="indent_filter_type=='purchase'"
+                                   readonly="state in ['progress','done']" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="vendor" readonly="approval_request_id != False" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="approval_request_id" readonly="state in ['progress','done']"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="PO Lines">
+                            <field name="order_line_ids">
+                                <tree editable="bottom" create="false" delete="false">
+                                    <field name="s_no"/>
+                                    <!--                                    <field name="po_line_id"/>-->
+                                    <field name="store_id"/>
+                                    <field name="purchase_indent_id"/>
+                                    <field name="state"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Product Summary Data">
+                            <group>
+                                <field name="select_all" widget="boolean"/>
+                            </group>
+                            <button type="object" name="create_pi_request" invisible="approval_request_id != False"
+                                    string="Request PI" class="oe_highlight"/>
+                            <field name="product_summary_ids">
+                                <tree editable="bottom" delete="false" create="false">
+                                    <field name="s_no"/>
+                                    <field name="select" widget="boolean"/>
+                                    <field name="as_of_date"/>
+                                    <field name="product_id"/>
+                                    <field name="pi_quantity" readonly="1" force_save="1"/>
+                                    <field name="quantity_to_raise" readonly="parent.state != 'draft'"/>
+                                    <field name="on_hand" readonly="1" force_save="1"/>
+                                    <field name="incoming_quantity" optional="hide" readonly="1" force_save="1"/>
+                                    <field name="outgoing_quantity" optional="hide" readonly="1" force_save="1"/>
+                                    <field name="forecast_quantity" string="Available Quantity" readonly="1" force_save="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_internal_purchase_indent_search_one" model="ir.ui.view">
+        <field name="name">internal.purchase.indent.search.view</field>
+        <field name="model">internal.purchase.indent</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="request_owner_id"/>
+                <field name="product_category"/>
+                <field name="product_variant"/>
+                <field name="vendor"/>
+                <filter string="My Indents" domain="[('request_owner_id','!=',False)]" name="request_owner_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="User" name="request_owner_id" context="{'group_by':'request_owner_id'}"/>
+                    <filter string="Product Category" name="product_category"
+                            context="{'group_by': 'product_category'}"/>
+                    <filter string="Product Variant" name="product_variant"
+                            domain="[]"
+                            context="{'group_by': 'product_variant_tags'}"/>
+                    <filter string="Vendor" name="vendor"
+                            context="{'group_by': 'vendor'}"/>
+                    <filter string="Company" name="store" domain="[]"
+                            context="{'group_by': 'store_tags'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+     <record id="view_pt_internal_purchase_indent_tree_one" model="ir.ui.view">
+        <field name="name">pt.internal.purchase.indent.tree</field>
+        <field name="model">pt.upload.indent</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Indents">
+                <field name="name"/>
+<!--                <field name="approval_request_id"/>-->
+                <field name="vendor"/>
+                <field name="product_category" optional="hide" widget="many2many_tags"/>
+                <field name="product_variant" widget="many2many_tags" optional="hide"/>
+                <field name="purchase_order_id"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-success="state == 'done'"
+                       decoration-muted="state == 'cancel'" decoration-primary="state == 'progress'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pt_internal_purchase_indent_form_one" model="ir.ui.view">
+        <field name="name">pt.internal.purchase.indent.form</field>
+        <field name="model">pt.upload.indent</field>
+        <field name="arch" type="xml">
+            <form string="PT Internal Purchase Indent">
+                <header>
+                    <button name="action_load_po_lines" invisible="state != 'draft'" type="object"
+                            string="Load PO Lines" class="btn-primary"/>
+<!--                    <button name="action_confirm" invisible="state != 'progress'" type="object"-->
+<!--                            string="Confirm" class="btn-primary"/>-->
+
+<!--                    <button name="action_cancel" type="object" string="Cancel"-->
+<!--                            invisible="state not in ['draft', 'progress', 'done'] or not id" data-hotkey="x"/>-->
+                    <field name="state" widget="statusbar" statusbar_visible="draft,progress,done"/>
+
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="request_owner_id" readonly="state in ['progress','done','draft']"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="store" readonly="state in ['progress','done']" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="from_date" readonly="state in ['progress','done']"/>
+                            <field name="to_date" readonly="state in ['progress','done']"/>
+                            <field name="indent_filter_type" readonly="state in ['progress','done']"/>
+                            <field name="purchase_order_id" readonly="state in ['progress','done']"   domain="[('company_id','=',store)]" invisible="indent_filter_type=='product_category'"
+                                                                options="{'no_create': True, 'no_open': True}"/>
+                            <field name="location_type"/>
+                            <field name="bill_number"/>
+                            <field name="receipt_number"/>
+
+                        </group>
+                        <group>
+                            <field name="product_category" readonly="state in ['progress','done']" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" invisible="indent_filter_type=='purchase'"/>
+                            <field name="product_variant" widget="many2many_tags" invisible="indent_filter_type=='purchase'"
+                                   readonly="state in ['progress','done']" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="vendor" options="{'no_create': True, 'no_open': True}"/>
+<!--                            <field name="approval_request_id" readonly="state in ['progress','done']"/>-->
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="PO Lines">
+                            <field name="pt_order_line_ids" readonly="state== 'done'">
+                                <tree editable="bottom" create="false" delete="false">
+                                    <!--                                    <field name="po_line_id"/>-->
+                                    <field name="store_id"/>
+                                    <field name="pt_purchase_indent_id"/>
+<!--                                    <field name="parent.icode_barcode"/>-->
+                                    <field name="state"/>
+                                    <field name="product_id"/>
+                                    <field name="icode_barcode"/>
+                                    <field name="quantity"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Product Summary Data">
+                            <group>
+                                <field name="select_all" widget="boolean"/>
+                            </group>
+                            <button name="action_update_receipt_quantity"
+        string="Update Receipt Quantities"
+        type="object"
+        class="btn-primary" invisible="state == 'done'" />
+
+                            <field name="pt_product_summary_ids" readonly="state == 'done'">
+                                <tree editable="bottom" delete="false" create="false">
+                                    <field name="select" widget="boolean"/>
+                                    <field name="as_of_date"/>
+                                    <field name="product_id"/>
+                                     <field name="icode_barcode"/>
+                                    <field name="pi_quantity" readonly="1" force_save="1"/>
+
+<!--                                    <field name="quantity_to_raise" readonly="parent.state != 'draft'"/>-->
+<!--                                    <field name="on_hand" readonly="1" force_save="1"/>-->
+<!--                                    <field name="incoming_quantity" optional="hide" readonly="1" force_save="1"/>-->
+<!--                                    <field name="outgoing_quantity" optional="hide" readonly="1" force_save="1"/>-->
+<!--                                    <field name="forecast_quantity" string="Available Quantity" readonly="1" force_save="1"/>-->
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pt_internal_purchase_indent_search_one" model="ir.ui.view">
+        <field name="name">pt.internal.purchase.indent.search.view</field>
+        <field name="model">pt.upload.indent</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="request_owner_id"/>
+                <field name="product_category"/>
+                <field name="product_variant"/>
+                <field name="vendor"/>
+                <filter string="My Indents" domain="[('request_owner_id','!=',False)]" name="request_owner_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="User" name="request_owner_id" context="{'group_by':'request_owner_id'}"/>
+                    <filter string="Product Category" name="product_category"
+                            context="{'group_by': 'product_category'}"/>
+                    <filter string="Product Variant" name="product_variant"
+                            domain="[]"
+                            context="{'group_by': 'product_variant_tags'}"/>
+                    <filter string="Vendor" name="vendor"
+                            context="{'group_by': 'vendor'}"/>
+                    <filter string="Company" name="store" domain="[]"
+                            context="{'group_by': 'store_tags'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_internal_purchase_indent_two" model="ir.actions.act_window">
+        <field name="name">PT Upload Indents</field>
+        <field name="res_model">pt.upload.indent</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_internal_purchase_indent_one" model="ir.actions.act_window">
+        <field name="name">Internal Purchase Indents</field>
+        <field name="res_model">internal.purchase.indent</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+     <record id="action_internal_purchase_indent_two" model="ir.actions.act_window">
+        <field name="name">PT Upload Indents</field>
+        <field name="res_model">pt.upload.indent</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_internal_purchase_indent_root_one" name="Internal Indents"
+              web_icon="internal_purchase_indent,static/description/project_management.png" sequence="10"/>
+    <menuitem id="menu_internal_purchase_indent_one" name="Purchase Indents"
+              parent="menu_internal_purchase_indent_root_one" action="action_internal_purchase_indent_one"/>
+     <menuitem id="menu_internal_purchase_indent_two" name="PT Upload"
+              parent="menu_internal_purchase_indent_root_one" action="action_internal_purchase_indent_two"/>
+</odoo>

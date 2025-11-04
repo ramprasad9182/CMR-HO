@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="cmr_customizations.LogisticDashboard">
+        <section id="logistics">
+            <br/>
+            <div class="dashboard-wrap">
+                <div class="dashboard">
+                    <!-- ===== Column 1 ===== -->
+                    <div class="dashboard-column col-1" data-col="1">
+                        <!-- LR Details -->
+                        <div class="card">
+                            <h3>LR Details</h3>
+                            <div class="details-row1">
+                                <div class="detail1">
+                                    <span>LR Against PO</span>
+                                    <strong>
+                                        <t t-esc="state.loading ? '…' : fmt(state.LrWithPO)"/>
+                                    </strong>
+                                </div>
+                                <div class="vertical-divider1"></div>
+                                <div class="detail1">
+                                    <span>Without PO</span>
+                                    <strong>
+                                        <t t-esc="state.loading ? '…' : fmt(state.LrWithoutPO)"/>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Delivered -->
+
+
+                        <div class="card">
+                            <h3>Delivered</h3>
+                            <div class="info-row">
+                                <span>Today</span>
+                                <strong>
+                                    <t t-esc="state.loadingDelivery ? '…' : fmt(state.done.today)"/>
+                                </strong>
+                            </div>
+                            <div class="divider"/>
+                            <div class="info-row">
+                                <span>Week</span>
+                                <strong>
+                                    <t t-esc="state.loadingDelivery ? '…' : fmt(state.done.week)"/>
+                                </strong>
+                            </div>
+                            <div class="divider"/>
+                            <div class="info-row">
+                                <span>Month</span>
+                                <strong>
+                                    <t t-esc="state.loadingDelivery ? '…' : fmt(state.done.month)"/>
+                                </strong>
+                            </div>
+                            <div class="divider"/>
+                        </div>
+                        <!-- Card: Delivered and Currently in Basement -->
+                        <div class="card card--s" data-card="delivered-basement">
+                            <div class="card__header">
+                                <h3 class="card__title">Delivered and Currently in Basement</h3>
+                            </div>
+                            <div class="card__body">
+                                <!-- Row 1 -->
+                                <div class="metric-row" data-row="delivered">
+                                    <div class="metric-row__label">Delivered</div>
+                                    <div class="metric-row__value metric-row__value--lg">
+                                        <t t-esc="state.loadingBasementDelivery ? '…' : this.fmt(state.basementDelivery.delivered_total)"/>
+                                    </div>
+                                </div>
+                                <div class="divider"></div>
+                                <!-- Row 2 -->
+                                <div class="metric-row" data-row="in_basement">
+                                    <div class="metric-row__label">In Basement</div>
+                                    <div class="metric-row__value">
+                                        <t t-esc="state.loadingBasementDelivery ? '…' : this.fmt(state.basementDelivery.basement)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 1-4: Zonewise -->
+                                                <div class="card card--s" data-card="zonewise-summary">
+                            <!-- Split header with two KPIs -->
+                            <div class="split-head">
+                                <!-- Total Zones -->
+                                <div class="split-cell">
+                                    <div class="split-title">Total Zones</div>
+                                    <div class="split-value split-value--lg">
+                                        <t t-esc="state.unopenedZoneSummary.total_zones or 0"/>
+                                    </div>
+                                </div>
+
+                                <!-- Total LRs -->
+                                <div class="split-cell split-cell--right">
+                                    <div class="split-title">Total LRs</div>
+                                    <div class="split-value">
+                                        <t t-esc="state.unopenedZoneSummary.total_lrs or 0"/>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="card__body">
+                                <!-- Ensure data exists -->
+                                <t t-if="state.unopenedZoneSummary and state.unopenedZoneSummary.top_zones and state.unopenedZoneSummary.top_zones.length">
+                                    <t t-foreach="state.unopenedZoneSummary.top_zones" t-as="z" t-key="z.zone_id">
+                                        <div class="metric-row" t-att-data-row="'zone_' + z.zone_id">
+                                            <div class="metric-row__label">
+                                                <t t-esc="z.zone_name"/>
+                                            </div>
+                                            <div class="metric-row__value">
+                                                <t t-esc="z.zone_count"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="divider"/>
+
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <div class="metric-row">
+                                        <div class="metric-row__label">No Unopened Zones</div>
+                                        <div class="metric-row__value">0</div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- ===== Column 2 ===== -->
+                    <div class="dashboard-column col-2" data-col="2">
+                        <!-- Delivered -->
+                        <div class="card">
+                            <h3>Status of the LR’s</h3>
+
+                            <!-- Delivered -->
+                            <div class="status-row">
+                                <span>Delivered</span>
+                                <div class="status-bar">
+                                    <div class="fill blue"
+                                         t-att-style="'width:' + this.pct(state.status.delivered, state.status.total) + '%;'">
+                                    </div>
+                                </div>
+                                <strong class="count">
+                                    <t t-esc="state.loadingStatus ? '…' : fmt(state.status.delivered)"/>
+                                </strong>
+                            </div>
+
+                            <!-- In Transit -->
+                            <div class="status-row">
+                                <span>In Transit</span>
+                                <div class="status-bar">
+                                    <div class="fill light-blue"
+                                         t-att-style="'width:' + this.pct(state.status.in_transit, state.status.total) + '%;'">
+                                    </div>
+                                </div>
+                                <strong class="count">
+                                    <t t-esc="state.loadingStatus ? '…' : fmt(state.status.in_transit)"/>
+                                </strong>
+                            </div>
+
+                            <!-- Delayed -->
+                            <div class="status-row">
+                                <span>Delayed</span>
+                                <div class="status-bar">
+                                    <div class="fill orange"
+                                         t-att-style="'width:' + this.pct(state.status.delayed, state.status.total) + '%;'">
+                                    </div>
+                                </div>
+                                <strong class="count">
+                                    <t t-esc="state.loadingStatus ? '…' : fmt(state.status.delayed)"/>
+                                </strong>
+                            </div>
+
+                            <!-- Canceled -->
+                            <div class="status-row">
+                                <span>Canceled</span>
+                                <div class="status-bar">
+                                    <div class="fill red"
+                                         t-att-style="'width:' + this.pct(state.status.canceled, state.status.total) + '%;'">
+                                    </div>
+                                </div>
+                                <strong class="count">
+                                    <t t-esc="state.loadingStatus ? '…' : fmt(state.status.canceled)"/>
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Partial Delivered LRs</h3>
+                            <div class="card2-content">
+                                <strong class="big-number2">
+                                    <t t-esc="state.loadingPartialDelivered ? '…' : fmt(state.partialDelivered)"/>
+                                </strong>
+                                <div class="bar-chart2">
+                                    <div class="bar2" style="height: 20%"/>
+                                    <div class="bar2" style="height: 40%"/>
+                                    <div class="bar2" style="height: 90%"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Row: Column 2, Position 3 -->
+                        <div class="card-pair card-pair--two" data-col="2" data-pos="3">
+                            <!-- Card A: Zonewise Unopened -->
+                            <div class="card card--s" data-card="zonewise-unopened">
+                                <div class="card__header">
+                                    <h3 class="card__title">Zone Wise<br/>Unopened LR's
+                                    </h3>
+                                </div>
+                                <div class="card__body">
+                                    <!-- Safety - check state and items existence -->
+                                    <t t-if="state.unopenedZone and state.unopenedZone.items and state.unopenedZone.items.length">
+                                        <t t-foreach="state.unopenedZone.items" t-as="zone" t-key="zone.placement_id">
+                                            <div class="metric-row" t-att-data-row="'division_' + zone.placement_id">
+                                                <div class="metric-row__label">
+                                                    <t t-esc="zone.placement_name"/>
+                                                </div>
+                                                <div class="metric-row__value">
+                                                    <t t-esc="zone.count"/>
+                                                </div>
+                                            </div>
+                                            <div class="divider"/>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="metric-row">
+                                            <div class="metric-row__label">No Unopened Zones</div>
+                                            <div class="metric-row__value">0</div>
+                                        </div>
+                                        <div class="divider"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <!-- Card B: Divisionwise Unopened LR's -->
+                            <div class="card card--s" data-card="divisionwise-unopened">
+                                <div class="card__header">
+                                    <h3 class="card__title">Division Wise<br/>Unopened LR's
+                                    </h3>
+                                </div>
+                                <div class="card__body">
+                                    <!-- Safety - check state and items existence -->
+                                    <t t-if="state.unopenedDivision and state.unopenedDivision.items and state.unopenedDivision.items.length">
+                                        <t t-foreach="state.unopenedDivision.items" t-as="division"
+                                           t-key="division.division_name">
+                                            <div class="metric-row"
+                                                 t-att-data-row="'division_' + division.division_name">
+                                                <div class="metric-row__label">
+                                                    <t t-esc="division.division_name"/>
+                                                </div>
+                                                <div class="metric-row__value">
+                                                    <t t-esc="division.count"/>
+                                                </div>
+                                            </div>
+                                            <div class="divider"/>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="metric-row">
+                                            <div class="metric-row__label">No Unopened Division</div>
+                                            <div class="metric-row__value">0</div>
+                                        </div>
+                                        <div class="divider"/>
+                                    </t>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Card 2-4: Bales vs Transport Charges -->
+                        <div class="card card--s" data-card="bales-vs-charges">
+                            <div class="split-two">
+                                <!-- LEFT: No. of Bales against LR -->
+                                <div class="half half--left half--no-inner-divider">
+                                    <div class="half-title">No. of Bales<br/>against LR
+                                    </div>
+                                    <div class="kv-table kv-table--tight">
+                                        <div class="kv-row">
+                                            <div class="kv-key">Open</div>
+                                            <div class="kv-value">
+                                                <t t-esc="state.loadingOpenParcel ? '…' : this.fmt(state.openParcel.done)"/>
+                                            </div>
+                                        </div>
+                                        <div class="kv-row">
+                                            <div class="kv-key">Unopen</div>
+                                            <div class="kv-value">
+                                                <t t-esc="state.loadingOpenParcel ? '…' : this.fmt(state.openParcel.draft)"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- RIGHT: Transport Charges LR -->
+                                <div class="half half--right half--no-inner-divider">
+                                    <div class="half-title">Transport<br/>Charges LR
+                                    </div>
+                                    <div class="kv-table kv-table--tight">
+                                        <div class="kv-row">
+                                            <div class="kv-key">Done Amount</div>
+                                            <div class="kv-value">
+                                                <t t-esc="state.loadingChargesTotals ? '…' : this.fmtINR(state.chargesTotals.done_rupees)"/>
+                                            </div>
+                                        </div>
+                                        <div class="kv-row">
+                                            <div class="kv-key">Draft Amount</div>
+                                            <div class="kv-value">
+                                                <t t-esc="state.loadingChargesTotals ? '…' : this.fmtINR(state.chargesTotals.draft_rupees)"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2-5: Transport Charges -->
+                        <div class="card card--s" data-card="transport-charges">
+                            <div class="card__header">
+                                <h3 class="card__title">Transport Charges</h3>
+                            </div>
+                            <div class="card__body">
+                                <!-- Progress -->
+                                <div class="progress progress--sm" aria-label="Transport Charges progress">
+                                    <div class="progress__track">
+                                        <!-- set width via JS later -->
+                                        <div class="progress__fill" style="width: 78%;"></div>
+                                    </div>
+                                </div>
+                                <!-- Label + value row -->
+                                <div class="kv-table kv-table--tight kv-table--no-vline" style="margin-top: 10px;">
+                                    <div class="kv-row">
+                                        <div class="kv-key">Total</div>
+                                        <div class="kv-value">₹
+                                            <t t-esc="state.loadingChargesTotals ? '…' : this.fmtINR(state.chargesTotals.total_rupees)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ===== Column 3 ===== -->
+                    <div class="dashboard-column col-3" data-col="3">
+                        <!-- Delivered -->
+                        <div class="card">
+                            <h3>Upcoming Deliveries</h3>
+                            <div class="info-row">
+                                <span>Today</span>
+                                <strong>
+                                    <t t-esc="state.loadingDelivery ? '…' : fmt(state.draft.today)"/>
+                                </strong>
+                            </div>
+                            <div class="divider"/>
+
+                            <div class="info-row">
+                                <span>Week</span>
+                                <strong>
+                                    <t t-esc="state.loadingDelivery ? '…' : fmt(state.draft.week)"/>
+                                </strong>
+                            </div>
+                            <div class="divider"/>
+
+                            <div class="info-row">
+                                <span>Month</span>
+                                <strong>
+                                    <t t-esc="state.loadingDelivery ? '…' : fmt(state.draft.month)"/>
+                                </strong>
+                            </div>
+                            <div class="divider"/>
+                        </div>
+                        <!--    Division Wise LR's      -->
+                        <div class="card">
+                            <h3>Top Delivered Products</h3>
+                            <div class="tp-total">
+                                <spa>Total:
+                                    <t t-esc="state.loadingTopProducts ? '…' : this.fmt(state.topProducts.total)"/>
+                                </spa>
+                            </div>
+                            <div class="tp-chart">
+                                <t t-foreach="state.topProducts.items" t-as="it" t-key="it.key">
+                                    <div class="tp-col">
+                                        <div class="tp-count">
+                                            <t t-esc="this.fmt(it.count)"/>
+                                        </div>
+
+                                        <!-- Plan B: pixel height per bar -->
+                                        <div class="tp-bar"
+                                             t-att-title="it.product_name"
+                                             t-att-style="'height:' + this.barPx(it.count, 140) + 'px;'">
+                                        </div>
+
+                                        <div class="tp-label" t-att-title="it.product_name">
+                                            <t t-esc="it.parent_category"/>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-if="!state.loadingTopProducts and ((state.topProducts.items || []).length === 0)">
+                                    <div class="muted">No delivered records</div>
+                                </t>
+                            </div>
+                        </div>
+                        <!-- Card 3-3: Partner table -->
+                        <div class="card card--s" data-card="partner-table">
+                            <div class="kv-table kv-table--tight">
+                                <!-- Header pair -->
+                                <div class="kv-row kv-row--head">
+                                    <div class="kv-key">Vendor</div>
+                                    <div class="kv-value" style="padding-right:20px;">Counts</div>
+                                </div>
+                                <!-- Body rows -->
+                                <div class="kv-row">
+                                    <div class="kv-key">Agent</div>
+                                    <div class="kv-value" style="padding-right:25px;">
+                                        <t t-esc="state.loadingRoleSplit ? '…' : this.fmt(state.roleSplit.agent)"/>
+                                    </div>
+                                </div>
+                                <div class="kv-row">
+                                    <div class="kv-key">Transporter</div>
+                                    <div class="kv-value" style="padding-right:25px;">
+                                        <t t-esc="state.loadingRoleSplit ? '…' : this.fmt(state.roleSplit.transporter)"/>
+                                    </div>
+                                </div>
+                                <div class="kv-row">
+                                    <div class="kv-key">Vendor</div>
+                                    <div class="kv-value" style="padding-right:25px;">
+                                        <t t-esc="state.loadingRoleSplit ? '…' : this.fmt(state.roleSplit.vendor)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 3-4: Pending for GRC (Division-wise) -->
+                        <div class="card card--s" data-card="grc-pending">
+                            <div class="card__header">
+                                <h3 class="card__title">
+                                    Pending for GRC by
+                                    <br/>
+                                    Division-wise with Bale qty
+                                </h3>
+                            </div>
+                            <div class="card__body">
+                                <!-- Safety - check state and items existence -->
+                                <t t-if="state.unopenedDivisionBales and state.unopenedDivisionBales.items and state.unopenedDivisionBales.items.length">
+                                    <t t-foreach="state.unopenedDivisionBales.items" t-as="division"
+                                       t-key="division.division_name">
+                                        <div class="metric-row"
+                                             t-att-data-row="'division_' + division.division_name">
+                                            <div class="metric-row__label">
+                                                <t t-esc="division.division_name"/>
+                                            </div>
+                                            <div class="metric-row__value">
+                                                <t t-esc="division.parcel_bale_total"/>
+                                            </div>
+                                        </div>
+                                        <div class="divider"/>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <div class="metric-row">
+                                        <div class="metric-row__label">No Unopened Division</div>
+                                        <div class="metric-row__value">0</div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-footer is-sticky">
+                    <div class="footer-row" style="height:200px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+</templates>

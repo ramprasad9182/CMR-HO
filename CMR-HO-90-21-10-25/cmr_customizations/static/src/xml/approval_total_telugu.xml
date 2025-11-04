@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="crm_customizations.TaxTotalsField" t-inherit="account.TaxTotalsField" t-inherit-mode="extension"   owl="1">
+        <xpath expr="//label[contains(text(), 'Total')]" position="replace">
+                <label class="o_form_label o_tax_total_label">Total/టోటల్</label>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_admin_dashboard_menu" model="ir.actions.client">
+        <field name="name">Admin SAP Dashboard</field>
+        <field name="tag">admin_dashboard_actions</field>
+    </record>
+
+    <menuitem id="menu_tally_dashboard_main"
+              name="SAP Integration Dashboard"
+              action="action_admin_dashboard_menu"
+              parent="integration_admin_panel.menu_tally_integration_root"
+              sequence="20"
+    />
+</odoo>

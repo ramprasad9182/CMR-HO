@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="interview_form_thank_you" name="Interview Form Thank You">
+    <t t-call="website.layout">
+        <div class="container mt-5 mb-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <div class="alert alert-success shadow-lg p-4">
+                        <h2>Thank You!</h2>
+                        <p>Your application has been submitted successfully.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+</odoo>

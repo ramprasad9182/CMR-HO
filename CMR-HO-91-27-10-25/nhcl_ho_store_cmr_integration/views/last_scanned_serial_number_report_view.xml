@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+
+    <record id="nhcl_last_scanned_report" model="ir.actions.act_window">
+        <field name="name">Last Scanned Serial Numbers Report</field>
+        <field name="res_model">last.scanned.serial.number.report</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="nhcl_last_scanned_report_form" model="ir.ui.view">
+        <field name="name">Last Scanned Serial Number Report Form</field>
+        <field name="model">last.scanned.serial.number.report</field>
+        <field name="arch" type="xml">
+            <form string="Last Scanned Serial Numbers" create="0">
+                <h1 style="color:black;font-weight:1000;text-align:center;">Last Scanned Serial Numbers
+                </h1>
+                <sheet>
+                    <header>
+                        <button name="get_last_scanned_unmatched_product_report" type="object"
+                                string="Submit" class="btn-primary"/>
+                        <button name="action_to_reset" type="object"
+                                string="Reset" class="btn-secondary"/>
+                        <button name="get_excel_sheet" type="object"
+                                string="Import Excel" class="btn-secondary"/>
+                    </header>
+                    <group name="last_scanned_report" style="border: 2px solid #990099; padding: 10px;">
+                        <group name="pos_delivery_hour_report_group">
+                                <field name="nhcl_store_id"
+                                       placeholder="Select Company"
+                                       domain="[('nhcl_active', '=', True),('nhcl_store_type', '!=', 'ho')]"
+                                       widget="many2many_checkboxes"
+                                       />
+                        </group>
+                        <group name="last_scanned_report_details">
+                            <group>
+                                <field name="from_date" required="1" widget="daterange"
+                                       options="{'to_date_field': 'to_date'}"/>
+                                <field name="to_date" required="1"/>
+                            </group>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Unmatched Serial Numbers Report">
+                            <field name="last_scanned_report_line_ids" widget="one2many_search" readonly="1" forsesave="1">
+                                <tree create="0" editable="bottom">
+                                     <field name="store_name"/>
+                                    <field name="store_receipt_number"/>
+                                    <field name="source_document" optional="hide"/>
+<!--                                    <field name="scanned_product_id"/>-->
+                                    <field name="scanned_product_name"/>
+                                    <field name="scanned_serial"/>
+                                    <field name="scanned_product_barcode"/>
+                                    <field name="stock_qty"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="reporting_status_last_scanned_serial_num"
+              name="Last SCanned Serial Numbers"
+              parent="nhcl_ho_store_cmr_integration.reporting_store_heading"
+              action="nhcl_last_scanned_report"
+              sequence="9"/>
+
+</odoo>
+

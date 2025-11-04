@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Action -->
+    <record id="nhcl_pos_audit_report_action" model="ir.actions.act_window">
+        <field name="name">POS Audit Report</field>
+        <field name="res_model">nhcl.pos.audit.report</field>
+        <field name="view_mode">form</field>
+         <field name="domain">[]</field>
+         <field name="context">{}</field>
+    </record>
+
+    <!-- Form View -->
+    <record id="nhcl_pos_audit_report_form" model="ir.ui.view">
+        <field name="name">nhcl.pos.audit.report.form</field>
+        <field name="model">nhcl.pos.audit.report</field>
+        <field name="arch" type="xml">
+            <form string="POS Audit Report" create="0">
+                <h1 style="color:black;font-weight:1000;text-align:center;">POS Audit Report</h1>
+                <sheet>
+                    <header>
+                        <button name="get_pos_audit_report" type="object"
+                                string="Submit" class="btn-primary"/>
+                    </header>
+
+                    <group name="filters" style="border: 2px solid #0099cc; padding: 10px;">
+                        <group>
+                            <field name="nhcl_store_id"
+                                   placeholder="Select Company"
+                                   widget="many2many_checkboxes"
+                                   domain="[('nhcl_active','=',True),('nhcl_store_type','!=','ho')]" />
+                            <field name="company_domain"/>
+                            <field name="audit_type_id" domain="company_domain" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+<!--                                   placeholder="Select Audit Type"/>-->
+                        </group>
+                        <group>
+                            <field name="from_date" widget="daterange" options="{'to_date_field': 'to_date'}"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Audit Report Lines">
+                            <field name="nhcl_pos_audit_ids" readonly="1" forsesave="1">
+                                <tree create="0" delete="0"  editable="bottom">
+                                    <field name="division_name"/>
+                                    <field name="section"/>
+                                    <field name="department"/>
+                                    <field name="barcode"/>
+                                    <field name="item_name"/>
+                                    <field name="items_name"/>
+                                    <field name="article_name"/>
+                                    <field name="mrp_price" optional="show"/>
+                                    <field name="rsp_price" optional="show"/>
+                                    <field name="book_qty" optional="show"/>
+                                    <field name="phy_qty" optional="show"/>
+                                    <field name="difference_qty" optional="show"/>
+                                    <field name="book_rsp_price" optional="show"/>
+                                    <field name="phy_rsp_price" optional="show"/>
+                                    <field name="difference_rsp_price" optional="show"/>
+                                    <field name="cp_value" optional="show"/>
+                                    <field name="book_cp_value" optional="show"/>
+                                    <field name="phy_cp_value" optional="show"/>
+                                    <field name="difference_cp_value" optional="show"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="nhcl_pos_audit_report_menu"
+              name="POS Audit Report"
+              parent="nhcl_ho_store_cmr_integration.reporting_store_heading"
+              action="nhcl_ho_store_cmr_integration.nhcl_pos_audit_report_action"
+              sequence="13"/>
+
+</odoo>

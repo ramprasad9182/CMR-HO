@@ -1,0 +1,795 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="text_tiles_report_otd" t-name="cmr_customizations.header_template">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+        </t>
+        <!-- Header Section -->
+        <div class="header" style="text-align: center; margin: 10px; margin-bottom: 40px;"> <!-- Added margin-top -->
+            <div class="row"
+                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+
+                <div class="col-2" style="text-align: center; padding-right: 10px; margin-top: 20px;">
+                    <t t-if="company.logo">
+                        <img t-att-src="image_data_uri(company.logo)" alt="Logo"
+                             style="width: 100px; max-height: 100px;"/>
+                    </t>
+                </div>
+                <!-- Left Section: Company Info -->
+                <div class="col-6"
+                     style="font-size: 15px; text-align: left; font-family: Arial, Verdana, sans-serif;margin-top: 20px;">
+                    <span style="font-weight: bold; font-size: 15px;">
+                        <t t-esc="company.name"/>
+                    </span>
+                    <div>
+                        <span t-field="company.street"/>
+                        <span t-field="company.street2"/>
+                        <br/>
+                        <span t-field="company.state_id"/>
+                        <span t-field="company.zip"/>
+                        <span t-field="company.city"/>
+                        <br/>
+                        <h8>CIN:</h8>
+                        <span t-field="company.phone"/>
+                        <br/>
+                        <h8>GSTIN :</h8>
+                        <t t-esc="company.vat"/>
+                        <br/>
+                        <h8>GST State:</h8>
+                        <span t-field="company.state_id"/>
+                    </div>
+                </div>
+
+                <!-- Right Section: Transfer Note Title -->
+                <div class="col-2" style="text-align: center; padding-right: 10px; margin-top: 20px;">
+                    <p style="font-weight: bold; font-size: 20px;">Transfer Out</p>
+                </div>
+                <div class="col-2" style="text-align: right; padding-right: 10px; margin-top: 20px;">
+
+                </div>
+            </div>
+        </div>
+        <!-- Footer Section -->
+        <div class="footer"
+             style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+            <hr style="width: 100%; margin-bottom: 5px;"/>
+            <p style="font-size: 10px; margin: 0;">Print Date:
+                <t t-esc="time.strftime('%Y-%m-%d')"/>
+            </p>
+            <p style="font-size: 10px;margin-left:700px">Page
+                <span class="page"/>
+            </p>
+        </div>
+    </template>
+
+
+    <template id="times_call_template" t-name="cmr_customizations.times_call_template">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <t t-foreach="docs" t-as="doc" style="font-family: Verdana, Arial, sans-serif;">
+            <t t-set="header_type" t-value="header_type"/>
+            <t t-esc="header_type"/>
+
+            <t t-call="cmr_customizations.text_tiles_report_otd" t-value="header_type"/>
+
+
+            <br/>
+            <table class="table table-bordered"
+                   style="width: 100%; font-size: 10px; text-align:center;border:1px solid black;margin-top:30px;">
+                <thead>
+                    <tr style="font-size:12px;background-color: #D3D3D3;">
+                        <td style="text-align:left;font-weight:bold;">Invoice No:
+                            <t t-esc="doc.name"/>
+                        </td>
+                        <td style="text-align:right;font-weight:bold;">Date:
+                            <t t-if="doc.invoice_date">
+                                <t t-esc="doc.invoice_date.strftime('%d-%m-%Y')"/>
+                            </t>
+                            <t t-else="">
+                                <span>N/A</span>
+                            </t>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+
+            <div class="page">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border:1px solid black;">
+                        <!-- Left Table -->
+                        <td style="width: 50%; vertical-align: top;">
+                            <table style="width: 100%; border-collapse: collapse;font-size:13px; display: flex; justify-content: center; width: auto;table-layout:fixed;">
+
+                                <tr colspan="2">
+                                    <td>
+                                        <b>Bill To</b>
+                                    </td>
+                                    <td>
+                                        <b>:</b>
+                                    </td>
+                                    <td>
+                                        <b>
+                                            <t t-esc="doc.partner_id.name"/>
+                                        </b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;width: 20%;">Address</td>
+                                    <td style="text-align: center; vertical-align: top;">
+                                        <b>:</b>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <t t-esc="doc.partner_id.street"/>
+                                        <t t-esc="doc.partner_id.street2"/>
+                                        <t t-esc="doc.partner_id.city"/>
+                                        <t t-esc="doc.partner_id.state_id.name"/>
+                                        <t t-esc="doc.partner_id.zip"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="vertical-align: top;width: 20%;">GSTIN</td>
+                                    <td style="text-align: center; vertical-align: top;">
+                                        <b>:</b>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <t t-esc="doc.partner_id.vat"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;width: 20%;">GST State</td>
+                                    <td style="text-align: center; vertical-align: top;">
+                                        <b>:</b>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <t t-esc="doc.partner_id.state_id.name"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <!--                            border table -->
+                        <td style="width: 0; vertical-align: top; border: 1px solid black; border-right: 1px solid black;">
+                            <div style="width: 0; height: 100%; background-color: black;"></div>
+                        </td>
+
+
+                        <!-- Right Table -->
+                        <td style="width: 50%; vertical-align: top;">
+                            <table style="width: 100%; border-collapse: collapse; font-size:13px; table-layout: fixed;">
+                                <tr>
+                                    <td style="width: 20%; vertical-align: top;">
+                                        <b>Ship To</b>
+                                    </td>
+                                    <td style="width: 3%; text-align: center; vertical-align: top;">
+                                        <b>:</b>
+                                    </td>
+                                    <td style="width: 77%; vertical-align: top;">
+                                        <b>
+                                            <t t-esc="doc.partner_id.name"/>
+                                        </b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%; vertical-align: top;">Address</td>
+                                    <td style="width: 3%; text-align: center; vertical-align: top;">
+                                        <b>:</b>
+                                    </td>
+                                    <td style="width: 77%; vertical-align: top;">
+                                        <t t-esc="doc.partner_id.street"/>,
+                                        <t t-esc="doc.partner_id.street2"/>,
+                                        <t t-esc="doc.partner_id.city"/>
+                                        -
+                                        <t t-esc="doc.partner_id.zip"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%; vertical-align: top;">GSTIN</td>
+                                    <td style="width: 3%; text-align: center; vertical-align: top;">
+                                        <b>:</b>
+                                    </td>
+                                    <td style="width: 77%; vertical-align: top;">
+                                        <t t-esc="doc.partner_id.vat"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%; vertical-align: top;">GST State</td>
+                                    <td style="width: 3%; text-align: center; vertical-align: top;">
+                                        <b>:</b>
+                                    </td>
+                                    <td style="width: 77%; vertical-align: top; white-space: nowrap;">
+                                        <t t-esc="doc.partner_id.state_id.name"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="page2">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border:1px solid black;">
+                        <!-- Left Table -->
+                        <td style="width: 50%; vertical-align: top;">
+                            <table style="width: 100%; border-collapse: collapse; margin-left: 13px; font-size: 13px; table-layout: fixed;">
+                                <!-- Transporter + Date -->
+                                <tr>
+                                    <td style="width: 20%;">Transporter</td>
+                                    <td style="width: 3%; text-align: center;">:</td>
+                                    <td style="width: 27%;">
+                                        <t t-set="sale_orders"
+                                           t-value="doc.invoice_line_ids.mapped('sale_line_ids').mapped('order_id')"/>
+                                        <t t-if="sale_orders">
+                                            <t t-foreach="sale_orders" t-as="sale_order">
+                                                <t t-if="sale_order.transpoter_id">
+                                                    <t t-esc="sale_order.transpoter_id.name"/>
+                                                </t>
+                                                <t t-else="">N/A</t>
+                                            </t>
+                                        </t>
+                                        <t t-else="">N/A</t>
+                                    </td>
+                                    <td style="width: 20%; text-align: right;">Date</td>
+                                    <td style="width: 3%; text-align: center;">:</td>
+                                    <td style="width: 27%;">
+                                        <t t-if="doc.invoice_date">
+                                            <t t-esc="doc.invoice_date.strftime('%d-%m-%Y')"/>
+                                        </t>
+                                        <t t-else="">N/A</t>
+                                    </td>
+                                </tr>
+
+                                <!-- LR No -->
+                                <tr>
+                                    <td>LR No</td>
+                                    <td style="text-align: center;">:</td>
+                                    <td>
+                                        <t t-set="pickings"
+                                           t-value="doc.invoice_line_ids.mapped('sale_line_ids').mapped('order_id.picking_ids')"/>
+                                        <t t-if="pickings">
+                                            <t t-foreach="pickings" t-as="picking">
+                                                <t t-if="picking.lr_number">
+                                                    <t t-esc="picking.lr_number"/>
+                                                </t>
+                                                <t t-else="">N/A</t>
+                                            </t>
+                                        </t>
+                                        <t t-else="">N/A</t>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <!-- Agent Name -->
+                                <tr>
+                                    <td>Agent Name</td>
+                                    <td style="text-align: center;">:</td>
+                                    <td>No Agent</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+
+
+                        </td>
+                        <!--                            border table -->
+                        <td style="width: 0; vertical-align: top; border: 1px solid black; border-right: 1px solid black;">
+                            <div style="width: 0; height: 100%; background-color: black;"></div>
+                        </td>
+
+
+                        <!-- Right Table -->
+                        <td style="width: 50%; vertical-align: top;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                <tr>
+                                    <td style="width: 10%;">Doc No</td>
+                                    <td style="width: 2%; text-align: right;">:</td>
+                                    <td style="width: 15%;"></td>
+                                    <td style="width: 40%; text-align: center;" rowspan="3" valign="top">
+                                        Date :
+                                        <!-- <t t-esc="doc.invoice_date.strftime('%d-%m-%Y')"/> -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Packet No</td>
+                                    <td style="text-align: right;">:</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Remarks</td>
+                                    <td style="text-align: right;">:</td>
+                                    <td></td>
+                                </tr>
+                            </table>
+
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <table class="table table-bordered"
+                   style="width: 100%; font-size: 13px; text-align:left;border:1px solid black;">
+                <tr>
+                    <td colspan="4" style="text-align:left;">
+                        <strong>IRN:</strong>
+                    </td>
+
+                    <td colspan="2" style="text-align:right;">ACK No :</td>
+                    <td style="text-align:right;" colspan="2">Date:
+                        <t t-set="today_date" t-value="datetime.date.today()"/>
+                        <t t-esc="today_date.strftime('%d-%m-%Y')"/>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Product Details Table -->
+            <table class="table table-bordered"
+                   style="width: 100%; font-size: 13px; border-collapse: collapse; text-align: center; border: 1px solid black;">
+                <thead style="background-color: #D3D3D3;">
+                    <tr style="border:1px solid black;padding:4px;">
+                        <th>S No.</th>
+                        <th style="text-align:center;" colspan="3">Group/Item
+                        </th>
+                        <th colspan="2" style="text-align:left;">HSN Code</th>
+                        <!--                            <th colspan="2">RSP</th>-->
+                        <th colspan="2">Qty</th>
+                        <th colspan="2">UOM</th>
+                        <th colspan="2" style="text-align:right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="grouped_lines" t-value="{}"/>
+                    <t t-foreach="doc.invoice_line_ids" t-as="line">
+                        <t t-set="key" t-value="str(line.product_id.product_tmpl_id.id)"/>
+                        <t t-if="key in grouped_lines">
+                            <t t-set="existing" t-value="grouped_lines[key]"/>
+                            <t t-set="new_qty" t-value="existing['qty'] + line.quantity"/>
+                            <t t-set="new_price" t-value="existing['price'] + line.price_subtotal"/>
+                            <t t-set="grouped_lines" t-value="dict(list(grouped_lines.items()) + [(key, {
+            'name': line.product_id.name,
+
+            'hsn': line.product_id.l10n_in_hsn_code,
+            'qty': new_qty,
+            'uom': line.product_uom_id.name,
+            'price': new_price
+        })])"/>
+                        </t>
+                        <t t-else="">
+                            <t t-set="grouped_lines" t-value="dict(list(grouped_lines.items()) + [(key, {
+            'name': line.product_id.name,
+
+            'hsn': line.product_id.l10n_in_hsn_code,
+            'qty': line.quantity,
+            'uom': line.product_uom_id.name,
+            'price': line.price_subtotal
+        })])"/>
+                        </t>
+                    </t>
+                    <t t-set="counter" t-value="1"/>
+                    <t t-foreach="grouped_lines.items()" t-as="line">
+                        <tr>
+                            <td>
+                                <t t-esc="counter"/>
+                            </td>
+                            <td style="text-align:center;" colspan="3">
+                                <t t-esc="line[1]['name']"/>
+                            </td>
+                            <td colspan="2" style="text-align:left;">
+                                <t t-esc="line[1]['hsn']"/>
+                            </td>
+                            <td colspan="2">
+                                <t t-esc="'%0.2f' % line[1]['qty']"/>
+                            </td>
+                            <td colspan="2">
+                                <t t-esc="line[1]['uom']"/>
+                            </td>
+                            <td colspan="2" style="text-align:right;">
+                                <t t-esc="'%0.2f' % line[1]['price']"/>
+                            </td>
+                        </tr>
+                        <t t-set="counter" t-value="counter + 1"/>
+                    </t>
+
+                    <tr style="border: 1px solid black;background-color: #D3D3D3;">
+                        <td style="font-weight: bold; text-align:left;" colspan="6">Total</td>
+                        <td colspan="1"/>
+                        <td colspan="1">
+                            <b>
+                                <t t-esc=" '%0.2f' % sum(doc.invoice_line_ids.mapped('quantity'))"/>
+
+                            </b>
+                        </td>
+                        <td colspan="3"/>
+                        <td style="text-align:right;">
+                            <b>
+                                <t t-esc=" '%0.2f' % doc.amount_untaxed"/>
+                            </b>
+                        </td>
+                    </tr>
+                    <tr style="border: 1px solid black;background-color: #D3D3D3;">
+                        <td style="font-weight: bold; text-align:left;" colspan="8">Challan No:</td>
+                        <td colspan="4">
+                            <b>
+                                <t t-set="pickings"
+                                   t-value="doc.invoice_line_ids.mapped('sale_line_ids').mapped('order_id.picking_ids')"/>
+
+                                <t t-if="pickings">
+                                    <t t-foreach="pickings" t-as="picking">
+                                        <t t-if="picking.name">
+                                            <t t-esc="picking.name"/>
+                                        </t>
+                                        <t t-else="">
+
+                                        </t>
+                                        <br/>
+                                    </t>
+                                </t>
+                                <t t-else="">
+
+                                </t>
+                            </b>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <!--                            hsn grouping-->
+            <table class="table table-bordered"
+                   style="width: 100%; margin: 0; padding: 0; font-size: 13px; border: 1px solid black; text-align: center; border-collapse: collapse;">
+                <thead style="background-color: #D3D3D3;">
+                    <tr>
+                        <th rowspan="2" style="border: 1px solid black;">HSN Code</th>
+                        <th rowspan="2" style="border: 1px solid black;">Taxable Value</th>
+                        <th rowspan="2" style="border: 1px solid black;">Qty.</th>
+                        <th rowspan="2" style="border: 1px solid black;">UOM</th>
+                        <th colspan="2" style="border: 1px solid black;">IGST</th>
+                        <th colspan="2" style="border: 1px solid black;">CGST</th>
+                        <th colspan="2" style="border: 1px solid black;">SGST</th>
+                        <th colspan="2" style="border: 1px solid black;">CESS</th>
+                    </tr>
+                    <tr>
+                        <th style="border: 1px solid black;">Rate</th>
+                        <th style="border: 1px solid black;">Amount</th>
+                        <th style="border: 1px solid black;">Rate</th>
+                        <th style="border: 1px solid black;">Amount</th>
+                        <th style="border: 1px solid black;">Rate</th>
+                        <th style="border: 1px solid black;">Amount</th>
+                        <th style="border: 1px solid black;">Rate</th>
+                        <th style="border: 1px solid black;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Initialize empty dictionary for HSN grouping -->
+                    <t t-set="hsn_dict" t-value="{}"/>
+
+                    <!-- Loop through order lines -->
+                    <t t-foreach="doc.invoice_line_ids" t-as="line">
+                        <t t-if="line.product_id.l10n_in_hsn_code">
+                            <t t-set="hsn_code" t-value="line.product_id.l10n_in_hsn_code"/>
+
+                            <!-- Loop through each tax -->
+                            <t t-foreach="line.tax_ids" t-as="tax">
+                                <t t-set="gst_percentage" t-value="int(tax.amount)"/>
+                                <t t-set="gst_value" t-value="(line.price_subtotal * gst_percentage) / 100"/>
+                                <t t-set="tax_type"
+                                   t-value="'IGST' if tax.tax_group_id.name == 'IGST' else 'CGST_SGST'"/>
+                                <t t-set="key" t-value="hsn_code + '-' + str(gst_percentage) + '-' + tax_type"/>
+
+                                <!-- If key already in dictionary, update it -->
+                                <t t-if="key in hsn_dict">
+                                    <t t-set="existing_entry" t-value="hsn_dict[key]"/>
+                                    <t t-set="new_quantity"
+                                       t-value="existing_entry['quantity'] + line.quantity"/>
+                                    <t t-set="new_gst" t-value="existing_entry['gst'] + gst_value"/>
+                                    <t t-set="new_price"
+                                       t-value="existing_entry['price'] + (line.price_unit * line.quantity)"/>
+                                    <t t-set="new_uom" t-value="existing_entry.get('uom', line.product_uom_id.name)"/>
+
+                                    <!-- Update dictionary -->
+                                    <t t-set="hsn_dict"
+                                       t-value="dict(list(hsn_dict.items()) + [(key, {
+                        'quantity': new_quantity,
+                        'price': new_price,
+                        'gst': new_gst,
+                        'tax_rate': gst_percentage,
+                        'tax_type': tax_type,
+                        'uom': new_uom
+                   })])"/>
+                                </t>
+                                <t t-else="">
+                                    <!-- Add new entry -->
+                                    <t t-set="hsn_dict"
+                                       t-value="dict(list(hsn_dict.items()) + [(key, {
+                        'quantity': line.quantity,
+                        'price': line.price_unit * line.quantity,
+                        'gst': gst_value,
+                        'tax_rate': gst_percentage,
+                        'tax_type': tax_type,
+                        'uom': line.product_uom_id.name
+                   })])"/>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+
+
+                    <!-- Display Grouped Data -->
+                    <t t-foreach="hsn_dict.items()" t-as="hsn_entry">
+                        <t t-set="hsn_key" t-value="hsn_entry[0]"/>
+                        <t t-set="val" t-value="hsn_entry[1]"/>
+                        <t t-set="hsn_code" t-value="hsn_key.split('-')[0]"/>
+                        <t t-set="tax_rate" t-value="hsn_key.split('-')[1]"/>
+                        <t t-set="tax_type" t-value="hsn_key.split('-')[2]"/>
+                        <tr>
+                            <td style="text-align:center;">
+                                <t t-esc="hsn_code"/>
+                            </td>
+                            <td style="text-align:center;">
+                                <t t-out="'%0.2f' % val['price']"/>
+                            </td>
+                            <td style="text-align:center;">
+                                <t t-esc=" '%0.2f' % val['quantity']"/>
+                            </td>
+                            <td>
+                                <t t-esc="val.get('uom', '')"/>
+                            </td>
+
+                            <!-- IGST -->
+                            <t t-if="tax_type == 'IGST'">
+                                <td>
+                                    <t t-out="'%0.2f' % float(tax_rate)"/>
+                                    %
+                                </td>
+                                <td style="text-align:center;">
+                                    <t t-out="'%0.2f' % val.get('gst', 0)"/>
+                                </td>
+                                <td>0</td>
+                                <td>0.00</td>
+                                <td>0</td>
+                                <td>0.00</td>  <!-- Empty CGST & SGST columns -->
+                            </t>
+
+                            <!-- CGST + SGST -->
+                            <t t-if="tax_type == 'CGST_SGST'">
+                                <td>0</td>
+                                <td>0.00</td>  <!-- Empty IGST columns -->
+                                <td>
+                                    <t t-out="'%0.2f' % (float(tax_rate) / 2)"/>
+                                    %
+                                </td>
+                                <td style="text-align:center;">
+                                    <t t-out="'%0.2f' % (val.get('gst', 0) / 2)"/>
+                                </td>
+                                <td>
+                                    <t t-out="'%0.2f' % (float(tax_rate) / 2)"/>
+                                    %
+                                </td>
+                                <td style="text-align:center;">
+                                    <t t-out="'%0.2f' % (val.get('gst', 0) / 2)"/>
+                                </td>
+                            </t>
+
+                            <!-- CESS (Placeholder, modify based on logic) -->
+                            <td>0</td>
+                            <td>0.00</td>
+                        </tr>
+                    </t>
+                    <tr style="border: 1px solid black;background-color: #D3D3D3;">
+                        <td style="font-weight: bold; text-align:left;">Total</td>
+                        <td>
+                            <b>
+                                <t t-esc="'%.2f' % doc.amount_total"/>
+
+                            </b>
+                            <!--                                <t t-esc="'{:,.2f}'.format(sum(doc.invoice_line_ids.mapped('price_total')))"/>-->
+                        </td>
+                        <td>
+                            <b>
+                                <t t-esc="'{:,.2f}'.format(sum(doc.invoice_line_ids.mapped('quantity')))"/>
+                            </b>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <t t-foreach="doc.tax_totals['groups_by_subtotal']['Untaxed Amount']"
+                               t-as="amount_by_group">
+                                <t t-if="amount_by_group['tax_group_name'] == 'IGST'">
+                                    <b>
+                                        <span class="text-right"
+                                              t-out="'%0.2f' % float(amount_by_group['tax_group_amount']) or ''"/>
+                                    </b>
+                                </t>
+                            </t>
+                        </td>
+                        <td></td>
+                        <td>
+                            <t t-if="len(doc.tax_totals['groups_by_subtotal']['Untaxed Amount']) > 1">
+                                <b>
+                                    <t t-out="'%0.2f' % float(doc.tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount']) or ''"/>
+                                </b>
+                            </t>
+                        </td>
+                        <td></td>
+                        <td>
+                            <t t-if="len(doc.tax_totals['groups_by_subtotal']['Untaxed Amount']) > 1">
+                                <b>
+                                    <t t-out="'%0.2f' % float(doc.tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount']) or ''"/>
+                                </b>
+                            </t>
+                        </td>
+                        <td/>
+                        <td/>
+                    </tr>
+                    <tr>
+
+                        <td style="font-size:15px;font-weight: bold;text-align:center;background-color: #D3D3D3;"
+                            colspan="4">Grand Total
+                        </td>
+                        <td style="font-size:15px;font-weight: bold;text-align:right;" colspan="8">
+                            <t t-esc="'{:,.2f}'.format(doc.amount_total)"/>
+                            <!--                            <t t-esc="'{:,.2f}'.format(sum(doc.invoice_line_ids.mapped('price_total')))"/>-->
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </t>
+
+        <!-- Amount in Words -->
+        <p style="text-align:left;font-size:13px;">
+            <b>Amount In Words:
+                <sapan>
+                    <t t-esc="doc.amount_total_words"/>
+                    <!--                    <t t-esc="doc.currency_id.amount_to_text(sum(doc.invoice_line_ids.mapped('price_subtotal')))"/>-->
+                    only
+                </sapan>
+            </b>
+        </p>
+
+        <span>Remarks</span>
+        <span style="font-size:10px;margin:0;">
+            <!--            <t t-esc="doc.note"/>-->
+        </span>
+        <t t-set="sale_orders" t-value="doc.invoice_line_ids.mapped('sale_line_ids').mapped('order_id')"/>
+
+        <t t-if="sale_orders">
+            <t t-foreach="sale_orders" t-as="order">
+                <b>SO No:
+                    <t t-if="order.name">
+                        <t t-esc="order.name"/>
+                    </t>
+                    <t t-else="">
+
+                    </t>
+                </b>
+                <br/>
+            </t>
+        </t>
+        <t t-else="">
+        </t>
+        <br/>
+
+        <!-- Company Signature Section -->
+        <div style="width: 100%; text-align: right; font-size: 10px; margin: 5px;">
+            <b>For
+                <t t-esc="company.name"/>
+            </b>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <table style="width: 100%; border: none; text-align: center; margin-top: 10px;">
+            <tr>
+                <!-- Prepared By 1 -->
+                <td style="width: 25%;">
+                    <hr style="width: 40%; margin-bottom: 5px;"/>
+                    <b style="font-size: 10px;">Prepared By</b>
+                </td>
+                <!-- Checked By 1 -->
+                <td style="width: 25%;">
+                    <hr style="width: 40%; margin-bottom: 5px;"/>
+                    <b style="font-size: 10px;">Checked  By</b>
+                </td>
+                <!-- Prepared By 2 -->
+                <td style="width: 25%;">
+                    <hr style="width: 40%; margin-bottom: 5px;"/>
+                    <b style="font-size: 10px;">Delivered By</b>
+                </td>
+                <!-- Checked By 2 -->
+                <td style="width: 25%;">
+                    <hr style="width: 40%; margin-bottom: 5px;"/>
+                    <b style="font-size: 10px;">Approved By</b>
+                </td>
+            </tr>
+        </table>
+
+        <!--        <div style="page-break-before: always;"/>-->
+    </template>
+
+    <template id="final_text_tiles_otd" t-name="cmr_customizations.report_main_template">
+
+        <!-- Setup -->
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <!-- ✅ One single call to web.html_container -->
+        <t t-call="web.html_container">
+
+            <!-- First copy: Original -->
+            <!--            <t t-set="header_type" t-value="'original'"/>-->
+            <t t-call="cmr_customizations.times_call_template"/>
+
+            <!-- Page break -->
+            <!--            <div style="page-break-before: always;"></div>-->
+
+            <!--            &lt;!&ndash; Second copy: Duplicate &ndash;&gt;-->
+            <!--            <t t-set="header_type" t-value="'duplicate'"/>-->
+            <!--            <t t-call="cmr_customizations.times_call_template"/>-->
+
+            <!--            &lt;!&ndash; Page break &ndash;&gt;-->
+            <!--            <div style="page-break-before: always;"></div>-->
+
+            <!--            &lt;!&ndash; Third copy: Triplicate &ndash;&gt;-->
+            <!--            <t t-set="header_type" t-value="'triplicate'"/>-->
+            <!--            <t t-call="cmr_customizations.times_call_template"/>-->
+
+        </t>
+
+    </template>
+
+
+    <record id="paperformat_transfer_odt" model="report.paperformat">
+        <field name="name">Transfer Note Odt</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">4</field>
+        <field name="header_spacing">90</field>
+        <field name="dpi">96</field>
+    </record>
+    <record id="text_tiles_invoice_report" model="ir.actions.report">
+        <field name="name">Transfer Note Invoices</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cmr_customizations.final_text_tiles_otd</field>
+        <field name="report_file">cmr_customizations.final_text_tiles_otd</field>
+        <field name="print_report_name">'%s Text Tiles' %(object.name)</field>
+        <field name="paperformat_id" ref="cmr_customizations.paperformat_po_indent"/>
+    </record>
+</odoo>
