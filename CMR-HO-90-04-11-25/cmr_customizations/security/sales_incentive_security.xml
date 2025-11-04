@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Record Rule : Incentive Multi Company : Shows only sales incentive of specific company records -->
+        <record id="sales_incentive_manager_rule_multi_company_sales_incentive_structure" model="ir.rule">
+            <field name="name">Incentive Multi Company : Sales Incentive Structure</field>
+            <field name="model_id" ref="cmr_customizations.model_setu_sales_incentive_structure"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+        </record>
+    </data>
+</odoo>

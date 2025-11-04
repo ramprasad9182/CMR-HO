@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_zebra_label_dynamic_wizard_form" model="ir.ui.view">
+        <field name="name">print.dynamic.label</field>
+        <field name="model">dynamic.print.label</field>
+        <field name="arch" type="xml">
+            <form string="Print Zebra Labels">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="move_line_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="file" filename="file_name"/>
+                            <field name="file_name"/>
+                            <field name="printer_ip"/>
+                            <field name="printer_port"/>
+                            <field name="quantity_labels"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_print_label"
+                            type="object"
+                            string="Print Labels"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_print_label_dynamic" model="ir.actions.act_window">
+    <field name="name">Dynamic Print Label</field>
+    <field name="res_model">dynamic.print.label</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field> <!-- important -->
+</record>
+
+    <record id="stock_picking_print_label_button_dynamic" model="ir.ui.view">
+        <field name="name">stock.picking.button.print.label.dynamic</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="%(action_print_label_dynamic)d"
+                        string="Dynamic Print Labels"
+                        type="action"
+                        class="oe_highlight"/>
+            </header>
+        </field>
+    </record>
+</odoo>

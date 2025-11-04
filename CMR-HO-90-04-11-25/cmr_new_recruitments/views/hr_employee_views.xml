@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_hr_employee_form_custom" model="ir.ui.view">
+        <field name="name">hr.employee.form.name.aadhaar</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+              <xpath expr="//field[@name='work_email']" position="after">
+               <field name="ctc_type"/>
+               <field name="date_of_joining" required="1"/>
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="attributes">
+                <attribute name="string">Designation</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Name as per Aadhaar</attribute>
+                <attribute name="placeholder">Name as per Aadhaar</attribute>
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//h1[field[@name='name']]" position="before">
+                <label for="name">Name as per Aadhaar</label>
+            </xpath>
+            <xpath expr="//field[@name='job_title']" position="attributes">
+                <attribute name="string">Job Position</attribute>
+                <attribute name="placeholder">Job Position</attribute>
+            </xpath>
+            <xpath expr="//h2[field[@name='job_title']]" position="before">
+                <label for="job_title">Job Position</label>
+            </xpath>
+
+            <field name="mobile_phone" position="attributes">
+                <attribute name="string">Alternate Number</attribute>
+            </field>
+            <xpath expr="//page[@name='personal_information']//field[@name='bank_account_id']" position="after">
+                <field name="ifsc_code"/>
+            </xpath>
+
+            <xpath expr="//page[@name='personal_information']/group/group[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']/group/group[4]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='personal_information']/group/group[1]" position="inside">
+                <field name="blood_group"/>
+
+            </xpath>
+
+            <xpath expr="//field[@name='identification_id']" position="attributes">
+                <attribute name="string">Aadhaar Number</attribute>
+            </xpath>
+
+             <xpath expr="//field[@name='gender']" position="after">
+                <field name="age"/>
+            </xpath>
+
+            <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="insurance"/>
+                <field name="leave_eligibility"/>
+                <field name="probation_confirmation_date"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Nominee Details">
+                    <field name="nominee_ids" context="{'default_employee_id': active_id}">
+                        <tree editable="bottom" string="Nominees">
+                            <field name="sequence" string="S.No" readonly="1" force_save="1"/>
+                            <field name="nominee_name" string="Nominee"/>
+                            <field name="dob" string="Date of Birth"/>
+                            <field name="aadhar_no" string="Aadhar Number"/>
+                            <field name="relationship"/>
+                            <field name="percentage"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Family Details" name="family_details">
+                    <group string="Marital Status">
+                        <field name="marital"/>
+                        <field name="children"/>
+                        <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
+                        <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
+                    </group>
+                    <field name="family_detail_ids" context="{'default_employee_id': active_id}">
+                        <tree editable="bottom" create="true" delete="true">
+                            <field name="sequence" readonly="1" force_save="1"/>
+                            <field name="name"/>
+                            <field name="dob"/>
+                            <field name="aadhar_no"/>
+                            <field name="relationship"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Professional Details">
+                    <group>
+                        <field name="total_experience"/>
+                    </group>
+                    <field name="professional_ids">
+                        <tree editable="bottom" delete="0">
+                            <field name="sequence" readonly="1" force_save="1"/>
+                            <field name="company_name"/>
+                            <field name="designation"/>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="years_experience"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Assets Details">
+                    <group>
+                         <field name="uniform_m"/>
+                    </group>
+                    <field name="asset_ids" readonly="1">
+                        <tree string="Assigned Assets">
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="CTC BREAKUP">
+                    <form>
+                        <group>
+                            <group string="CTC Breakdown (Per Annum)">
+                                <field name="ctc" readonly="1"/>
+                                <field name="basic" readonly="1"/>
+                                <field name="hra" readonly="1"/>
+                                <field name="other_allowance" readonly="1"/>
+                                <field name="pf" readonly="1"/>
+                                <field name="pt" readonly="1"/>
+                                <field name="bonus" readonly="1" invisible="ctc_type not in ['with_bonus']"/>
+                                <field name="net_take_home" readonly="1"/>
+                                <field name="family_insurance" readonly="1"/>
+                                <field name="esic" readonly="1"/>
+                            </group>
+
+                            <group string="Monthly Salary Computed" >
+                                <field name="ctc_m" readonly="1" />
+                                <field name="basic_m" readonly="1"/>
+                                <field name="hra_m" readonly="1"/>
+                                <field name="other_allowance_m" readonly="1"/>
+                                <field name="pf_m" readonly="1"/>
+                                <field name="pt_m" readonly="1"/>
+                                <field name="net_take_home_m" readonly="1"/>
+                                 <field name="family_insurance_m" readonly="0"/>
+                                 <field name="bonus_m" readonly="1"/>
+                                 <field name="esic_m" readonly="1"/>
+                            </group>
+                        </group>
+
+                    </form>
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='personal_information']//group//div[@class='o_address_format'][1]"
+                   position="after">
+                <field name="same_as_private"/>
+                <label for="permanent_street">Permanent Address</label>
+                <div class="o_address_format">
+                    <field name="permanent_street" placeholder="Street..." class="o_address_street"/>
+                    <field name="permanent_street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="permanent_city" placeholder="City" class="o_address_city"/>
+                    <field name="permanent_state_id" class="o_address_state" placeholder="State"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'default_country_id': permanent_country_id}"/>
+                    <field name="permanent_zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="permanent_country_id" placeholder="Country" class="o_address_country"
+                           options="{'no_open': True, 'no_create': True}"/>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']//field[@name='bank_account_id']" position="after">
+                <field name="bank_name"/>
+                <field name="bank_account"/>
+            </xpath>
+
+            <xpath expr="//page[@name='personal_information']//field[@name='bank_account_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+<!--             <xpath expr="//group[@name='identification_group']/div[@class='o_row']" position="replace"/>-->
+<!--             <xpath expr="//group[@name='identification_group']/label[@for='barcode']" position="replace"/>-->
+            <xpath expr="//group[@name='identification_group']/field[@name='pin']" position="after">
+                <field name="cmr_code"/>
+                    </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Reference Details">
+                    <field name="reference_ids">
+                        <tree editable="bottom" delete="0">
+                            <field name="name"/>
+                            <field name="phone"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Educational Details">
+                    <field name="education_ids">
+                        <tree editable="bottom" delete="0">
+                            <field name="sequence" string="S.No" readonly="1" force_save="1"/>
+                            <field name="degree"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="year_of_passing"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Checklist Documents">
+                    <group>
+                        <field name="check_list_ids" string="Joining Check List" widget="many2many_checkboxes"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="grade_id" readonly="1" force_save="1"/>
+                 <field name="division_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.tree.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="ctc_type"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_employee_search_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.search.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/> <!-- existing search view -->
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="CTC Type" name="group_by_ctc_type" context="{'group_by':'ctc_type'}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

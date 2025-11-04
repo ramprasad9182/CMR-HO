@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <template id="stock.report_return_slip">
+        <t t-call="stock.report_deliveryslip"/>
+    </template>
+</odoo>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_contract_gss" model="ir.ui.view">
+        <field name="name">Contract</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//group[@name='salary_info']" position="inside">
+                    <group string="Employer Contribution" invisible="country_code != 'IN'">
+                        <field name="employer_pf"/>
+                        <field name="employer_esic"/>
+                    </group>
+                </xpath>
+<!--            <xpath expr="//field[@name='job_id']" position="after">-->
+<!--                <field name="leaves_available"/>-->
+<!--                <field name="cmr_el"/>-->
+<!--            </xpath>-->
+            <xpath expr="//field[@name='provident_fund']" position="after">
+                <field name="family_insurance_m"/>
+                <field name="uniform"/>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='information']/group/group[@name='salary']"
+                   position="inside">
+                <field name="net_salary"/>
+                <field name="cost_to_company"/>
+                <field name="actual_bonus"/>
+            </xpath>
+<!--            <xpath expr="//form/sheet/notebook/page[@name='other']" position="after">-->
+<!--                <page string="Leave History">-->
+<!--                    <field name="leave_line_ids">-->
+<!--                        <tree editable="bottom" create="0">-->
+<!--                            <field name="date"/>-->
+<!--&lt;!&ndash;                            <field name="leave_days"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <field name="total_leaves"/>&ndash;&gt;-->
+<!--                            <field name="used_leaves"/>-->
+<!--                            <field name="remaining_leaves"/>-->
+<!--                            <field name="el_used"/>-->
+<!--                            <field name="lop_used"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+<!--                </page>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+
+    <record id="hr_contract_payroll_gss" model="ir.ui.view">
+        <field name="name">Contract Accounting</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="l10n_in_hr_payroll.hr_contract_form_in_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/field[@name='l10n_in_driver_salay']" position="after">
+                <field name="basic"/>
+            </xpath>
+            <xpath expr="//group/field[@name='l10n_in_medical_insurance']" position="before">
+                <field name="p_tax"/>
+                <field name="provident_fund"/>
+            </xpath>
+
+            <xpath expr="//group/field[@name='l10n_in_house_rent_allowance_metro_nonmetro']" position="after">
+                <field name="other_allowance"/>
+            </xpath>
+
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="0">
+		<record id="sample_purchase_order_line_xls" model="ir.attachment">
+            <field name="public" eval="True"/>
+	        <field name="name">purchase_order_line.xls</field>
+	        <field name="type">binary</field>
+	    </record>
+	
+	    <record id="sample_purchase_order_line_csv" model="ir.attachment">
+            <field name="public" eval="True"/>
+	        <field name="name">purchase_order_line.csv</field>
+	        <field name="type">binary</field>
+	    </record>
+	    
+	</data>
+</odoo>
