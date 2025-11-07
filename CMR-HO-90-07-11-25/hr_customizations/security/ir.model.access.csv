@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_id,upload,model_hr_upload,,1,1,1,1
+access_hr_upload_wizard_user,hr.upload wizard user,model_hr_upload_wizard,,1,1,1,1
+access_hr_late_deduction_master_user,access.hr.late.deduction.master.user,model_hr_late_deduction_master,base.group_user,1,1,1,1
+access_hr_monthly_late_deduction,hr.monthly.late.deduction,model_hr_monthly_late_deduction,,1,1,1,1
+access_hr_late_deduction_line_user,hr.late.deduction.line user,model_hr_late_deduction_line,,1,1,1,1
+access_hr_overtime_master,access_hr_overtime_master,model_hr_overtime_master,base.group_user,1,1,1,1
+access_hr_monthly_overtime,access_hr_monthly_overtime,model_hr_monthly_overtime,base.group_user,1,1,1,1
+access_hr_overtime_line,access_hr_overtime_line,model_hr_overtime_line,base.group_user,1,1,1,1

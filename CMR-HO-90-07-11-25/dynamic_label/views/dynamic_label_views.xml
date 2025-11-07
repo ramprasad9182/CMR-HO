@@ -1,0 +1,49 @@
+<odoo>
+    <record id="view_dynamic_label_tree" model="ir.ui.view">
+        <field name="name">dynamic.label.tree</field>
+        <field name="model">dynamic.label</field>
+        <field name="arch" type="xml">
+            <tree string="Dynamic Labels">
+                <field name="config_name"/>
+                <field name="upload_date"/>
+                <field name="drop_down"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_dynamic_label_form" model="ir.ui.view">
+        <field name="name">dynamic.label.form</field>
+        <field name="model">dynamic.label</field>
+        <field name="arch" type="xml">
+            <form string="Dynamic Label">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="config_name"/>
+                        <field name="description"/>
+                    </group>
+                    <group>
+                        <field name="upload_date" readonly="1"/>
+                        <field name="drop_down"/>
+                        <field name="upload_file"/>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_dynamic_label" model="ir.actions.act_window">
+        <field name="name">Dynamic Labels</field>
+        <field name="res_model">dynamic.label</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_dynamic_label_root" name="Dynamic Label Manager"/>
+
+    <menuitem id="menu_dynamic_label_main"
+              name="Dynamic Labels"
+              parent="menu_dynamic_label_root"
+              action="action_dynamic_label"/>
+
+
+</odoo>

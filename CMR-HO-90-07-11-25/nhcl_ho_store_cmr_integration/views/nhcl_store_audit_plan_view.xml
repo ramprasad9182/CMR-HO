@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Action: must come before the menuitem -->
+    <record id="action_nhcl_audit_plan" model="ir.actions.act_window">
+        <field name="name">Audit Plans</field>
+        <field name="res_model">nhcl.audit.plan</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_nhcl_audit_plan_tree" model="ir.ui.view">
+        <field name="name">nhcl.audit.plan.tree</field>
+        <field name="model">nhcl.audit.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Audit Plans">
+                <field name="name"/>
+                <field name="plan_ref"/>
+                <field name="store_name"/>
+<!--                <field name="nhcl_sequence" invisible="1"/>-->
+<!--                <field name="store_id"/>-->
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_nhcl_audit_plan_form" model="ir.ui.view">
+        <field name="name">nhcl.audit.plan.form</field>
+        <field name="model">nhcl.audit.plan</field>
+        <field name="arch" type="xml">
+            <form string="Audit Plan">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="plan_ref"/>
+<!--                        <field name="nhcl_sequence" invisible="1"/>-->
+<!--                        <field name="store_id"/>-->
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_nhcl_audit_plan"
+              name="Audit Plans"
+              parent="stock.menu_stock_transfers"
+              action="action_nhcl_audit_plan"
+              sequence="22"/>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<!--To hide login links-->
+    <template id="hide_login_powered_by_odoo17" inherit_id="auth_signup.login" name="Hide login Powered by Odoo  ">
+        <xpath expr="//div[@class='justify-content-between mt-2 d-flex small']"
+               position="replace">
+        </xpath>
+    </template>
+
+    <!--To hide Database links-->
+    <template id="hide_superuser_odoo17" inherit_id="web.login" name="Hide Superuser  ">
+         <xpath expr="//button[@name='redirect']"
+                position="replace">
+        </xpath>
+    </template>
+
+    <!--To hide odoo powererd by links-->
+    <template id="hide_database_powered_by_odoo17" inherit_id="web.login_layout" name="Hide Database Powered by Odoo  ">
+        <xpath expr="//div[@class='text-center small mt-4 pt-3 border-top']"
+               position="replace">
+        </xpath>
+    </template>
+</odoo>
