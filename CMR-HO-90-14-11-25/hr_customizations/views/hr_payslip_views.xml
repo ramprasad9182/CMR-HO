@@ -1,0 +1,101 @@
+<odoo>
+    <record id="view_hr_payslip_tree_inherit_employee_details" model="ir.ui.view">
+        <field name="name">hr.payslip.tree.inherit.employee.details</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <!--                <field name="work_location"/>-->
+                <!--                <field name="uan_no"/>-->
+                <!--                <field name="insurance"/>-->
+                <!--                <field name="late_deduction"/>-->
+                <!--                <field name="overtime_cmr"/>-->
+                <field name="emp_code"/>
+                <field name="account_no"/>
+                <field name="ifsc_code"/>
+                <field name="bank_name"/>
+                <field name="designation"/>
+                <field name="department"/>
+                <field name="grade"/>
+                <field name="company_id"/>
+                <field name="ctc"/>
+                <field name="month_days"/>
+                <field name="paid_days"/>
+                <field name="present_days"/>
+                <field name="lop_work_entry_count"/>
+                <field name="absent_amount"/>
+                <field name="actual_basic"/>
+                <field name="actual_hra"/>
+                <field name="actual_bonus"/>
+                <field name="basic_salary"/>
+                <field name="hra"/>
+                <field name="bonus"/>
+                <field name="earned_gross"/>
+                <field name="total_earnings"/>
+                <field name="pf_no"/>
+                <field name="esi_no"/>
+                <field name="mng_deduction"/>
+                <field name="pf_er"/>
+                <field name="sal_adv"/>
+                <field name="loan_adv"/>
+                <field name="tds"/>
+                <field name="esi"/>
+                <field name="p_tax"/>
+                <field name="uniform"/>
+                <field name="total_deduction"/>
+                <field name="arrear_days"/>
+                <field name="arrear_amt"/>
+                <field name="net_pay"/>
+                <field name="total_bonus_amt"/>
+                <field name="payable_amt"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_form_inherit_employee_details" model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit.employee.details</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='struct_id']" position="after">
+                <field name="emp_code"/>
+                <field name="designation"/>
+                <field name="department"/>
+                <field name="work_location"/>
+                <field name="grade"/>
+                <field name="pf_no"/>
+                <field name="uan_no"/>
+                <field name="esi_no"/>
+                <field name="bank_name"/>
+                <field name="ifsc_code"/>
+                <field name="account_no"/>
+                <field name="ctc"/>
+                <field name="month_days"/>
+                <field name="paid_days"/>
+                <field name="lop_work_entry_count"/>
+                <field name="present_days"/>
+<!--                <field name="sal_adv"/>-->
+<!--                <field name="loan_adv"/>-->
+                <!--                <field name="absent_amount"/>-->
+                <!--                <field name="el_days"/>-->
+                <!--                <field name="lop_days"/>-->
+                <!--                    <field name="actual_bonus" readonly="0"/>-->
+
+            </xpath>
+        </field>
+    </record>
+        <record id="view_hr_payslip_form_inherit_non_ctc" model="ir.ui.view">
+        <field name="name">hr.payslip.form.non.ctc.report</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="%(hr_customizations.non_ctc_report_payslip)d"
+                        string="Payslip"
+                        type="action"
+                        class="btn-primary"
+                        icon="fa-print"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

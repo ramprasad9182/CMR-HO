@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_form_interview_form" model="ir.ui.view">
+        <field name="name">hr.interview.form.form</field>
+        <field name="model">hr.interview.form</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(action_survey_email_wizard)d" string="Send Email"
+                            type="action" class="btn-primary"
+                            context="{'active_id': id}"/>
+                    <button name="action_print_qr" type="object" string="Print QR" class="btn-secondary"/>
+
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button name="action_view_applicants"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-users">
+                            <field name="applicant_count" widget="statinfo" string="Applicants"/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="name"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Questions">
+
+
+                            <group>
+                                  <field name="show_name"/>
+                                <field name="show_mobile"/>
+                                <field name="show_phone"/>
+                                <field name="show_dob"/>
+                                <field name="show_age"/>
+                                <field name="show_gender"/>
+                                <field name="show_marital"/>
+                                <field name="show_current_address"/>
+                                <field name="show_prefer_company"/>
+                                <field name="show_company"/>
+                                <field name="show_dept"/>
+                                <field name="show_experience_type"/>
+                                <field name="show_total_exp"/>
+                                <field name="show_retail_experience_years"/>
+                                <field name="show_emp_details"/>
+                                <field name="show_ref_details"/>
+                                <field name="show_edu_details"/>
+                            </group>
+
+
+                        </page>
+                    </notebook>
+
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_interview_form" model="ir.actions.act_window">
+        <field name="name">Interview Forms</field>
+        <field name="res_model">hr.interview.form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_interview_root" name="Interview Forms" web_icon="recruitment_interview_form,static/description/interview.png" sequence="10"/>
+    <menuitem id="menu_interview_form" name="Forms" parent="menu_interview_root" action="action_interview_form"
+              sequence="12"/>
+
+
+</odoo>

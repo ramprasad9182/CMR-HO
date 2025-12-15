@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+                <!-- Inherit hr.attendance tree view -->
+        <record id="view_hr_attendance_tree_inherit_custom" model="ir.ui.view">
+            <field name="name">hr.attendance.tree.inherit.custom</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="arch" type="xml">
+
+                <!-- Example: Add after 'check_out' field -->
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="employee_code"/>
+                    <field name="designation_id"/>
+                     <field name="department_id"/>
+                    <field name="ctc_type"/>
+                    <field name="date"/>
+                    <field name="company_id"/>
+                    <field name="division_id"/>
+
+                </xpath>
+                <xpath expr="//field[@name='check_out']" position="after">
+                    <field name="difference_check_in"/>
+                    <field name="difference_check_out"/>
+                    <field name="total_working_hours"/>
+                    <field name="morning_session"/>
+                    <field name="afternoon_session"/>
+                    <field name="full_day_status"/>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="hr_attendance_inherited_view_form" model="ir.ui.view">
+            <field name="name">hr.attendance.inherited.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+            <field name="arch" type="xml">
+                  <xpath expr="//field[@name='overtime_hours']" position="after">
+                    <field name="ctc_type"/>
+                    <field name="difference_check_in"/>
+                    <field name="difference_check_out"/>
+                    <field name="total_working_hours"/>
+                    <field name="morning_session"/>
+                    <field name="afternoon_session"/>
+                    <field name="full_day_status"/>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="employee_code"/>
+                    <field name="designation_id"/>
+                     <field name="department_id"/>
+                    <field name="company_id"/>
+                    <field name="division_id"/>
+                    <field name="date"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

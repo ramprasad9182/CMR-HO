@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="cmr_loyalty_reward_form_inherited_view" model="ir.ui.view">
+        <field name="name">loyalty.reward.view.form.inherit</field>
+        <field name="model">loyalty.reward</field>
+        <field name="inherit_id" ref="loyalty.loyalty_reward_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name = 'reward_type_group']" position="after">
+                <group name="discounted_product" string="Discount Product"
+                       invisible="reward_type != 'discount_on_product'">
+                    <field name="discount_product_id"/>
+                    <field name="product_price"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="loyalty_reward_view_kanban_inherit_discounted_product" model="ir.ui.view">
+        <field name="name">loyalty.reward.view.kanban.inherit.discount.product</field>
+        <field name="model">loyalty.reward</field>
+        <field name="inherit_id" ref="loyalty.loyalty_reward_view_kanban"/>
+        <field name="arch" type="xml">
+            <div name="reward_info" position="inside">
+                <t t-elif="record.reward_type.raw_value === 'discount_on_product'">
+                        <div class="d-flex">
+                            <i class="fa fa-cube fa-fw" title="Discount Product"/>
+                            <field name="discount_product_id" class="d-inline"/>
+                            <t t-if="record.product_price.raw_value > 0">( Price
+                                <field name="product_price"/>
+                                )
+                            </t>
+
+                        </div>
+                </t>
+            </div>
+        </field>
+    </record>
+</odoo>

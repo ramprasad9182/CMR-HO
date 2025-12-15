@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_bulk_replication_js" model="ir.actions.client">
+        <field name="name">Integration Bulk Posting</field>
+        <field name="tag">bulk_replication_action</field>
+    </record>
+
+    <record id="action_bulk_tracking" model="ir.actions.client">
+        <field name="name">Tracking</field>
+        <field name="tag">bulk_tracking_action</field>
+    </record>
+
+    <menuitem id="menu_bulk_replication_js" name="Integration Bulk Posting" parent="cmr_customizations.nhcl_cmr_configuration"
+          sequence="5"
+          action="action_bulk_replication_js"/>
+
+    <menuitem id="menu_bulk_tracking" name="Live Sync Dashboard " parent="dashboard_report"
+          sequence="6"
+          action="action_bulk_tracking"/>
+
+</odoo>

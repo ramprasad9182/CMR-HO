@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wizard Form View -->
+    <record id="view_reprint_dynamic_label_form" model="ir.ui.view">
+        <field name="name">reprint.dynamic.label.form</field>
+        <field name="model">reprint.dynamic.label</field>
+        <field name="arch" type="xml">
+            <form string="Reprint Zebra Labels">
+                <sheet>
+
+                    <group>
+                        <group>
+                            <field name="serial_number_line_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="file" filename="file_name"/>
+                            <field name="file_name"/>
+                            <field name="printer_ip"/>
+                            <field name="printer_port"/>
+                            <field name="quantity_labels"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_print_label"
+                            type="object"
+                            string="Print Labels"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_open_reprint_dynamic_label" model="ir.actions.act_window">
+        <field name="name">Reprint Dynamic Label</field>
+        <field name="res_model">reprint.dynamic.label</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field> <!-- Opens in a popup -->
+    </record>
+
+
+</odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="ir_cron_view_tree" model="ir.ui.view">
+            <field name="name">ir.cron.view.tree</field>
+            <field name="model">ir.cron</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="nextcall"/>
+                    <field name="interval_number"/>
+                    <field name="interval_type"/>
+                    <field name="active"/>
+                    <field name="is_running"/>
+                    <button name="start_cron_job" type="object" string="Activate" invisible="active==True"/>
+                    <button name="stop_cron_job" type="object" string="Deactivate" invisible="active==False"/>
+                </tree>
+            </field>
+        </record>
+         <record id="ir_cron_view_form_inherit" model="ir.ui.view">
+            <field name="name">ir.cron.view.form.inherit</field>
+            <field name="model">ir.cron</field>
+            <field name="inherit_id" ref="base.ir_cron_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//h1[hasclass('oe_title')]" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="open_history" type="object" class="oe_stat_button" icon="fa-history" invisible="cv_history_count == 0">
+                            <field name="cv_history_count" widget="statinfo" string="History"/>
+                        </button>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="is_custom_cron"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="ir_cron_view_search" model="ir.ui.view">
+            <field name="name">ir.cron.view.search</field>
+            <field name="model">ir.cron</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter string="Running" name="running" domain="[('is_running', '=', True)]"/>
+                    <separator/>
+                    <filter string="CMR Cron Jobs" name="custom_cron" domain="[('is_custom_cron', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_nhcl_cmr_cron_jobs_dashboard" model="ir.actions.act_window">
+            <field name="name">Cron Jobs Dashboard</field>
+            <field name="res_model">ir.cron</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="ir_cron_view_tree"/>
+<!--            <field name="view_id" ref="ir_cron_view_form"/>-->
+            <field name="search_view_id" ref="ir_cron_view_search"/>
+            <field name="context">{"search_default_custom_cron":1}</field>
+        </record>
+
+        <menuitem id="menu_cmr_cron_jobs_dashboard" name="Cron Jobs Dashboard"
+              parent="cron_job_report"
+              sequence="7"
+              action="action_nhcl_cmr_cron_jobs_dashboard"/>
+    </data>
+</odoo>

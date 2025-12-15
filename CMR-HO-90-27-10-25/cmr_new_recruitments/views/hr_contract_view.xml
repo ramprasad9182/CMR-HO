@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_contract_gss" model="ir.ui.view">
+        <field name="name">Contract</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page[@name='information']/group/group[@name='salary']"
+                   position="inside">
+                <field name="net_salary"/>
+                <field name="cost_to_company"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_contract_payroll_gss" model="ir.ui.view">
+        <field name="name">Contract Accounting</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="l10n_in_hr_payroll.hr_contract_form_in_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/field[@name='l10n_in_driver_salay']" position="after">
+                <field name="basic"/>
+            </xpath>
+            <xpath expr="//group/field[@name='l10n_in_medical_insurance']" position="before">
+                <field name="p_tax"/>
+                <field name="provident_fund"/>
+            </xpath>
+
+            <xpath expr="//group/field[@name='l10n_in_house_rent_allowance_metro_nonmetro']" position="after">
+                <field name="other_allowance"/>
+            </xpath>
+
+
+        </field>
+    </record>
+</odoo>

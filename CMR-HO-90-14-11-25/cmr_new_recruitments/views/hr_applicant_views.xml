@@ -1,0 +1,424 @@
+<odoo>
+    <record id="view_hr_applicant_form_custom" model="ir.ui.view">
+        <field name="name">hr.applicant.form.name.aadhaar</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header/button[@name='create_employee_from_applicant']" position="attributes">
+                <attribute name="class">oe_highlight</attribute>
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+
+                <!-- Request Approval -->
+                <button name="action_request_approval"
+                        string="Request For Job Offer Approval"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not is_stage_initial or on_hold"
+                        groups="hr_recruitment.group_hr_recruitment_manager"/>
+
+
+                <!-- Approve Level 1 -->
+                <button name="action_first_approve"
+                        string="Approve"
+                        type="object"
+                        class="btn-success"
+                        invisible="approval_stage not in ['first_requested'] or on_hold"
+                        groups="cmr_new_recruitments.group_hr_applicant_first_approval"/>
+
+                <!-- Approve Level 2 -->
+                <button name="action_second_approve"
+                        string="Approve"
+                        type="object"
+                        class="btn-success"
+                        invisible="approval_stage not in ['first_approved'] or on_hold"
+                        groups="cmr_new_recruitments.group_hr_applicant_second_approval"/>
+
+                <button name="action_refuse_approval_one"
+                        string="Refuse"
+                        type="object"
+                        class="btn-danger"
+                        invisible="approval_stage not in ['first_requested'] or on_hold"
+                        groups="cmr_new_recruitments.group_hr_applicant_first_approval"/>
+
+                <button name="action_refuse_approval_two"
+                        string="Refuse"
+                        type="object"
+                        class="btn-danger"
+                        invisible="approval_stage not in ['first_approved'] or on_hold"
+                        groups="cmr_new_recruitments.group_hr_applicant_second_approval"/>
+
+
+                <button name="action_appointment_request_approval"
+                        string="Request For Appointment Offer Approval"
+                        type="object"
+                        class="btn-primary"
+                        invisible="approval_stage not in ['first_approved_offer'] or on_hold"
+                        groups="hr_recruitment.group_hr_recruitment_manager"/>
+
+                <!-- Approve Level 1 -->
+                <button name="action_appointment_first_approve"
+                        string="Approve"
+                        type="object"
+                        class="btn-success"
+                        invisible="approval_stage not in ['second_approved_offer'] or on_hold"
+                        groups="cmr_new_recruitments.group_hr_applicant_first_approval"/>
+
+                <!-- Approve Level 2 -->
+                <button name="action_appointment_second_approve"
+                        string="Approve"
+                        type="object"
+                        class="btn-success"
+                        invisible="approval_stage not in ['third_approved_offer'] or on_hold"
+                        groups="cmr_new_recruitments.group_hr_applicant_second_approval"/>
+
+                <button name="action_appointment_refuse_approval_one"
+                        string="Refuse"
+                        type="object"
+                        class="btn-danger"
+                        invisible="approval_stage not in ['second_approved_offer'] or on_hold"
+                        groups="cmr_new_recruitments.group_hr_applicant_first_approval"/>
+
+                <button name="action_appointment_refuse_approval_two"
+                        string="Refuse"
+                        type="object"
+                        class="btn-danger"
+                        invisible="approval_stage not in ['third_approved_offer'] or on_hold"
+                        groups="cmr_new_recruitments.group_hr_applicant_second_approval"/>
+
+
+            </xpath>
+
+
+            <xpath expr="//button[@name='archive_applicant']" position="before">
+                <button name="action_open_checklist_tab" string="Check List" type="object" class="btn-primary"
+                        invisible="approval_stage not in ['checklist'] or on_hold"
+                        groups="hr_recruitment.group_hr_recruitment_manager"
+                />
+
+                <button name="action_quotation_send" string="Send Job Offer" type="object" class="oe_highlight"
+                        invisible="approval_stage not in ['second_approved'] or on_hold"
+                        groups="hr_recruitment.group_hr_recruitment_manager"
+                />
+
+                <button name="action_quotation_send_accepted" string="Job Offer Accepted" type="object"
+                        class="oe_highlight"
+                        invisible="approval_stage not in ['job_accepted'] or on_hold"
+                        groups="hr_recruitment.group_hr_recruitment_manager"
+                />
+
+                <button name="action_quotation_send_rejected" string="Job Offer Rejected" type="object"
+                        class="oe_highlight"
+                        invisible="approval_stage not in ['job_accepted'] or on_hold"
+                        groups="hr_recruitment.group_hr_recruitment_manager"
+                />
+
+                <button name="action_appointment_letter_send" string="Send Appointment Letter" type="object"
+                        class="oe_highlight"
+                         invisible="not (is_employee_created and approval_stage == 'appointment')"
+                        groups="hr_recruitment.group_hr_recruitment_manager"
+                />
+                <!--                        invisible="approval_stage not in ['appointment'] or on_hold"-->
+
+                <button name="action_appointment_letter_accepted" string="Appointment Accepted" type="object"
+                        class="oe_highlight"
+                        invisible="approval_stage not in ['appointment_accepted'] or on_hold"
+                        groups="hr_recruitment.group_hr_recruitment_manager"
+                />
+
+                <button name="action_appointment_letter_rejected" string="Appointment Rejected" type="object"
+                        class="oe_highlight"
+                        invisible="approval_stage not in ['appointment_accepted'] or on_hold"
+                        groups="hr_recruitment.group_hr_recruitment_manager"
+                />
+
+                <button name="action_set_on_hold" type="object" string="On Hold" class="btn-secondary"
+                        invisible="on_hold or approval_stage in ['job_rejected','appointment_rejected'] or application_status == 'refused' or is_stage_signed"
+                        groups="hr_recruitment.group_hr_recruitment_manager"
+                />
+                <button name="action_unhold" type="object" string="Unhold" class="btn-primary"
+                        invisible="not on_hold"
+                />
+
+            </xpath>
+
+            <xpath expr="//div[@class='oe_button_box']" position="after">
+                <widget name="web_ribbon" title="On Hold" bg_color="bg-warning" invisible="not on_hold"/>
+                <widget name="web_ribbon" title="Rejected" bg_color="bg-danger"
+                        invisible="approval_stage not in ['job_rejected','appointment_rejected']"/>
+                <!--                <widget name="web_ribbon" title="Offer Accepted" bg_color="bg-success" invisible="not (offer_tag == 'accepted' and not is_stage_signed)"/>-->
+
+            </xpath>
+
+            <xpath expr="//group[@name='recruitment_contract']/div[@class='o_row'][field[@name='salary_proposed']]"
+                   position="after">
+                <field name="ctc_type"
+                       invisible="not is_stage_initial and approval_stage not in ['first_requested','first_approved','second_approved','job_accepted','job_rejected','first_approved_offer','second_approved_offer','third_approved_offer','appointment','appointment_accepted','appointment_rejected','checklist','done']"/>
+                />
+            </xpath>
+
+            <xpath expr="//header/button[@name='archive_applicant']" position="attributes">
+                <attribute name="groups">hr_recruitment.group_hr_recruitment_manager</attribute>
+                <attribute name="invisible">approval_stage in ['job_rejected','appointment_rejected'] or not active or on_hold or is_employee_created
+                </attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='type_id']" position="after">
+                <!--                <field name="document_type" invisible="0"/>-->
+                <!--                <field name="offer_tag" invisible="0" readonly="0"/>-->
+                <field name="is_stage_initial" invisible="1"/>
+                <field name="is_stage_signed" invisible="1"/>
+                <field name="job_offer_sent" invisible="1"/>
+                <field name="on_hold" invisible="1"/>
+                <field name="is_employee_created" invisible="1"/>
+
+                <!--                <field name="is_stage_second_interview" invisible="0"/>-->
+                <field name="approval_stage" invisible="1"/>
+
+
+            </xpath>
+             <xpath expr="//field[@name='availability']" position="attributes">
+                 <attribute name="string">Date Of Joining</attribute>
+            </xpath>
+<!--             <xpath expr="//field[@name='availability']" position="attributes">-->
+<!--                <attribute name="required">1</attribute>-->
+<!--            </xpath>-->
+
+
+            <xpath expr="//field[@name='categ_ids']" position="after">
+                <field name="division_id"/>
+            </xpath>
+
+            <xpath expr="//div[@class='oe_title pe-0']" position="replace">
+                <div class="oe_title pe-0 d-flex justify-content-between align-items-start w-100">
+
+                    <!-- Left Block -->
+                    <div class="d-flex flex-column w-100">
+
+                        <!-- Name as per Aadhaar -->
+                        <div class="mb-2">
+                            <!-- This renders label + "?" icon -->
+                            <field name="partner_name" string="Name as per Aadhaar" invisible="1"/>
+                            <label for="partner_name"/>
+                            <!-- This renders field in big size -->
+                            <h1>
+                                <field name="partner_name" nolabel="1" placeholder="e.g. John Doe"/>
+                            </h1>
+                        </div>
+
+                        <!-- Subject / Application -->
+                        <div>
+                            <field name="name" string="Subject / Application" invisible="1"/>
+                            <label for="name"/>
+                            <h1>
+                                <field name="name"
+                                       placeholder="e.g. Sales Manager 2 year experience"
+                                       nolabel="1"
+                                       options="{'line_breaks': False}"
+                                       widget="text"/>
+                            </h1>
+                        </div>
+
+                    </div>
+
+                    <!-- Right: Kanban dot -->
+                    <div class="ms-auto mt-2">
+                        <field name="kanban_state" widget="state_selection"/>
+                    </div>
+
+                </div>
+            </xpath>
+
+
+<!--            <field name="partner_name" position="attributes">-->
+<!--                <attribute name="string">Name as per Aadhaar</attribute>-->
+<!--            </field>-->
+            <field name="partner_phone" position="attributes">
+                <attribute name="string">Alternate Number</attribute>
+            </field>
+
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Professional Details" groups="hr_recruitment.group_hr_recruitment_manager">
+                    <group>
+                        <field name="total_experience"/>
+                    </group>
+                    <field name="applicant_professional_ids">
+                        <tree editable="bottom" delete="0">
+                            <field name="sequence" readonly="1" force_save="1"/>
+                            <field name="company_name"/>
+                            <field name="designation"/>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="years_experience"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Reference Details" groups="hr_recruitment.group_hr_recruitment_manager">
+                    <field name="applicant_reference_ids">
+                        <tree editable="bottom" delete="0">
+                            <field name="name"/>
+                            <field name="phone"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Educational Details" groups="hr_recruitment.group_hr_recruitment_manager">
+                    <field name="applicant_education_ids">
+                        <tree editable="bottom" delete="0">
+                            <field name="sequence" string="S.No" readonly="1" force_save="1"/>
+                            <field name="degree"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="year_of_passing"/>
+                        </tree>
+                    </field>
+                </page>
+
+                <page string="Checklist Documents" invisible="checklist_tab_visible == False" groups="hr_recruitment.group_hr_recruitment_manager">
+                    <group>
+                        <field name="check_list_ids" string="Joining Check List" widget="many2many_checkboxes"/>
+                    </group>
+                </page>
+
+                 <page string="CTC BREAKUP" invisible="not is_stage_initial and approval_stage not in ['first_requested','first_approved','second_approved','job_accepted','job_rejected','first_approved_offer','second_approved_offer','third_approved_offer','appointment','appointment_accepted','appointment_rejected','checklist','done']">
+                    <form>
+                        <group>
+                            <group string="Monthly Salary Computed">
+                                <field name="ctc_m" required="1"/>
+                                <field name="basic_m" readonly="1"/>
+                                <field name="hra_m" readonly="1"/>
+                                <field name="other_allowance_m" readonly="1"/>
+                                <field name="pf_m" readonly="1"/>
+                                <field name="pt_m" readonly="1"/>
+                                <field name="net_take_home_m" readonly="1"/>
+                                <field name="family_insurance_m"/>
+                                <field name="esic_m" readonly="1"/>
+<!--                                <field name="bonus_m" readonly="1"/>-->
+                            </group>
+                            <group string="CTC Breakdown (Per Annum)">
+
+                                <field name="ctc" required="1"/>
+                                <field name="basic" readonly="1"/>
+                                <field name="hra" readonly="1"/>
+                                <field name="other_allowance" readonly="1"/>
+                                <field name="pf" readonly="1"/>
+                                <field name="pt" readonly="1"/>
+                                <field name="bonus" readonly="1" invisible="ctc_type not in 'with_bonus'"/>
+                                <field name="net_take_home" readonly="1"/>
+                                <field name="family_insurance" readonly="1"/>
+                                <field name="esic" readonly="1"/>
+                            </group>
+
+
+                        </group>
+
+                    </form>
+                </page>
+                <page string="Offer Letter Details"
+                      invisible="not is_stage_initial and approval_stage not in ['first_requested','first_approved','second_approved','job_accepted','job_rejected','first_approved_offer','second_approved_offer','third_approved_offer','appointment','appointment_accepted','appointment_rejected','checklist','done']">                    <form>
+                        <group>
+                            <field name="applicant_name" readonly="1"/>
+                            <field name="todays_date" readonly="1"/>
+                            <field name="date_of_joining" readonly="1"/>
+                            <field name="ctc_offer" readonly="1"/>
+                            <field name="designation" readonly="1" force_save="1"/>
+
+                        </group>
+                    </form>
+                </page>
+
+            </xpath>
+
+            <xpath expr="//page[@name='application_summary']/field[@name='description']" position="before">
+                <group>
+                    <field name="shortlisted" readonly="approval_stage not in ['draft'] or is_stage_initial"
+                           style="border-bottom: 1px solid #714B67;padding-top: 6px;margin-bottom: 10px; width:25%"
+                           placeholder="    "/>
+
+                    <field name="checklist_tab_visible"
+                           invisible="1"/>
+                </group>
+
+            </xpath>
+            <xpath expr="//page[@name='application_summary']/group[field[@name='shortlisted']]" position="after">
+                <button name="action_add_stage_remarks"
+                        type="object"
+                        string="Load Stages"
+                        class="btn btn-primary"
+                />
+                <field name="stage_remark_ids" context="{'default_applicant_id': active_id}">
+                    <tree editable="bottom">
+                        <field name="stage_id" readonly="1"/>
+                        <field name="remarks"/>
+                    </tree>
+                </field>
+            </xpath>
+
+             <xpath expr="//button[@name='action_applications_email']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+<!--    <record id="cmr_new_recruitments_hr_applicant_form_inherit" model="ir.ui.view">-->
+<!--        <field name="name">hr.applicant.form.refuse.button.inherit</field>-->
+<!--        <field name="model">hr.applicant</field>-->
+<!--        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            &lt;!&ndash; Modify the Refuse button directly &ndash;&gt;-->
+<!--            <xpath expr="//header/button[@name='archive_applicant']" position="attributes">-->
+<!--                <attribute name="invisible">shortlisted != 'no' or not active</attribute>-->
+<!--                <attribute name="class">btn-danger</attribute>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="cmr_new_recruitments_hr_applicant_search_inherit" model="ir.ui.view">
+        <field name="name">hr.applicant.form.search.inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_search_bis"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='hired']" position="after">
+                <filter string="On Hold" name="on_hold_filter" domain="[('on_hold','=',True)]"/>
+                <filter string="Offer Accepted" name="offer_accepted_filter"
+                        domain="[('approval_stage','=','job_accepted')]"/>
+                <filter string="Offer Rejected" name="offer_rejected_filter"
+                        domain="[('approval_stage','=','job_rejected')]"/>
+            </xpath>
+        </field>
+    </record>
+
+
+<!--    <record id="your_custom_view_id" model="ir.ui.view">-->
+<!--        <field name="name">hr.applicant.form.inherit.add_field</field>-->
+<!--        <field name="model">hr.applicant</field>-->
+<!--        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//group[@name='recruitment_contract']/div[@class='o_row'][field[@name='salary_proposed']]"-->
+<!--                   position="after">-->
+<!--                <field name="ctc_type"-->
+<!--                invisible="not is_stage_initial and approval_stage not in ['first_requested','first_approved','second_approved','job_accepted','job_rejected','first_approved_offer','second_approved_offer','third_approved_offer','appointment','appointment_accepted','appointment_rejected','checklist','done']"/>/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+    <record id="hide_ref_user_id_field" model="ir.ui.view">
+        <field name="name">hr.applicant.hide.ref.user</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_referral.hr_applicant_view_form_inherit_referral"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref_user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="nhcl_ho_store_cmr_integration.BulkTracking">
+        <div>
+        </div>
+        <div style="padding:10px;">
+               <style>
+                   body {
+                      background-color: #ffffff !important;
+                   }
+                   .styled-table {
+                    border-collapse: separate;
+                    border-spacing: 5px;
+                    margin: 0px;
+                    width: fit-content;
+                    }
+                    .styled-table tr {
+                        height: 145px;
+                    }
+                   .styled-table td {
+                   padding: 7;
+                   text-align: center;
+                   color: #333;
+                   width: 170px;
+                   border-radius: 2px;
+                   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
+                   transition: transform 0.1s ease, box-shadow 0.1s ease;
+                   }
+                   .info-tab {
+                   background-color: #f2f2f2;
+                   font-size: 10px;
+                   font-weight: bold;
+                   margin-bottom: 10px;
+                   text-align:left;
+                   margin-left:5px;
+                   }
+                   .info-title {
+                   <!--                   color:#5c5c5c;-->
+                   font-size: 15px;
+                   font-weight: 600;
+                   margin-bottom: 10px;
+                   text-align:center;
+                   <!--                   margin-left:5px;-->
+                   }
+                   .info-number {
+                   font-weight:400;
+                   font-size: 24px;
+                   text-align: left;
+                   margin-bottom: 10px;
+                   text-align:center;
+                   }
+                   .trans-tab {
+                   background-color: #f2f2f2;
+                   }
+
+                   <!--                   master style -->
+                   .master-tab{
+                   background-color: #f2f2f2;
+                   }
+                   .master-title {
+                   <!--                   color:#5c5c5c;-->
+                   font-size: 15px;
+                   margin-bottom: 10px;
+                   text-align:center;
+                   font-weight: 600;
+                   }
+                   .master-number {
+                   display: flex;
+                   justify-content: space-between;
+                   font-size: 1.18rem;
+                   font-weight: 400;
+                   margin-top: 22px;
+                   margin-bottom: 22px;
+                   transform: scaleY(1.27);
+                   transform-origin: center;
+                   }
+                   .master-number > * {
+                   flex: 1 1 200px;
+                   max-width: 130px;
+                   }
+                   .title {
+                   font-size: 1.5rem;
+                   font-weight: bold;
+                   color: #01666b;
+                   margin: 3px;
+                   letter-spacing: 1.2px;
+                   }
+
+                   .master-third {
+                   display:flex;
+                   gap: 18px;
+                   font-size: 11px;
+                   font-weight: 600;
+                   margin-left: 15px;
+                   }
+                   .table-title{
+                   font-size: 20px;
+                   font-weight: bold;
+                   margin-left:20px;
+                   color: #2580c2;
+                   text-align: Left;
+                   }
+                   .clickable-div {
+                   cursor: pointer; /* Makes the cursor appear clickable */
+                   }
+               </style>
+            <center>
+                <div class="title"><span>Dashboard For Data Sync </span></div>
+                <table>
+                    <tr>
+                        <td>
+                            <div class="table-title">
+                                    Information Admin Data
+                            </div>
+                            <table class="styled-table">
+                                <tr class="info-tab">
+                                    <td>
+                                        <div class="info-title">
+                                            Total Configured Stores
+                                        </div>
+                                        <div class="info-number">
+                                            <span t-esc="state.total.liveSync">0</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="info-title">
+                                            Total Live Stores
+                                        </div>
+                                        <div><br/></div>
+                                        <div class="info-number">
+                                            <span t-esc="state.total.liveStore">0</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="info-tab">
+                                    <td class="info-color">
+                                        <div class="info-title">
+                                            Master Data Not Processed Ho to POS
+                                        </div>
+                                        <div class="info-number">
+                                            <span t-esc="state.total.processedEvent">0</span>
+                                        </div>
+                                    </td>
+                                    <td class="info-color">
+                                        <div class="info-title">
+                                            Master Data Processed Today
+                                        </div>
+                                        <div class="info-number">
+                                            <span t-esc="state.total.processedToday">0</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="info-tab" style="visibility: hidden;">
+                                    <td class="info-color">
+                                        <div class="info-title">
+                                            HO to POS Not Processed Event's - Transactions
+                                        </div>
+                                        <div class="info-number">
+                                            <span t-esc="state.total.transactionEvent">0</span>
+                                        </div>
+                                    </td>
+                                    <td class="info-color">
+                                        <div class="info-title">
+                                            HO to POS Processed Event's on Today - Transactions
+                                        </div>
+                                        <div class="info-number">
+                                            <span t-esc="state.total.transactionToday">0</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <div style="font-size: 20px; font-weight: bold; color: #2580c2; text-align: left; margin-left:20px;">
+                                    Masters Data
+                            </div>
+                            <table class="styled-table">
+                                <tr class="master-tab">
+                                    <td class="td">
+                                        <div class="master-title">
+                                            Accounts
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.account">0</span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.account">0</span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.pending.account">0</span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div style="color: #f72f2f" class="clickable-div"
+                                                 t-on-click="viewAccountFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                    <td class="td">
+                                        <div class="master-title">
+                                            Tax
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.tax">0</span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.tax"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.tax"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div style="color: #f72f2f" class="clickable-div"
+                                                 t-on-click="viewTaxFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                    <td class="td">
+                                        <div class="master-title">
+                                            Fiscal Year
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.fiscal"></span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.fiscal"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.fiscal"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div class="clickable-div" style="color: #f72f2f"
+                                                 t-on-click="viewFiscalFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                    <td class="td">
+                                        <div class="master-title">
+                                            Employees
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.employee"></span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.employee"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.employee"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div class="clickable-div" style="color: #f72f2f"
+                                                 t-on-click="viewEmployeeFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="master-tab">
+                                    <td>
+                                        <div class="master-title">
+                                            Products Templates
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.template"></span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.template"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.template"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div class="clickable-div" style="color: #f72f2f"
+                                                 t-on-click="viewTemplateFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="master-title">
+                                            Products Categories
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.category"></span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.category"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.category"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div class="clickable-div" style="color: #f72f2f"
+                                                 t-on-click="viewCategoryFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="master-title">
+                                            Products Variants
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.product"></span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.product"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.product"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div class="clickable-div" style="color: #f72f2f"
+                                                 t-on-click="viewVariantFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="master-title">
+                                            Products Attributes
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.attribute"></span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.attribute"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.attribute"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div class="clickable-div" style="color: #f72f2f"
+                                                 t-on-click="viewAttributeFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="master-tab">
+                                    <td>
+                                        <div class="master-title">
+                                            Promotions
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.loyalty"></span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.loyalty"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.loyalty"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div class="clickable-div" style="color: #f72f2f"
+                                                 t-on-click="viewPromotionFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="master-title">
+                                            Users
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.users"></span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.users"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.users"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div class="clickable-div" style="color: #f72f2f"
+                                                 t-on-click="viewUsersFailure">Failure</div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="master-title">
+                                            Contacts
+                                        </div>
+                                        <div class="master-number">
+                                            <div>
+                                                <span t-esc="state.total.partner"></span>
+                                            </div>
+                                            <div>
+                                                <span t-esc="state.processed.partner"></span>
+                                            </div>
+                                            <div class="clickable-div">
+                                                <span t-esc="state.pending.partner"></span>
+                                            </div>
+                                        </div>
+                                        <div class="master-third">
+                                            <div style="color: #02a149">Total</div>
+                                            <div style="color: #0094d4">Processed</div>
+                                            <div class="clickable-div" style="color: #f72f2f"
+                                                 t-on-click="viewContactFailure">Failure</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <div style="font-size: 20px; font-weight: bold; color: #2580c2; text-align: left; margin-left:20px;">
+                                    Transactions Data
+                            </div>
+                            <table class="styled-table">
+                                <tr class="trans-tab">
+                                    <td>
+                                        <div class="info-title">
+                                            Transactions Not Processed HO - POS
+                                        </div>
+                                        <div class="info-number">
+                                            <div>
+                                                <span t-esc="state.total.transactionEvent"></span>
+                                            </div>
+                                            <!--                                            <div>-->
+                                            <!--                                                <span></span>-->
+                                            <!--                                            </div>-->
+                                            <!--                                            <div>-->
+                                            <!--                                                <span></span>-->
+                                            <!--                                            </div>-->
+                                        </div>
+                                        <!--                                        <div class="trans-third" style="margin-top:15px;">-->
+                                        <!--                                            <div style="color: #02a149">Total</div>-->
+                                        <!--                                            <div style="color: #0094d4">Processed</div>-->
+                                        <!--                                            <div style="color: #f72f2f"><span>Failure</span></div>-->
+                                        <!--                                        </div>-->
+                                    </td>
+                                    <td>
+                                        <div class="info-title">
+                                            Transactions Processed Today to POS
+                                        </div>
+                                        <!--                                        <div><br/></div>-->
+                                        <div class="info-number">
+                                            <div>
+                                                <span t-esc="state.total.transactionToday"></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--                                hiding table rows -->
+                                <tr style="visibility: hidden;">
+                                    <td>
+                                        <div class="trans-title">
+                                            Configured Live Sync Sites
+                                        </div>
+                                        <div class="trans-number">
+                                            <span t-esc="state.pending.product"></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="trans-title"><br/>
+                                            Live Store's
+                                        </div>
+                                        <div class="trans-number">
+                                            <span t-esc="state.pending.category"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr style="visibility: hidden;">
+                                    <td>
+                                        <div class="trans-title">
+                                            Configured Live Sync Sites
+                                        </div>
+                                        <div class="trans-number">
+                                            <span t-esc="state.pending.product"></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="trans-title">
+                                            Live Store's
+                                        </div>
+                                        <div class="trans-number">
+                                            <span t-esc="state.pending.category"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </center>
+       </div>
+    </t>
+</templates>

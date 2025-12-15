@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="x_multi.MultiSelect" owl="1">
+      <div class="o-ms" t-ref="root" t-on-keydown="onKeydown">
+        <!-- FIELD -->
+          <div class="o-ms-field d-flex flex-wrap gap-1 align-items-center" t-on-click="onFieldClick" >
+          <!-- chips -->
+              <t t-set="chips" t-value="selectedChips || []"/>
+              <t t-foreach="(chips.slice(0, (props.maxChips || 3)))" t-as="c" t-key="c.id">
+            <span class="o-ms-chip d-inline-flex align-items-center">
+              <t t-esc="c.label"/>
+                <a class="o-ms-chip-x" href="#" t-on-click.prevent="() => remove(c.id)">×</a>
+            </span>
+          </t>
+              <span t-if="chips.length > (props.maxChips || 3)" class="o-ms-chip">
+            +<t t-esc="(chips.length - (props.maxChips || 3))"/>
+          </span>
+              <a t-if="chips.length" href="#" class="o-ms-chip-x" t-on-click.prevent="clearAll">Clear</a>
+
+              <!-- input -->
+              <input
+                      t-ref="input"
+                      class="o-ms-input"
+                      type="text"
+                      t-att-placeholder="chips.length ? '' : (props.placeholder || 'Select…')"
+                      t-model="state.query"
+                      t-on-input="onInput"
+                      t-on-focus="openPanel"
+              />
+        </div>
+
+          <!-- PANEL -->
+          <div t-if="state.open" class="o-ms-panel"  t-ref="panel">
+          <t t-set="vKey" t-value="props.valueKey || 'id'"/>
+              <t t-set="lKey" t-value="props.labelKey || 'name'"/>
+              <t t-set="opts" t-value="filteredOptions || []"/>
+
+              <!-- Options -->
+              <t t-foreach="opts" t-as="o" t-key="o[vKey]">
+            <!-- All option (id=0) clears selection -->
+                  <div class="o-ms-opt d-flex align-items-center justify-between"
+                       t-if="o[vKey] === 0"
+                       t-on-click.stop="() => add(0)">
+              <span><t t-esc="o[lKey]"/></span>
+                      <span t-if="!state.selected.size">✓</span>
+            </div>
+
+                  <!-- Normal options -->
+                  <div class="o-ms-opt d-flex align-items-center justify-between"
+                       t-elif="true"
+                       t-on-click.stop="() => (state.selected.has(o[vKey]) ? remove(o[vKey]) : add(o[vKey]))">
+              <span><t t-esc="o[lKey]"/></span>
+                      <span t-if="state.selected.has(o[vKey])">✓</span>
+            </div>
+          </t>
+
+              <div t-if="!(opts || []).length" class="o-ms-empty">No matches</div>
+        </div>
+      </div>
+    </t>
+
+    <t t-name="owl.OwlTransportDashboard" owl="1">
+         <section class="section_transport">
+             <div class="title"><span>Stock In Transit Dashboard </span></div>
+             <div class="row">
+                 <div class="border m-0 p-0 bg-white"/>
+                 <div class="col-lg-3 sidebar" style="background-color: #fff; padding: 1rem;">
+                     <div class="bulk-sidebar">
+                        <t t-set="lastMainParent" t-value="''"/>
+                         <t t-set="lastSubParent" t-value="''"/>
+                         <t t-foreach="menuItems" t-as="item" t-key="item.id">
+                            <t t-if="item.mainParent !== lastMainParent">
+                                <div class="sidebar-title main-parent">
+                                    <t t-esc="item.mainParent"/>
+                                </div>
+                                <t t-set="lastMainParent" t-value="item.mainParent"/>
+                                <t t-set="lastSubParent" t-value="''"/> <!-- Reset subParent on new mainParent -->
+                            </t>
+                             <t t-if="item.subParent !== lastSubParent">
+                                <div class="sidebar-title sub-parent">
+                                    <t t-esc="item.subParent"/>
+                                </div>
+                                 <t t-set="lastSubParent" t-value="item.subParent"/>
+                            </t>
+                             <div class="sidebar-item"
+                                  t-att-class="state.selected === item.id ? 'active' : ''"
+                                  t-on-click="() => selectMenu(item.id)">
+                                <t t-esc="item.label"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                 <div class="col" style="padding: 1rem; bg-white">
+                     <div class="row">
+                         <t t-if="state.selected === 1">
+                             <div>
+                                 <span class="sub-title"> Stock In Transfer Overview</span>
+                             </div>
+                             <div class="filter-row">
+                                    <div class="filter-group" style="width:240px;">
+                                        <MultiSelect
+                                                options="state.companyOptions"
+                                                value="state.selectedCompanyIds"
+                                                onChange.bind="onCompaniesChange"
+                                                placeholder="'All Companies (Delivery Address)'"/>
+                                    </div>
+                                    <div class="filter-group" style="width:240px;">
+                                        <MultiSelect
+                                                options="state.categoryOptions"
+                                                value="state.selectedCategoryIds"
+                                                onChange.bind="onCategoriesChange"
+                                                placeholder="'All Categories'"/>
+                                    </div>
+                                    <div class="filter-group" style="width:100px;">
+                                        <select class="o_input d-flex flex-wrap" t-on-change="onPeriodChange"
+                                              style="padding-left:5px;">
+                                          <option value="7">Last 7 Days</option>
+                                          <option value="15">Last 15 Days</option>
+                                          <option value="21">Last 21 Days</option>
+                                          <option value="30">Last 30 Days</option>
+                                          <option value="45">Last 45 Days</option>
+                                          <option value="90" t-att-selected="state.selectedPeriod===90?true:undefined">Last 90 days</option>
+                                          <option value="180">Last 180 Days</option>
+                                        </select>
+                                    </div>
+                                    <div class="record-count">
+                                         Total Categories: <t t-esc="state.totalCategories"/>
+                                    </div>
+                             </div>
+                             <div class="report-table-wrapper">
+                                 <table class="report-table header-table">
+                                    <thead style="font-weight:bold;">
+                                      <tr>
+                                        <th class="text-center" style="width:20%">Category Name</th>
+                                          <th class="text-center" style="width:13%">Total Bales</th>
+                                          <th class="text-center" style="width:13%">Bales In Transit</th>
+                                          <th class="text-center" style="width:13%">Bales Received</th>
+                                          <th class="text-center" style="width:13%">Bales Opened</th>
+                                          <th class="text-center" style="width:13%">Bales Not Opened</th>
+                                          <th class="text-center" style="width:13%">Pending Bales</th>
+                                      </tr>
+                                    </thead>
+                                     <tbody>
+<!--                                         <t t-if="state.rows">-->
+<!--                                            <tr><td class="text-center" colspan="7">Loading…</td></tr>-->
+<!--                                         </t>-->
+                                         <t t-if="(state.rows || []).length === 0">
+                                            <tr><td class="text-center" colspan="7">No data</td></tr>
+                                         </t>
+                                         <t t-else="">
+                                             <t t-foreach="state.rows || []" t-as="r" t-key="r.group_key">
+                                                  <tr>
+                                                      <td class="text-center"><t t-esc="r.category_name"/>
+                                                          <div/></td>
+                                                      <td class="text-center"><t t-esc="r.total_bales"/></td>
+                                                      <td class="text-center"><t t-esc="r.bales_in_transit"/></td>
+                                                      <td class="text-center"><t t-esc="r.bales_received"/></td>
+                                                      <td class="text-center"><t t-esc="r.bales_opened"/></td>
+                                                      <td class="text-center"><t t-esc="r.bales_not_opened"/></td>
+                                                      <td class="text-center"><t t-esc="r.pending_bales"/></td>
+                                                  </tr>
+                                             </t>
+                                         </t>
+                                     </tbody>
+                                  </table>
+                             </div>
+                         </t>
+                         <t t-if="state.selected === 2">
+                             <div><span class="sub-title "> Stock In Return Overview</span></div>
+                             <div class="filter-row">
+                                 <div class="filter-group" style="width:240px;">
+                                    <MultiSelect
+                                            options="state.companyOptions"
+                                            value="state.rCompanyIds"
+                                            onChange.bind="onCompaniesChangeReturn"
+                                            placeholder="'All Companies (Company Wise)'" />
+                                 </div>
+                                 <div class="filter-group" style="width:240px;">
+                                    <MultiSelect
+                                            options="state.categoryOptions"
+                                            value="state.rCategoryIds"
+                                            onChange.bind="onCategoriesChangeReturn"
+                                            placeholder="'All Categories'" />
+                                 </div>
+                                 <div class="filter-group" style="width:100px;">
+                                      <select class="o_input d-flex flex-wrap" t-on-change="onPeriodChangeReturn"
+                                              style="padding-left:5px;">
+                                          <option value="7">Last 7 Days</option>
+                                          <option value="15">Last 15 Days</option>
+                                          <option value="21">Last 21 Days</option>
+                                          <option value="30">Last 30 Days</option>
+                                          <option value="45">Last 45 Days</option>
+                                          <option value="90" t-att-selected="state.rPeriod===90?true:undefined">Last 90 days</option>
+                                          <option value="180">Last 180 Days</option>
+                                      </select>
+                                 </div>
+                                 <div class="record-count">
+                                         Total Categories: <t t-esc="state.totalRecords"/>
+                                 </div>
+                             </div>
+                             <div class="report-table-wrapper">
+                                 <table class="report-table header-table">
+                                    <thead style="font-weight:bold;">
+                                      <tr>
+                                        <th class="text-center" style="width:20%">Category Name</th>
+                                          <th class="text-center" style="width:13%">Total Bales</th>
+                                          <th class="text-center" style="width:13%">Bales In Transit</th>
+                                          <th class="text-center" style="width:13%">Bales Received</th>
+                                          <th class="text-center" style="width:13%">Bales Opened</th>
+                                          <th class="text-center" style="width:13%">Bales Not Opened</th>
+                                          <th class="text-center" style="width:13%">Pending Bales</th>
+                                      </tr>
+                                    </thead>
+                                     <tbody>
+<!--                                         <t t-if="state.rowsReturn">-->
+<!--                                             <tr><td class="text-center" colspan="7">Loading…</td></tr>-->
+<!--                                         </t>-->
+                                         <t t-if="(state.rowsReturn || []).length === 0">
+                                            <tr><td class="text-center" colspan="7">No data</td></tr>
+                                         </t>
+                                         <t t-else="">
+                                             <t t-foreach="state.rowsReturn || []" t-as="r" t-key="r.group_key || r.category_id">
+                                                  <tr>
+                                                      <td class="text-center"><t t-esc="r.category_name"/></td>
+                                                      <td class="text-center"><t t-esc="r.total_bales"/></td>
+                                                      <td class="text-center"><t t-esc="r.bales_in_transit"/></td>
+                                                      <td class="text-center"><t t-esc="r.bales_received"/></td>
+                                                      <td class="text-center"><t t-esc="r.bales_opened"/></td>
+                                                      <td class="text-center"><t t-esc="r.bales_not_opened"/></td>
+                                                      <td class="text-center"><t t-esc="r.pending_bales"/></td>
+                                                  </tr>
+                                             </t>
+                                         </t>
+                                     </tbody>
+                                  </table>
+                             </div>
+                         </t>
+                     </div>
+                </div>
+             </div>
+         </section>
+    </t>
+</templates>

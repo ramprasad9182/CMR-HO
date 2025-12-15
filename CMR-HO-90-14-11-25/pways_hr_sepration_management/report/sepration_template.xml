@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_other_sattelment">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page" style="font-family: 'Times New Roman', Times, serif;">
+                        <div class="header">
+                            <div style="display:flex; flex-direction:column; justify-content:center;min-height:100vh;">
+                                <center><u><b><span style="font-size:20px;"><t t-esc="o.company_id.name"/></span></b></u></center>
+                                <center><u><b><span style="font-size:18px;">Final Settlement</span></b></u></center>
+                                <div class="row">
+                                    <div class="col-3" style="text-align:left;">
+                                        <span style="text-align:right;">Settlement Number: <t t-esc="o.name"/></span>
+                                    </div><div class="col-3"/><div class="col-3"/>
+                                    <div class="col-3" style="text-align:right;">
+                                        <span style="text-align:left;">Date: <t t-esc="o.request_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="text-align:justify;">
+                            <div class="col-4">
+                                <span>Name :</span>
+                                <span><t t-esc="o.employee_id.name"/></span><br/>
+                                <span>Title :</span>
+                                <span><t t-esc="o.employee_job_id.name"/></span><br/>
+                                <span>Department :</span>
+                                <span><t t-esc="o.employee_dept.name"/></span><br/>
+                                <span>Joining Date :</span>
+                                <span><t t-esc="o.joined_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/></span><br/>
+                            </div>
+                        </div><hr style="border-top: 1px solid black;"/>
+                        <table style="width: 100%;">
+                            <thead style="width: 100%;">
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Duration - From</th>
+                                    <th>To</th>
+                                    <th>Days</th>
+                                    <th>Unproductive Days</th>
+                                    <th>Eligible Days</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="o.gratuity_id">
+                                    <tr>
+                                        <td><span>Gratuity Period</span></td>
+                                        <td><span>
+                                            <t t-esc="o.gratuity_id.joined_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/></span>
+                                        </td>
+                                        <td><span>
+                                            <t t-set="last_date" t-value="o.gratuity_id.joined_date + relativedelta(years=o.gratuity_id.worked_years)"/>
+                                            <t t-esc="last_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/></span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <t t-esc="o.gratuity_id.total_days" t-options='{"widget": "float", "precision": 2}'/>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <t t-esc="o.gratuity_id.unproductive_days" t-options='{"widget": "float", "precision": 2}'/>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <t t-esc="o.gratuity_id.eligible_days" t-options='{"widget": "float", "precision": 2}'/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-if="o.leave_ids">
+                                    <tr t-foreach="o.leave_ids" t-as="line">
+                                        <t t-set="leave" t-value="line.report_leave_data()"/>
+                                        <t t-if="line.quantity > 0">
+                                            <td><span>Leave Period</span></td>
+                                            <td>
+                                                <span>
+                                                    <t t-esc="leave.date_from" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    <t t-esc="leave.date_to" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    <t t-esc="line.quantity" t-options='{"widget": "float", "precision": 2}'/>
+                                                </span>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <hr style="border-top: 1px solid black;"/>
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40%;">Description</th>
+                                    <th style="width: 15%;">Remarks</th>
+                                    <th style="width: 15%;">Quantity</th>
+                                    <th style="width: 15%;">Amount</th>
+                                    <th style="width: 15%;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="o.gratuity_ids">
+                                    <tr t-foreach="o.gratuity_ids" t-as="line">
+                                        <td style="width: 40%;"><span><t t-esc="line.description"/></span></td>
+                                        <td style="width: 15%;"><span><t t-esc="line.remarks"/></span></td>
+                                        <td style="width: 15%;"><span><t t-esc="line.quantity" t-options='{"widget": "float", "precision": 2}'/></span></td>
+                                        <td style="width: 15%;"><span><t t-esc="round(line.amount, 2)" t-options='{"widget": "float", "precision": 2}'/></span></td>
+                                        <td style="width: 15%;"><span><t t-esc="line.total" t-options='{"widget": "float", "precision": 2}'/></span></td>
+                                    </tr>
+                                </t>
+                                <t t-if="o.leave_ids">
+                                    <tr t-foreach="o.leave_ids" t-as="line">
+                                        <t t-if="line.quantity > 0">
+                                            <td style="width: 40%;"><span><t t-esc="line.description"/></span></td>
+                                            <td style="width: 15%;"><span><t t-esc="line.remarks"/></span></td>
+                                            <td style="width: 15%;"><span><t t-esc="line.quantity" t-options='{"widget": "float", "precision": 2}'/></span></td>
+                                            <td style="width: 15%;"><span><t t-esc="round(line.amount, 2)" t-options='{"widget": "float", "precision": 2}'/></span></td>
+                                            <td style="width: 15%;"><span><t t-esc="line.total" t-options='{"widget": "float", "precision": 2}'/></span></td>
+                                        </t>
+                                    </tr>
+                                </t>
+                                <t t-if="o.other_sattlement_ids">
+                                    <tr t-foreach="o.other_sattlement_ids" t-as="line">
+                                        <td style="width: 40%;"><span><t t-esc="line.description"/></span></td>
+                                        <td style="width: 15%;"><span><t t-esc="line.remarks"/></span></td>
+                                        <td style="width: 15%;"><span><t t-esc="line.quantity" t-options='{"widget": "float", "precision": 2}'/></span></td>
+                                        <td style="width: 15%;"><span><t t-esc="round(line.amount, 2)" t-options='{"widget": "float", "precision": 2}'/></span></td>
+                                        <td style="width: 15%;"><span><t t-esc="line.total" t-options='{"widget": "float", "precision": 2}'/></span></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table><br/>
+                        <div style="text-align:right;"><span style="text-align:right; border-top: 1px solid black; padding:5px;">
+                            <b>Net Payable :&#160; <t t-esc="o.total_payable_amount" t-options='{"widget":"float", "precision":2}'/></b></span>
+                        </div><hr style="border-top: 1px solid black;"/>
+                        <div style="text-align:right;">* Amount in QAR.</div>
+                        <div style="text-align:left;">
+                            <span>Remarks : <t t-esc="o.remarks"/></span>
+                        </div><br/>
+                        <div class="row" style="margin-top: 50px;">
+                            <div class="col-4"><span  style="border-top: 1px solid black; padding:5px;">Prepared By</span></div>
+                            <div class="col-4"><span style="border-top: 1px solid black; padding:5px;">Checked By Finance</span></div>
+                            <div class="col-4"><span style="border-top: 1px solid black; padding:5px;">Recipient's Sign</span></div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="nhcl_bulk_account_view" model="ir.ui.view">
+        <field name="name">Bulk Account</field>
+        <field name="model">nhcl.bulk.account</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_account_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_account" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="server_nhcl_bulk_account_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="account.model_account_account"/>
+        <field name="binding_model_id" ref="account.model_account_account"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_account_stores()</field>
+    </record>
+    
+    <record id="nhcl_bulk_contact_view" model="ir.ui.view">
+        <field name="name">Bulk Contact</field>
+        <field name="model">nhcl.bulk.contact</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_contact_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_contact" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="server_nhcl_bulk_contact_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_contact_stores()</field>
+    </record>
+    
+    <record id="nhcl_bulk_category_view" model="ir.ui.view">
+        <field name="name">Bulk Category</field>
+        <field name="model">nhcl.bulk.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_category_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_category" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="server_nhcl_bulk_category_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="product.model_product_category"/>
+        <field name="binding_model_id" ref="product.model_product_category"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_category_stores()</field>
+    </record>
+    
+    <record id="nhcl_bulk_attribute_view" model="ir.ui.view">
+        <field name="name">Bulk Attribute</field>
+        <field name="model">nhcl.bulk.attribute</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_attribute_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_attribute" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="server_nhcl_bulk_attribute_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="product.model_product_attribute"/>
+        <field name="binding_model_id" ref="product.model_product_attribute"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_product_attribute_stores()</field>
+    </record>
+    
+    <record id="nhcl_bulk_employee_view" model="ir.ui.view">
+        <field name="name">Bulk Employee</field>
+        <field name="model">nhcl.bulk.employee</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                   <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_employee_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_employee" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="server_nhcl_bulk_employee_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_employee_stores()</field>
+    </record>
+    
+    <record id="nhcl_bulk_user_view" model="ir.ui.view">
+        <field name="name">Bulk User</field>
+        <field name="model">nhcl.bulk.user</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_user_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_user" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="server_nhcl_bulk_user_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="binding_model_id" ref="base.model_res_users"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_user_stores()</field>
+    </record>
+    
+    
+    <record id="nhcl_bulk_fin_year_view" model="ir.ui.view">
+        <field name="name">Bulk Financial</field>
+        <field name="model">nhcl.bulk.fin_year</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_fin_year_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_fin_year" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+<!--    <record id="server_nhcl_bulk_fin_year_view" model="ir.actions.server">-->
+<!--        <field name="name">Bulk Process</field>-->
+<!--        <field name="model_id" ref="account.model_account_fiscal_year"/>-->
+<!--        <field name="binding_model_id" ref="account.model_account_fiscal_year"/>-->
+<!--        <field name="state">code</field>-->
+<!--        <field name="code">action = records.get_fin_year_stores()</field>-->
+<!--    </record>-->
+    
+    
+    <record id="nhcl_bulk_tax_view" model="ir.ui.view">
+        <field name="name">Bulk Tax</field>
+        <field name="model">nhcl.bulk.tax</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_tax_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_tax" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="server_nhcl_bulk_tax_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="account.model_account_tax"/>
+        <field name="binding_model_id" ref="account.model_account_tax"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_tax_stores()</field>
+    </record>
+
+    <record id="nhcl_bulk_product_temp_view" model="ir.ui.view">
+        <field name="name">Bulk Product Template</field>
+        <field name="model">nhcl.bulk.product_temp</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_product_temp_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_product_temp" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="server_nhcl_bulk_product_temp_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_product_temp_stores()</field>
+    </record>
+
+    <record id="nhcl_bulk_product_prod_view" model="ir.ui.view">
+        <field name="name">Bulk Product Product</field>
+        <field name="model">nhcl.bulk.product_prod</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_product_prod_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_product_prop" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="server_nhcl_bulk_product_prod_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_product_product_stores()</field>
+    </record>
+
+    <record id="nhcl_bulk_loyalty_view" model="ir.ui.view">
+        <field name="name">Bulk Program</field>
+        <field name="model">nhcl.bulk.loyalty</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_selected_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page name="stores" string="Stores">
+                            <field name="nhcl_loyalty_line_id">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="store_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Replicate" name="button_replicate_loyalty" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="server_nhcl_bulk_loyalty_view" model="ir.actions.server">
+        <field name="name">Bulk Process</field>
+        <field name="model_id" ref="loyalty.model_loyalty_program"/>
+        <field name="binding_model_id" ref="loyalty.model_loyalty_program"/>
+        <field name="state">code</field>
+        <field name="code">action = records.get_loyalty_stores()</field>
+    </record>
+</odoo>

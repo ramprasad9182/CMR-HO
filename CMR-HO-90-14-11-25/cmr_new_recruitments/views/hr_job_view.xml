@@ -1,0 +1,35 @@
+<odoo>
+    <record id="view_hr_job_report_tree" model="ir.ui.view">
+        <field name="name">hr.job.report.tree</field>
+        <field name="model">hr.job</field>
+        <field name="arch" type="xml">
+            <tree string="Job Position Report" create="false" edit="false" delete="false">
+                <field name="name" string="Job Position"/>
+                  <field name="no_of_recruitment"/>
+                <field name="application_count" string="Applications"/>
+                <field name="interviews_conducted"/>
+                <field name="job_offer_emails_sent"/>
+                <field name="hired_count" string="Hired"/>
+                <field name="offer_accepted"/>
+                <field name="offer_rejected"/>
+                <field name="on_hold_count"/>
+
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_hr_job_report_custom" model="ir.actions.act_window">
+        <field name="name">Job Position Report</field>
+        <field name="res_model">hr.job</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_hr_job_report_tree"/>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+    </record>
+
+     <menuitem id="menu_hr_job_report_custom"
+              name="Job Position Report"
+              parent="hr_recruitment.report_hr_recruitment"
+              action="action_hr_job_report_custom"/>
+
+</odoo>

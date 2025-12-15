@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="cmr_grc_master_tree_view" model="ir.ui.view">
+        <field name="name">grc.master.tree></field>
+        <field name="model">grc.master</field>
+        <field name="arch" type="xml">
+            <tree delete="0" duplicate="0" import="0">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="cmr_grc_master_form_view" model="ir.ui.view">
+        <field name="name">grc.master.form></field>
+        <field name="model">grc.master</field>
+        <field name="arch" type="xml">
+            <form delete="0" duplicate="0">
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="cmr_grc_master_action" model="ir.actions.act_window">
+        <field name="name">GRC Master</field>
+        <field name="res_model">grc.master</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="cmr_grc_master"
+              name="GRC Master"
+              parent="stock.menu_warehouse_config"
+              action="cmr_customizations.cmr_grc_master_action"
+              sequence="100"/>
+</odoo>

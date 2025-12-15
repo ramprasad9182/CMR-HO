@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="logistic_entry_check" model="ir.actions.server">
+            <field name="name">Logistic Entry Check</field>
+            <field name="model_id" ref="cmr_customizations.model_logistic_screen_data"/>
+            <field name="binding_model_id" ref="cmr_customizations.model_logistic_screen_data"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.logistic_entry_check()
+            </field>
+        </record>
+
+        <record id="logistic_transport_check" model="ir.actions.server">
+            <field name="name">Logistic Transport Check</field>
+            <field name="model_id" ref="cmr_customizations.model_transport_check"/>
+            <field name="binding_model_id" ref="cmr_customizations.model_transport_check"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.logistic_transport_check()
+            </field>
+        </record>
+
+        <record id="open_parcel_server_action" model="ir.actions.server">
+            <field name="name">Open Parcel</field>
+            <field name="model_id" ref="cmr_customizations.model_open_parcel"/>
+            <field name="binding_model_id" ref="cmr_customizations.model_open_parcel"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.open_parcel()
+            </field>
+        </record>
+    </data>
+</odoo>

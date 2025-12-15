@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <data>
+        <record id="pos_lfb_wise_report" model="ir.ui.view">
+    <field name="name">POS LFB Report </field>
+    <field name="model">pos.lfb.report.wizard</field>
+    <field name="arch" type="xml">
+        <form string="POS lfb Summary Report">
+            <group>
+                <group>
+                    <field name="from_date" required="1"/>
+                    <field name="to_date" required="1"/>
+                   <field name="nhcl_store_id"
+                                       placeholder="Select Company"
+                                       domain="[('nhcl_active', '=', True),('nhcl_store_type', '!=', 'ho')]"
+                                       widget="many2many_checkboxes"
+                                       />
+                </group>
+            </group>
+            <footer>
+                <button name="get_last_first_bill_num" class="btn btn-primary" string="Print PDF" type="object"/>
+                <button name="get_last_first_bill_num_in_excel" class="btn btn-primary" string="Excel" type="object"/>
+                <!-- Uncomment and correct if needed -->
+                <!-- <button name="pos_lfb_xls_report" class="btn btn-primary" string="Print XLS" type="object"/> -->
+                <button special="cancel" string="Cancel"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+
+        <record id="pos_lfb_wise_reports" model="ir.actions.act_window">
+            <field name="name">pos lfb report wizard</field>
+            <field name="res_model">pos.lfb.report.wizard</field>
+            <field name="view_id" ref="pos_lfb_wise_report"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="report_pos_lfb_pdfsss" model="ir.actions.report">
+            <field name="name">POS lfb Wise Report</field>
+            <field name="model">pos.lfb.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">nhcl_ho_store_cmr_integration.report_pos_lfb_pdf</field>
+            <field name="report_file">nhcl_ho_store_cmr_integration.report_pos_lfb_pdf</field>
+            <field name="binding_type">report</field>
+        </record>
+
+        <menuitem
+                id="pos_lfb_wise_report_menu"
+                name="POS lfb Wise Report"
+                action="pos_lfb_wise_reports"
+                parent="nhcl_ho_store_cmr_integration.reporting_store_heading"
+                sequence="4"
+        />
+
+    </data>
+</odoo>

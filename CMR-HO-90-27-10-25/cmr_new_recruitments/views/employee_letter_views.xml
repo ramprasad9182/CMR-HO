@@ -1,0 +1,123 @@
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_tree_employee_letter" model="ir.ui.view">
+        <field name="name">employee.letter.tree</field>
+        <field name="model">employee.letter</field>
+        <field name="arch" type="xml">
+            <tree string="Employee Letters">
+                <field name="employee_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_form_employee_letter" model="ir.ui.view">
+        <field name="name">employee.letter.form</field>
+        <field name="model">employee.letter</field>
+        <field name="arch" type="xml">
+            <form string="Employee Letter">
+                <sheet>
+                    <header>
+                         <button name="action_quotation_send" string="Send Job Offer" type="object"
+                                class="oe_highlight"  invisible="email_stage != 'draft'"/>
+                        <button name="action_appointment_letter_send" string="Send Appointment Letter" type="object"
+                                class="oe_highlight"  invisible="email_stage != 'quotation_sent'"/>
+                        <button name="action_fetch_employee_details" type="object" string="Copy Details to Employee" class="btn-primary"
+                                 invisible="email_stage != 'appointment_sent'"/>
+                    </header>
+                    <group>
+                        <field name="employee_id" required="1" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True,}"/>
+                        <field name="ctc_type" required="1"/>
+                        <field name="email_stage" invisible="1"/>
+
+
+                    </group>
+
+
+                    <notebook>
+                        <page string="Letter Info">
+                            <group>
+
+                                <field name="todays_date" readonly="1"/>
+                                <field name="date_of_joining" required="1"/>
+                                <field name="ctc_offer" readonly="1"/>
+                                <field name="designation_id" required="1" readonly="1" force_save="1"/>
+                            </group>
+                        </page>
+                        <page string="CTC BREAKUP">
+                            <form>
+                                 <group>
+
+                                    <group string="Monthly Salary Computed">
+                                        <field name="ctc_m" required="1"/>
+                                        <field name="basic_m" readonly="1"/>
+                                        <field name="hra_m" readonly="1"/>
+                                        <field name="other_allowance_m" readonly="1"/>
+                                        <field name="pf_m" readonly="1"/>
+                                        <field name="pt_m" readonly="1"/>
+                                        <field name="net_take_home_m" readonly="1"/>
+                                        <field name="family_insurance_m"/>
+                                    </group>
+                                    <group string="CTC Breakdown (Per Annum)">
+                                        <field name="ctc" required="1"/>
+                                        <field name="basic" readonly="1"/>
+                                        <field name="hra" readonly="1"/>
+                                        <field name="other_allowance" readonly="1"/>
+                                        <field name="pf" readonly="1"/>
+                                        <field name="pt" readonly="1"/>
+                                        <field name="bonus" readonly="1" invisible="ctc_type not in ['with_bonus']"/>
+                                        <field name="net_take_home" readonly="1"/>
+                                        <field name="family_insurance" readonly="1" force_save="1"/>
+                                    </group>
+
+
+                                </group>
+
+                            </form>
+                        </page>
+                    </notebook>
+                     <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_employee_letter" model="ir.actions.act_window">
+        <field name="name">Employee Letters</field>
+        <field name="res_model">employee.letter</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_employee_letter_print_offer_letter" model="ir.actions.server">
+        <field name="name">Print Offer Letter</field>
+        <field name="model_id" ref="cmr_new_recruitments.model_employee_letter"/>
+        <!-- or use the external ID -->
+        <field name="binding_model_id" ref="cmr_new_recruitments.model_employee_letter"/>
+
+        <field name="binding_type">action</field> <!-- 'object' = gear icon action -->
+        <field name="state">code</field>
+        <field name="code">action = records.action_print_offer_letter()</field>
+    </record>
+
+    <record id="action_employee_letter_print_appointment_letter" model="ir.actions.server">
+        <field name="name">Print Appointment Letter</field>
+        <field name="model_id" ref="cmr_new_recruitments.model_employee_letter"/>
+        <field name="binding_model_id" ref="cmr_new_recruitments.model_employee_letter"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_print_appointment_letter()</field>
+    </record>
+
+
+
+    <menuitem id="menu_employee_letter_root" name="Employee Letters"
+              parent="hr_recruitment.report_hr_recruitment"
+              action="action_employee_letter"
+    />
+</odoo>

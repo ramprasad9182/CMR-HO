@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cmr_mrp_production_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherits</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/div/field[@name='bom_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='user_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='user_id']" position="after">
+                <field name="nhcl_last_serial_number" force_save="1"/>
+                <field name="scan_or_import" widget="radio"/>
+                <field name="stock_barcode" invisible="scan_or_import != 'scan'" style="border: 4px solid #714B67;padding-top: 6px;margin-bottom: 10px;"
+                                   placeholder="Please, Enter Barcode Here......"/>
+            </xpath>
+             <xpath expr="//label[@for='lot_producing_id']" position="attributes">
+                <attribute name="invisible">state in ('draft', 'progress', 'to_close','done','cancel','confirmed') or product_tracking in ('none', False)</attribute>
+             </xpath>
+
+            <xpath expr="//field[@name='lot_producing_id']" position="attributes">
+                <attribute name="invisible">state in ('draft', 'progress', 'to_close','done','cancel','confirmed') or product_tracking in ('none', False)</attribute>
+             </xpath>
+            <xpath expr="//button[@name='action_generate_serial']" position="attributes">
+                <attribute name="invisible">state in ('draft', 'progress', 'to_close','done','cancel','confirmed') or product_tracking in ('none', False)</attribute>
+             </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='components']/field/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='components']/field/tree/field[@name='product_uom_qty']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='components']/field/tree/field[@name='quantity']" position="attributes">
+                <attribute name="sum">Quantity</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='components']/field/tree/field[@name='lot_ids']" position="attributes">
+                 <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='components']/field/tree/field[@name='lot_ids']" position="after">
+                <button name="action_import_excel" type="object" string="Import Excel" class="btn-primary" invisible="parent.scan_or_import != 'import'"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <field name="allow_import_order" invisible="1"/>
+                    <button name="%(import_mrp_line_action)d"
+                            string="Import Products"
+                            type="action"
+                            class="btn-primary" invisible="allow_import_order == False"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cmr_mrp_bom_form_view_view" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherits</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='product_tmpl_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='components']/field/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+						<button name="%(import_bom_line_action)d"
+						string="Import Products"
+                        type="action"
+                        class="btn-primary" invisible="allow_import_order == False"/>
+					<field name="allow_import_order" invisible="1"/>
+				</xpath>
+        </field>
+    </record>
+</odoo>

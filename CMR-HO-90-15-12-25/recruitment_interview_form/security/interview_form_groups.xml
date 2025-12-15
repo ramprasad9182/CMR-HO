@@ -1,0 +1,16 @@
+<odoo>
+  <record id="module_category_hr_interview_form" model="ir.module.category">
+    <field name="name">Interview Form</field>
+    <field name="sequence">15</field>
+  </record>
+
+  <record id="group_form_users" model="res.groups">
+    <field name="name">Form Users</field>
+    <field name="category_id" ref="recruitment_interview_form.module_category_hr_interview_form"/>
+  </record>
+
+    <record id="group_form_users_all" model="res.groups">
+    <field name="name">Form Users All</field>
+    <field name="category_id" ref="recruitment_interview_form.module_category_hr_interview_form"/>
+  </record>
+</odoo>
