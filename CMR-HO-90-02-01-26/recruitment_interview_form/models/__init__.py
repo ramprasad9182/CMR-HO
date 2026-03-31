@@ -1,0 +1,1 @@
+from . import hr_interview_form, hr_applicant

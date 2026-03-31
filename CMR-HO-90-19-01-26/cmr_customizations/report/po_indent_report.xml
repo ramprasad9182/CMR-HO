@@ -1,0 +1,910 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="nhcl_reports_lists">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <t t-if="not header">
+            <t t-call="web.html_container">
+                <strong>Debug: Header is missing!</strong>
+            </t>
+        </t>
+
+        <div class="header">
+            <div class="row"
+                 style="font-family: Verdana, Arial, sans-serif; height: 120px; padding-top: 10px; margin: 0; display: flex; align-items: center;">
+
+                <!-- Logo Section -->
+                <div class="col-2" style="text-align: left; height: 100px;">
+                    <img align="left" t-att-src="image_data_uri(company.logo)" alt="Logo"
+                         style="width: 120px; max-height: 150px; text-align: left;"/>
+                </div>
+
+                <!-- Title and Address Section -->
+                <div class="col-8" style="text-align: center; height: 120px;margin-top:10px;">
+                    <strong style="font-size: 18px;">PURCHASE INDENT</strong>
+                    <br/>
+                    <span style="text-align: center;">
+                        <t t-esc="company.name"/>
+                        <br/>
+                        <t t-esc="company.street"/>,
+                        <t t-esc="company.street2"/>
+                        <br/>
+                        <t t-esc="company.state_id.name"/>
+                    </span>
+                </div>
+
+                <!-- GST, CIN, Zip Section -->
+                <div class="col-2" style="margin-top:12px;">
+                    <p>
+                        <strong style="font-size:14px;text-align:right;">NON SET BASED</strong>
+                    </p>
+                    <div style="font-size:10px;padding:2px;"><strong>GST No:</strong>
+                        <t t-esc="o.company_id.vat"/>
+                    </div>
+                    <div style="font-size:10px; padding:2px;">
+                        <strong>CIN No:</strong>
+
+                        <t t-esc="company.nhcl_res_cin_no"/>
+                    </div>
+                    <div style="font-size:10px;padding:2px;"><strong>Zip Code:</strong>
+                        <t t-esc="o.company_id.zip"/>
+                    </div>
+                    <!--                    <t t-esc="o.partner_id.zip"/>-->
+                </div>
+            </div>
+            <!-- Contact, Website, and Email Section -->
+            <!--    <div style="margin-top: 0; text-align: center; font-size: 10px; border-top: 1px solid #000; padding-top:0;">-->
+            <div style="margin-top: 15; text-align: center; font-size: 10px; padding-top:10;">
+                    <b>Contact No:
+                        <t t-esc="company.phone"/>
+                    </b> &amp;nbsp;
+                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                    <b>Website:
+                        <t t-esc="company.website"/>
+                    </b> &amp;nbsp;
+                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                    <b>Email:
+                        <t t-esc="company.email"/>
+                    </b>
+            </div>
+        </div>
+
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-out="0"/>
+        </div>
+    </template>
+
+    <template id="nhcl_po_indent_temp">
+        <t t-call="cmr_customizations.nhcl_reports_lists">
+            <div class="page">
+                <br/>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table-striped table table-bordered"
+                               style="page-break-inside: avoid;width:100%;table-layout:fixed;font-size:14px;">
+                            <tr style="font-family:Verdana, Arial,sans-serif;text-align:left;margin:0px;">
+                                <th colspan="8" style="margin:0;">
+                                    INDENT DETAILS:
+                                </th>
+                                <th colspan="6" style="margin:0;">
+                                    SITE DETAILS:
+                                </th>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Purchase Indent No</strong>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    :
+                                    <t t-esc="o.name"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>PI Date</strong>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    :
+                                    <t t-esc="o.create_date.strftime('%Y-%m-%d')"/>
+
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Site Id</strong>
+                                </td>
+                                <td colspan="4" style="border-bottom:1px solid white;text-align:left;padding:0;">
+                                    :
+                                    <t t-esc="o.company_id.id"/>
+                                </td>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Document No
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    :
+                                    <t t-esc="o.name"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Date
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    :<!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Site Name
+                                    </strong>  <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="4" style="border-bottom:1px solid white;text-align:left;padding:0;">
+                                    :
+                                    <t t-esc="o.company_id.name"/>
+                                </td>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Ref Order No
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    :<!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Type Of Buying
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    :
+                                    <t t-esc="o.purchase_type"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Site Address
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+<!--                                <td colspan="1" style="border:1px solid black;padding:0;text-align:left;margin:0;">-->
+
+<!--                                </td>-->
+                                 <td colspan="4" style="border-bottom:1px solid white;text-align:left;padding:0;">
+                                   : <t t-esc="o.company_id.street"/>
+                                </td>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Currency
+                                    </strong>   <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    :<!--                                    <t t-esc="o.jobno.name"/>-->
+                                    <t t-esc="o.currency_id.name"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Exchange Rate</strong>
+                                    :<!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    :<!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>State Name
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="4" style="border-bottom:1px solid white;text-align:left;padding:0;">
+                                    :
+                                    <t t-esc="o.company_id.state_id.name"/>
+                                </td>
+
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Agent Name
+                                    </strong>  <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    :<!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="4" style="border-bottom:1px solid white;">
+                                    <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;">
+                                    <strong>PI Valid From
+                                    </strong>   <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;">
+                                    :<!--                                    <t t-esc="o.jobno.name"/>-->
+                                    <t t-esc="o.from_date"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;">
+                                    <strong>PI Valid To
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;">
+                                    :<!--                                    <t t-esc="o.jobno.name"/>-->
+                                    <t t-esc="o.to_date"/>
+                                </td>
+                                <td style="border-right:1px solid white;text-align:left;padding:0;" colspan="2">
+                                    <strong>Contact Person</strong>
+                                </td>
+                                <td style="border-right:1px solid white;text-align:left;padding:0;">
+                                    : <!--                                    <t t-esc="o.jobno.name"/>-->
+                                    <t t-esc="o.company_id.partner_id.child_ids and o.company_id.partner_id.child_ids[0].name or 'No Contact'"/>
+
+                                </td>
+                                <!--                                                                <td>-->
+                                <!--                                                                    :&lt;!&ndash;                                    <t t-esc="o.jobno.name"/>&ndash;&gt;-->
+                                <!--                                                                </td>-->
+                                <td colspan="3" style="text-align:center;padding:0;">
+                                    <strong>Contact No</strong>
+                                    :
+                                    <t t-esc="o.company_id.partner_id.child_ids and o.company_id.partner_id.child_ids[0].phone or 'No phone'"/>
+                                </td>
+                            </tr>
+
+                            <tr style="font-family:Verdana, Arial,sans-serif;text-align:left;">
+                                <th colspan="7">
+                                    BILLING FROM:
+                                </th>
+                                <th colspan="7">
+                                    SHIPPING FROM: Delivery Location
+                                </th>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Supplier Code
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+
+                                    <t t-esc="o.partner_id.contact_sequence"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Supplier Code
+                                    </strong>   <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="border-bottom:1px solid white;text-align:left;">
+                                    <t t-esc="o.partner_id.contact_sequence"/>
+                                </td>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Supplier Name
+                                    </strong>  <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    <t t-esc="o.partner_id.name"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Supplier Name
+                                    </strong>  <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="border-bottom:1px solid white;text-align:left;">
+                                    <t t-esc="o.partner_id.name"/>
+                                </td>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Address
+                                    </strong>  <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    <t t-esc="o.partner_id.street"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>Address
+                                    </strong>  <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="border-bottom:1px solid white;text-align:left;">
+                                    <t t-esc="o.partner_id.street"/>
+                                </td>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>GST No
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    <t t-esc="o.partner_id.vat"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;border-bottom:1px solid white;">
+                                    <strong>GST No
+                                    </strong>   <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="border-right:1px solid white;border-bottom:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="border-bottom:1px solid white;text-align:left;">
+                                    <t t-esc="o.partner_id.vat"/>
+                                </td>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;margin:0;">
+                                <td colspan="2" style="border-right:1px solid white;">
+                                    <strong>State Name
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="border-right:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="border-right:1px solid white;text-align:left;">
+                                    <t t-esc="o.partner_id.state_id.name"/>
+                                </td>
+                                <td colspan="2" style="border-right:1px solid white;text-align:left;">
+                                    <strong>State Name
+                                    </strong> <!--                                    <t t-esc="o.jobno.name"/>-->
+                                </td>
+                                <td colspan="1"
+                                    style="text-align:center;border-right:1px solid white;text-align:left;">
+                                    :
+                                </td>
+                                <td colspan="4"
+                                    style="text-align:left;">
+                                    <t t-esc="o.partner_id.state_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="14" style="text-align:left;font-weight:bold">INDENT DETAILS:</td>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:11px;text-align:center">
+                                <th colspan="1" style="padding:2px 0 2px 2px">Article Code</th>
+                                <th colspan="3" style="padding:2px 0 2px 0;">Article Name</th>
+                                <th colspan="1">BRAND</th>
+                                <th colspan="1" style="font-size:10px;">Color/Size/Remarks</th>
+                                <th colspan="1" style="padding:2px 0 2px 0;">DESIGN/FIT</th>
+                                <th colspan="1">HSN</th>
+                                <th colspan="1" style="padding:2px 0 2px 0;">Order Qty</th>
+                                <th colspan="1">Rate</th>
+                                <th colspan="1" style="padding:0">Discount</th>
+                                <th colspan="1">Taxes</th>
+                                <th colspan="1">Final Rate</th>
+                                <th colspan="1">Amount</th>
+                            </tr>
+                            <t t-foreach="o.product_line_ids" t-as="line">
+                                <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                    <td style="text-align:center;padding:0;" colspan="1">
+                                        <t t-esc="line.product_id.default_code"/>
+                                    </td>
+                                    <td colspan="3" style="text-align:center;padding:0;">
+                                        <t t-esc="line.product_id.name"/>
+                                    </td>
+                                    <td colspan="1" style="text-align:center;padding:0;">
+                                          <t t-if="line.product_id.nhcl_product_type == 'unbranded'">Un-Branded</t>
+                                        <t t-elif="line.product_id.nhcl_product_type == 'branded'">Branded</t>
+                                        <t t-elif="line.product_id.nhcl_product_type == 'others'">Others</t>
+                                       <t t-else="">-</t>
+                                    </td>
+                                    <td colspan="1">
+                                        <!--                                        <t t-esc="line.l10n_in_hsn_code"/>-->
+                                    </td>
+                                    <td colspan="1">
+                                      <t t-esc="line.design_category_id.name"/>
+                                    </td>
+                                    <td colspan="1" style="text-align:center;padding:2px 0;">
+                                        <t t-esc="line.product_id.l10n_in_hsn_code"/>
+                                    </td>
+                                    <td colspan="1" style="text-align:center;padding:0;">
+                                        <t t-esc=" '%0.2f' % line.quantity"/>
+                                    </td>
+                                    <td colspan="1" style="text-align:center;padding:0">
+                                        <t t-esc=" '%0.2f' % line.unit_price"/>
+                                    </td>
+                                    <td colspan="1">
+                                        <!--                                        <t t-esc="line.quantity"/>-->
+                                    </td>
+                                    <td colspan="1" style="text-align:center;padding:0;font-size:9px;">
+                                        <t t-esc="line.nhcl_taxes_id.name"/>
+                                    </td>
+                                    <td colspan="1" style="text-align:center;padding:0;">
+                                        <t t-esc="'%0.2f' %  line.unit_price"/>
+                                    </td>
+                                    <td colspan="1" style="text-align:center;padding:0;">
+                                        <t t-esc=" '%0.2f' % line.nhcl_price_subtotal"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;text-align:left;">
+                                <th colspan="3"/>
+                                <th colspan="4">Sub Total 1 (Untaxed Amount)</th>
+                                <th style="padding-left:10px;text-align:center;" colspan="1">
+<!--                                    <t t-esc=" '%0.2f' % sum(o.product_line_ids.mapped('quantity'))"/>-->
+                                </th>
+                                <th colspan="1" style="text-align:center;">
+                                     <t t-esc=" '%0.2f' % sum(o.product_line_ids.mapped('quantity'))"/>
+                                </th>
+                                <th colspan="1"></th>
+                                <th colspan="4" style="text-align:right;">
+                                    <t style="text-align:right;">
+                                        <t t-esc=" '%0.2f'%  sum(o.product_line_ids.mapped('nhcl_price_subtotal'))"/>
+                                    </t>
+                                </th>
+
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;text-align:left;">
+                                <th colspan="3"/>
+                                <th colspan="4">Discount in %</th>
+                                <th colspan="4"></th>
+                                <th colspan="1" style="text-align:right;">(+/-)</th>
+                                <th colspan="2" style="text-align:right;">0.00</th>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;text-align:left;">
+                                <th colspan="3"/>
+                                <th colspan="4">Discount in Value</th>
+                                <th colspan="4"></th>
+                                <th colspan="1" style="text-align:right;">(+/-)</th>
+                                <th colspan="2" style="text-align:right;">0.00</th>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;text-align:left;">
+                                <th colspan="3"/>
+                                <th colspan="4">Additional Charges 1</th>
+                                <th colspan="5" style="text-align:right;">(+/-)</th>
+                                <th colspan="2" style="text-align:right;">0.00</th>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;text-align:left;">
+                                <th colspan="3"/>
+                                <th colspan="4">Additional Charges 2</th>
+                                <th colspan="5" style="text-align:right;">(+/-)</th>
+                                <th colspan="2" style="text-align:right;">0.00</th>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;text-align:left;">
+                                <th colspan="3"/>
+                                <th colspan="4">Sub Total 2 (Taxable Amount)</th>
+                                <th colspan="7" style="text-align:right">
+                                    <t t-esc=" '%0.2f'% sum(o.product_line_ids.mapped('nhcl_price_subtotal'))"/>
+                                </th>
+                            </tr>
+                            <!-- Check if IGST exists -->
+                            <t t-set="has_igst"
+                               t-value="any(tax_group['tax_group_name'] == 'IGST' for tax_group in o.nhcl_tax_totals_json['groups_by_subtotal']['Untaxed Amount'])"/>
+
+                            <!-- Show CGST and SGST ONLY if IGST is NOT present -->
+                            <t t-if="not has_igst">
+                                <!-- CGST Row -->
+                                <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;text-align:left;">
+                                    <th colspan="3"/>
+                                    <th colspan="4" style="border-right:1px solid white;">CGST</th>
+                                    <th colspan="7" style="text-align:right;">
+                                        <t t-if="len(o.nhcl_tax_totals_json['groups_by_subtotal']['Untaxed Amount']) > 1">
+                                            <t t-out="'%0.2f' % float(o.nhcl_tax_totals_json['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount']) or ''"/>
+                                        </t>
+                                        <t t-else="">
+                                            0.00
+                                        </t>
+                                    </th>
+                                </tr>
+
+                                <!-- SGST Row -->
+                                <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;text-align:left;">
+                                    <th colspan="3"/>
+                                    <th colspan="4" style="border-right:1px solid white;">SGST</th>
+                                    <th colspan="7" style="text-align:right;">
+                                        <t t-if="len(o.nhcl_tax_totals_json['groups_by_subtotal']['Untaxed Amount']) > 1">
+                                            <t t-out="'%0.2f' % float(o.nhcl_tax_totals_json['groups_by_subtotal']['Untaxed Amount'][1]['tax_group_amount']) or ''"/>
+                                        </t>
+                                        <t t-else="">
+                                            0.00
+                                        </t>
+                                    </th>
+                                </tr>
+                            </t>
+
+                            <!-- Show IGST ONLY if it is present -->
+                            <t t-if="has_igst">
+                                <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;text-align:left;">
+                                    <th colspan="3"/>
+                                    <th colspan="4" style="border-right:1px solid white;">IGST</th>
+                                    <th colspan="6" style="text-align:right;">
+                                        <!--                                        <t t-esc="sum(o.product_line_ids.mapped('nhcl_price_subtotal'))"/>-->
+                                    </th>
+                                    <th style="text-align:right;">
+                                        <t t-foreach="o.nhcl_tax_totals_json['groups_by_subtotal']['Untaxed Amount']"
+                                           t-as="tax_group">
+                                            <t t-if="tax_group['tax_group_name'] == 'IGST'">
+                                                <t t-out="'%0.2f' % float(tax_group['tax_group_amount']) or ''"/>
+                                            </t>
+                                            <t t-else="">
+                                                0.00
+                                            </t>
+                                        </t>
+                                    </th>
+                                </tr>
+                            </t>
+
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;text-align:left;">
+                                <th colspan="5"/>
+                                <th colspan="7">PO Amount</th>
+                                <th colspan="2" style="text-align:right;">
+                                    <!--                                    <t t-set="total_gst" t-value="0.0"/>-->
+
+                                    <!--                                    <t t-foreach="o.nhcl_tax_totals_json['groups_by_subtotal']['Untaxed Amount']"-->
+                                    <!--                                       t-as="tax_group">-->
+                                    <!--                                        <t t-if="tax_group['tax_group_name'] in ['IGST', 'CGST', 'SGST']">-->
+                                    <!--                                            <t t-set="total_gst"-->
+                                    <!--                                               t-value="total_gst + float(tax_group['tax_group_amount'])"/>-->
+                                    <!--&lt;!&ndash;                                                    <t t-esc="sum(o.product_line_ids.mapped('nhcl_price_subtotal'))"/>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;                                            <t t-set="final_total" t-value="float(o.amount_total) + total_gst"/>&ndash;&gt;-->
+                                    <!--                                        </t>-->
+                                    <!--                                    </t>-->
+                                    <!--                                     <t t-out="total_gst"/> + <t t-esc="sum(o.product_line_ids.mapped('nhcl_price_subtotal'))"/>-->
+                                    <t t-set="total_gst" t-value="0.0"/>
+
+                                    <t t-foreach="o.nhcl_tax_totals_json['groups_by_subtotal']['Untaxed Amount']"
+                                       t-as="tax_group">
+                                        <t t-if="tax_group['tax_group_name'] in ['IGST', 'CGST', 'SGST']">
+                                            <t t-set="total_gst"
+                                               t-value="total_gst + float(tax_group['tax_group_amount'])"/>
+                                        </t>
+                                    </t>
+
+                                    <t t-set="untaxed_total"
+                                       t-value="sum(o.product_line_ids.mapped('nhcl_price_subtotal'))"/>
+                                    <t t-set="final_total" t-value="total_gst + untaxed_total"/>
+
+                                    <!--                                    <t t-out="total_gst"/>-->
+                                    <!--                                    +-->
+                                    <!--                                    <t t-out="untaxed_total"/>-->
+                                    <!--                                    =-->
+                                    <t t-out=" '%0.2f' %  final_total"/>
+
+                                </th>
+                            </tr>
+                        </table>
+                        <table class="table-striped table table-bordered"
+                               style="page-break-inside: avoid;width:100%;table-layout:fixed;font-size:14px;margin:0;">
+
+                            <tr style="font-family:Verdana, Arial,sans-serif;text-align:left;">
+                                <th colspan="14">HSN CHARGE MASTER:</th>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <th colspan="2" rowspan="2" style="font-family:center;padding-top:10px;">HSN Code</th>
+                                <th colspan="2" rowspan="2" style="font-family:center;padding-top:10px;">Total Unit
+                                    Qty
+                                </th>
+                                <th colspan="2" rowspan="2" style="font-family:center">Taxable Amount</th>
+                                <th colspan="2">CGST</th>
+                                <th colspan="2">SGST</th>
+                                <th colspan="2">IGST</th>
+                                <th colspan="2" rowspan="2" style="font-family:center;padding-top:10px;">Total Tax
+                                    Amount
+                                </th>
+                            </tr>
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:10px;">
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+
+                            </tr>
+                            <t t-set="hsn_dict" t-value="{}"/>  <!-- Initialize empty dictionary -->
+
+                            <t t-foreach="o.product_line_ids" t-as="line">
+                                <t t-if="line.product_id.l10n_in_hsn_code">
+                                    <t t-set="hsn_code" t-value="line.product_id.l10n_in_hsn_code"/>
+                                    <t t-set="igst" t-value="0"/>
+                                    <t t-set="cgst" t-value="0"/>
+                                    <t t-set="sgst" t-value="0"/>
+                                    <t t-set="gst_type" t-value="'CGST_SGST'"/>
+
+                                    <!-- Extract GST Details from Product Line Tax -->
+                                    <t t-foreach="line.nhcl_taxes_id" t-as="tax">
+                                        <t t-set="tax_amount" t-value="float(tax.amount)"/>
+
+                                        <t t-if="'IGST' in tax.name">
+                                            <t t-set="igst" t-value="tax_amount"/>
+                                            <t t-set="igst_rate" t-value="tax_amount"/>
+                                            <t t-set="gst_type" t-value="'IGST'"/>
+                                        </t>
+
+                                        <!-- If tax name contains 'GST' (e.g., 5% GST), split into CGST + SGST -->
+                                        <t t-elif="'GST' in tax.name">
+                                            <t t-set="cgst" t-value="tax_amount / 2"/>  <!-- Split GST into CGST -->
+                                            <t t-set="sgst" t-value="tax_amount / 2"/>  <!-- Split GST into SGST -->
+                                            <t t-set="cgst_rate" t-value="tax_amount / 2"/>
+                                            <t t-set="sgst_rate" t-value="tax_amount / 2"/>
+                                        </t>
+
+                                        <t t-elif="'CGST' in tax.name">
+                                            <t t-set="cgst" t-value="tax_amount"/>
+                                            <t t-set="cgst_rate" t-value="tax_amount"/>
+                                        </t>
+
+                                        <t t-elif="'SGST' in tax.name">
+                                            <t t-set="sgst" t-value="tax_amount"/>
+                                            <t t-set="sgst_rate" t-value="tax_amount"/>
+                                        </t>
+                                    </t>
+
+                                    <!-- Calculate Tax Amounts -->
+                                    <t t-set="igst_value" t-value="(line.nhcl_price_subtotal * igst) / 100"/>
+                                    <t t-set="cgst_value" t-value="(line.nhcl_price_subtotal * cgst) / 100"/>
+                                    <t t-set="sgst_value" t-value="(line.nhcl_price_subtotal * sgst) / 100"/>
+
+                                    <!-- Create a unique key for HSN + GST Type -->
+                                    <t t-set="hsn_key"
+                                       t-value="hsn_code + '-' + gst_type + '-' + str(igst) + '-' + str(cgst) + '-' + str(sgst)"/>
+
+                                    <t t-if="hsn_key in hsn_dict">
+                                        <t t-set="existing_entry" t-value="hsn_dict[hsn_key]"/>
+                                        <t t-set="new_quantity" t-value="existing_entry['quantity'] + line.quantity"/>
+                                        <t t-set="new_price"
+                                           t-value="existing_entry['price'] + line.nhcl_price_subtotal"/>
+                                        <t t-set="new_igst" t-value="existing_entry['igst'] + igst_value"/>
+                                        <t t-set="new_cgst" t-value="existing_entry['cgst'] + cgst_value"/>
+                                        <t t-set="new_sgst" t-value="existing_entry['sgst'] + sgst_value"/>
+
+                                        <!-- Update dictionary -->
+                                        <t t-set="hsn_dict"
+                                           t-value="dict(list(hsn_dict.items()) + [(hsn_key, {'quantity': new_quantity, 'price': new_price, 'igst': new_igst, 'cgst': new_cgst, 'sgst': new_sgst, 'igst_rate': igst, 'cgst_rate': cgst, 'sgst_rate': sgst})])"/>
+                                    </t>
+                                    <t t-else="">
+                                        <!-- Create new entry for this HSN Code -->
+                                        <t t-set="hsn_dict"
+                                           t-value="dict(list(hsn_dict.items()) + [(hsn_key, {'quantity': line.quantity, 'price': line.nhcl_price_subtotal, 'igst': igst_value, 'cgst': cgst_value, 'sgst': sgst_value, 'igst_rate': igst, 'cgst_rate': cgst, 'sgst_rate': sgst})])"/>
+                                    </t>
+                                </t>
+                            </t>
+
+
+                            <!-- Display Table -->
+                            <t t-foreach="hsn_dict.items()" t-as="hsn_entry">
+                                <t t-set="hsn_key" t-value="hsn_entry[0]"/>
+                                <t t-set="val" t-value="hsn_entry[1]"/>
+                                <t t-set="hsn_code" t-value="hsn_key.split('-')[0]"/>
+                                <t t-set="gst_type" t-value="hsn_key.split('-')[1]"/>
+
+                                <tr style="font-size:10px;">
+                                    <td style="text-align:center;font-size:10px;" colspan="2">
+                                        <t t-esc="hsn_code"/>  <!-- HSN Code -->
+                                        <!--                                        <t t-esc="hsn_dict"/>  &lt;!&ndash; HSN Code &ndash;&gt;-->
+                                    </td>
+                                    <td style="text-align:center;font-size:10px;" colspan="2">
+                                        <t t-out="'%0.2f' % val['quantity']"/>
+                                    </td>
+                                    <td style="text-align:center;font-size:10px;" colspan="2">
+                                        <t t-out="'%0.2f' % val['price']"/>
+                                    </td>
+                                    <t t-if="gst_type == 'IGST'">
+                                        <td style="text-align:center;"></td>
+                                        <td style="text-align:center;"></td>
+                                        <td style="text-align:center;"></td>
+                                        <td style="text-align:center;"></td>
+
+                                        <td style="text-align:center;font-size:10px;">
+                                            <t t-esc="str(int(val['igst_rate'])) + '%'"/>  <!-- IGST Rate -->
+                                        </td>
+                                        <td style="text-align:left;font-size:10px;">
+                                            <t t-out="'%0.2f' % val['igst']"/>  <!-- IGST Amount -->
+                                        </td>
+                                        <td colspan="2" style="font-size:10px;text-align:right;">
+                                            <t t-out="'%0.2f' % val['igst']"/>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="text-align:center;font-size:10px;">
+                                            <t t-esc="str(float(val['cgst_rate'])) + '%'"/>  <!-- CGST Rate -->
+                                        </td>
+                                        <td style="text-align:left;font-size:10px;">
+                                            <t t-out="'%0.2f' % val['cgst']"/>  <!-- CGST Amount -->
+                                        </td>
+
+                                        <td style="text-align:center;font-size:10px;">
+                                            <t t-esc="str(float(val['sgst_rate'])) + '%'"/>  <!-- SGST Rate -->
+                                        </td>
+                                        <td style="text-align:left;font-size:10px;">
+                                            <t t-out="'%0.2f' % val['sgst']"/>  <!-- SGST Amount -->
+                                        </td>
+
+                                        <td style="text-align:center;"></td>
+                                        <td style="text-align:center;"></td>
+
+                                        <t t-if="gst_type == 'CGST_SGST'">
+                                            <t t-set="total_cgst_sgst" t-value="val['cgst'] + val['sgst']"/>
+                                        </t>
+                                        <td colspan="2" style="text-align:center;font-size:12px;">
+                                            <t t-out="'%0.2f' % total_cgst_sgst"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+
+
+                            <tr style="font-family:Verdana, Arial,sans-serif;font-size:12px;">
+                                <th colspan="6">Tax Amount</th>
+                                <t t-set="half_gst" t-value="float(total_gst) / 2"/>
+                                <t t-if="not has_igst">
+                                    <!-- Display CGST & SGST -->
+                                    <th colspan="2">
+                                        <t t-out="'%0.2f' % half_gst"/>
+                                    </th>
+                                    <th colspan="2">
+                                        <t t-out="'%0.2f' % half_gst"/>
+                                    </th>
+                                    <th colspan="2"/>
+                                </t>
+                                <t t-else="">
+                                    <!-- IGST case: skip CGST & SGST columns -->
+                                    <th colspan="2"/>
+                                    <th colspan="2"/>
+                                    <th colspan="2">
+                                        <t t-out="'%0.2f' % total_gst"/>
+                                    </th>
+                                </t>
+                                <th colspan="2" style="text-align:center;">
+                                    <t t-out=" '%0.2f' % total_gst"/>
+                                </th>
+                            </tr>
+                        </table>
+                        <!--terms and conditions-->
+                        <br/>
+                        <br/>
+                        <div style="font-family:Verdana, Arial,sans-serif;page-break-inside: avoid;font-size:12px;text-align:left;border:1px solid #D3D3D3;"
+                             t-if="not is_html_empty(o.terms_conditions)" name="comment">
+                            <p>
+                                <strong>TERMS &amp; CONDITIONS:</strong>
+                            </p>
+                            <span t-field="o.terms_conditions"/>
+                        </div>
+                        <div style="font-family:Verdana, Arial,sans-serif;font-size:12px;text-align:left;">
+                            <strong>Remarks:</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12" style="padding-top:10px;">
+                        <table style="width: 100%; border-collapse: collapse; border-spacing: 0; text-align: center;border: none;">
+                            <tr style="font-family: Verdana, Arial, sans-serif; font-size: 12px; padding: 20px;border: 1px solid white;">
+                                <td colspan="2" style="border: none; padding-top: 40px;">
+                                    <b>Created BY</b>
+                                </td>
+                                <td colspan="2" style="border: none; padding-top: 40px;"></td>
+                                <td colspan="2" style="border: none; padding-top: 40px;">
+                                    <b>Approved By</b>
+                                </td>
+                                <td colspan="1" style="border: none; padding-top: 40px;"></td>
+                                <td colspan="2" style="border: none; padding-top: 40px;">
+                                    <b>Updation Time</b>
+                                </td>
+                                <td colspan="1" style="border: none; padding-top: 40px;"></td>
+                                <td colspan="2" style="border: none; padding-top: 40px;">
+                                    <b>Authorised BY</b>
+                                </td>
+                                <td colspan="2" style="border: none; padding-top: 40px;"></td>
+                            </tr>
+                            <tr style="font-family: Verdana, Arial, sans-serif; font-size: 12px; padding: 10px;border: 1px solid white;">
+                                <td colspan="2" style="border: none;padding: 10px;">
+                                    <t t-esc="user.name"/>
+                                </td>
+                                <td colspan="2" style="border: none;padding: 10px;"></td>
+                                <td colspan="2" style="border: none;padding: 10px;">
+
+                                </td>
+                                <td colspan="1" style="border: none;padding: 10px; "></td>
+                                <td colspan="2" style="border: none;padding: 10px; ">
+                                    <t t-esc="time.strftime('%d-%m-%Y')"/>
+                                </td>
+                                <td colspan="1" style="border: none;padding: 10px;"></td>
+                                <td colspan="2" style="border: none;padding: 10px;">
+
+                                </td>
+                                <td colspan="2" style="border: none;padding: 10px;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="po_indent_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="cmr_customizations.nhcl_po_indent_temp"/>
+            </t>
+        </t>
+    </template>
+
+    <!--    <record id="paperformat_po_indent" model="report.paperformat">-->
+    <!--        <field name="name">Gate Pass</field>-->
+    <!--        <field name="default" eval="False"/>-->
+    <!--        <field name="format">A4</field>-->
+    <!--        <field name="page_height">0</field>-->
+    <!--        <field name="page_width">0</field>-->
+    <!--        <field name="orientation">Portrait</field>-->
+    <!--        <field name="margin_top">25</field>-->
+    <!--        <field name="margin_bottom">18</field>-->
+    <!--        <field name="margin_left">4</field>-->
+    <!--        <field name="margin_right">4</field>-->
+    <!--        <field name="header_spacing">28</field>-->
+    <!--        <field name="dpi">90</field>-->
+    <!--    </record>-->
+    <record id="paperformat_po_indent" model="report.paperformat">
+        <field name="name">Purchase Indent</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">28</field>
+        <field name="margin_bottom">18</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">4</field>
+        <field name="header_spacing">28</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="nhcl_po_indent" model="ir.actions.report">
+        <field name="name">Purchase Indent</field>
+        <field name="model">approval.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cmr_customizations.po_indent_report_template</field>
+        <field name="report_file">cmr_customizations.po_indent_report_template</field>
+        <field name="print_report_name">'po'</field>
+        <field name="paperformat_id" ref="cmr_customizations.paperformat_po_indent"/>
+        <field name="binding_model_id" ref="approvals.model_approval_request"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

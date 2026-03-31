@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+  <record id="seq_gift_voucher" model="ir.sequence">
+    <field name="name">Gift Voucher</field>
+    <field name="code">gift.voucher.seq</field>
+    <field name="padding">6</field>
+    <field name="prefix">GV/</field>
+    <field name="implementation">no_gap</field>
+  </record>
+</odoo>

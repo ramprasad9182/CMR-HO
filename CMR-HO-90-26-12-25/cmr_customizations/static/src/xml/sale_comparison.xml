@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="cmr_customizations.SaleComparison">
+        <section id="SaleComparison">
+            <br/>
+            <div>
+                <span class="sub-title" style="padding-left:25px">Sale Comparison Dashboard</span>
+            </div>
+            <div class="filter-row d-flex gap-3 align-items-center">
+                <!-- Period filter -->
+                <div class="filter-group" style="padding-left:50px">
+                    <select class="o_input" t-on-change="onPeriodChange">
+                        <option value="">Select period...</option>
+                        <option value="Q1">Q1</option>
+                        <option value="Q2">Q2</option>
+                        <option value="Q3">Q3</option>
+                        <option value="Q4">Q4</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <!-- Year filter (native scrollable picker style) -->
+                <div class="filter-group" style="padding-left:25px">
+                    <input type="number"
+                       class="o_input"
+                       min="2019"
+                       max="2030"
+                       t-att-value="state.filters.year"
+                       placeholder="Select year..."
+                       t-on-change="onYearChange"/>
+                </div>
+            </div>
+            <!-- Report table -->
+            <div class="report-table-wrapper">
+                <table class="report-table header-table">
+                    <!-- Table header -->
+                    <thead style="font-weight:bold;">
+                        <tr>
+                            <th class="text-center" style="width:20%">
+                                Company Name
+                            </th>
+                            <th class="text-center" style="width:13%">
+                                <t t-esc="state.headers.current"/>
+                            </th>
+                            <th class="text-center" style="width:13%">
+                                <t t-esc="state.headers.previous"/>
+                            </th>
+                            <th class="text-center" style="width:13%">
+                                <t t-esc="state.headers.delta"/>
+                            </th>
+                        </tr>
+                    </thead>
+                    <!-- Table body -->
+                    <tbody>
+                        <!-- No data -->
+                        <tr t-if="!state.rows.length and !state.loading">
+                            <td colspan="4" class="text-center">
+                                No data available
+                            </td>
+                        </tr>
+                        <!-- Loading -->
+                        <tr t-if="state.loading">
+                            <td colspan="4" class="text-center">
+                                Loading...
+                            </td>
+                        </tr>
+                        <!-- Company rows -->
+                        <t t-foreach="state.rows" t-as="row" t-key="row.company_id">
+                            <tr>
+                                <td class="text-center">
+                                    <t t-esc="row.company_name"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-esc="row.current_total"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-esc="row.previous_total"/>
+                                </td>
+                                <td class="text-center"
+                                    t-att-class="{
+                                        'delta-positive': row.delta_class === 'positive',
+                                        'delta-negative': row.delta_class === 'negative'
+                                    }">
+                                    <t t-esc="row.delta_display"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Footer placeholder -->
+            <div class="dashboard-wrap">
+                <div class="dashboard-footer is-sticky">
+                    <div class="footer-row" style="height:200px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+</templates>

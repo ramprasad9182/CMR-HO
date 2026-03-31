@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_owl_transport_dashboard" model="ir.actions.client">
+        <field name="name">Transport Dashboard</field>
+        <field name="tag">owl.transport_dashboard</field>
+    </record>
+    <record id="action_owl_lr_dashboard" model="ir.actions.client">
+        <field name="name">Stock In Return Dashboard</field>
+        <field name="tag">owl.lr_dashboard</field>
+    </record>
+    <!--    invoice type menu -->
+    <menuitem id="menu_nhcl_transports_dashboard"
+              name="Transit Dashboard"
+              sequence="6"
+              parent="cmr_customizations.menu_parent_transport"/>
+
+    <menuitem id="menu_nhcl_stock_transports_dashboard"
+              name="Stock In Transit"
+              sequence="2"
+              action="action_owl_transport_dashboard"
+              parent="menu_nhcl_transports_dashboard"/>
+
+     <menuitem id="menu_nhcl_lr_dashboard"
+              name="LR Number"
+              sequence="1"
+              action="action_owl_lr_dashboard"
+              parent="menu_nhcl_transports_dashboard"/>
+</odoo>

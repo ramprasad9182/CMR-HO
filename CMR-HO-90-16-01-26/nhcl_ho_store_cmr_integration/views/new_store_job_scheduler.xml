@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="ir_cron_old_store_job_scheduler" model="ir.cron">
+        <field name="name">Current Masters for Pending Records-Job</field>
+        <field name="model_id" ref="model_nhcl_ho_store_master"/>
+        <field name="state">code</field>
+        <field name="code">model.masters_job_scheduler_for_old_store()</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="is_custom_cron">True</field>
+        <field name="active">False</field>
+    </record>
+
+    <record id="ir_cron_new_store_job_scheduler" model="ir.cron">
+        <field name="name">New Masters Posting-Job</field>
+        <field name="model_id" ref="model_nhcl_ho_store_master"/>
+        <field name="state">code</field>
+        <field name="code">model.masters_job_scheduler_for_new_store()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="is_custom_cron">True</field>
+        <field name="active">False</field>
+    </record>
+
+    <record id="ir_cron_ho_delivery_order_job_scheduler" model="ir.cron">
+        <field name="name">HO-Store Delivery Order Transaction-Job</field>
+        <field name="model_id" ref="model_nhcl_ho_store_master"/>
+        <field name="state">code</field>
+        <field name="code">model.send_delivery_ho_store()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="is_custom_cron">True</field>
+        <field name="active">False</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+          <!-- Attendances -->
+        <record id="hr_upload_rule_employee_company" model="ir.rule">
+            <field name="name">HR Upload Employee multi company rule</field>
+            <field name="model_id" ref="model_hr_upload"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('employee_name.company_id','=',False),('employee_name.company_id', 'in', company_ids)]</field>
+        </record>
+</odoo>

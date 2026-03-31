@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="cmr_customizations.StockReportTemplate">
+        <div class="o_stock_report p-4">
+            <h2>Stock Report by Company</h2>
+            <div class="mt-4">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Incoming</th>
+                            <th>Out Going</th>
+                            <th>Store Return</th>
+                            <th>POS Deliveries</th>
+                            <th>POS Exchange</th>
+                            <th>Total QTY</th>
+                            <th>Total Inward</th>
+                            <th>Closing QTY</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-if="state.incoming.length">
+                            <t t-foreach="state.incoming" t-as="row" t-key="row.company_id">
+                                <tr>
+                                    <td><t t-esc="row.company_name"/></td>
+                                    <td><t t-esc="row.incoming"/></td>
+                                    <td><t t-esc="row.outgoing"/></td>
+                                    <td><t t-esc="row.storeReturn"/></td>
+                                    <td><t t-esc="row.posDeliveries"/></td>
+                                    <td><t t-esc="row.posExchange"/></td>
+                                    <td><t t-esc="row.totalStock"/></td>
+                                    <td><t t-esc="row.totalInverts"/></td>
+                                    <td><t t-esc="row.totalClosing"/></td>
+                                </tr>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <tr>
+                                <td colspan="7" class="text-center">No data available</td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,52 @@
+<odoo>
+    <!-- Report Template -->
+    <template id="report_store_target_pdf">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+            <div class="page">
+                <h2 style="text-align: center;">Store Target Report</h2>
+                <p><strong>Store:</strong> <t t-esc="doc.store_id.name"/></p>
+                <p><strong>Period:</strong> <t t-esc="doc.from_date"/> to <t t-esc="doc.to_date"/></p>
+
+                <table class="table table-condensed" style="width:100%; border-collapse: collapse;" border="1">
+                    <thead>
+                        <tr style="background-color: #D3D3D3; font-weight: bold; text-align: center;">
+                            <th>S.No</th>
+                            <th>Division</th>
+                            <th t-if="doc.day_month_selection=='day'">Regular per Day</th>
+                            <th t-if="doc.day_month_selection=='day'">Festival per Day</th>
+                            <th t-if="doc.day_month_selection=='month'">Regular Excess Month</th>
+                            <th t-if="doc.day_month_selection=='month'">Festival Excess Month</th>
+                            <th>Achievement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="doc.line_ids" t-as="line">
+                            <tr style="text-align: center;">
+                                <td><t t-esc="line.s_no"/></td>
+                                <td><t t-esc="line.division_name"/></td>
+                                <td t-if="doc.day_month_selection=='day'"><t t-esc="line.regular or 0.0"/></td>
+                                <td t-if="doc.day_month_selection=='day'"><t t-esc="line.festival or 0.0"/></td>
+                                <td t-if="doc.day_month_selection=='month'"><t t-esc="line.regular_excess_month or 0.0"/></td>
+                                <td t-if="doc.day_month_selection=='month'"><t t-esc="line.festival_excess_month or 0.0"/></td>
+                                <td><t t-esc="line.target_price or 0.0"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_store_target" model="ir.actions.report">
+        <field name="name">Store Target Report</field>
+        <field name="model">store.target.report</field>
+<!--        <field name="binding_model_id" ref=""/>-->
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cmr_customizations.report_store_target_pdf</field>
+        <field name="report_file">cmr_customizations.report_store_target_pdf</field>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

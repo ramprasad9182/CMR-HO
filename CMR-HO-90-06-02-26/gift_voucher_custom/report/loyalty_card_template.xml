@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="my_custom_header">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+        </t>
+        <div class="header" style="text-align: center; margin-top:50px;padding:30px;">
+        </div>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-out="0"/>
+        </div>
+    </template>
+    <template id="gift_voucher_custom.loyalty_card_template">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <t t-call="gift_voucher_custom.my_custom_header">
+            <t t-call="web.html_container">
+
+                <t t-if="docs">
+                    <t t-foreach="docs" t-as="card" t-index="idx">
+                        <t t-set="index" t-value="idx or 0"/>
+
+                        <div style="width:100%; height:100mm; position:relative; margin-bottom:5mm; margin-top:5mm; page-break-inside:avoid;">
+                            <!-- Background Image -->
+                            <!--                            <img t-att-src="'/gift_voucher_custom/static/src/img/voucher_bg.jpg'"-->
+                            <!--                                 style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:1; z-index:0;"/>-->
+
+                            <!-- Partner Name -->
+                            <div style="position:absolute; left:100mm; top:10mm; font-size:16px; font-weight:700; z-index:1;">
+                                <t t-esc="card.sudo().partner_id.name or ''"/>
+                            </div>
+
+                            <!-- Company Name -->
+                            <div style="
+    position:absolute;
+    left:25%;
+    top:35%;
+    transform:translate(-50%, -50%);
+    width:120mm;
+    text-align:center;
+    z-index:1;
+">
+                                <img t-if="company and company.logo"
+                                     t-att-src="image_data_uri(company.logo)"
+                                     style="
+             max-height:70mm;
+             max-width:120mm;
+             display:block;
+             margin:0 auto;
+         "
+                                     alt="Company Logo"/>
+                            </div>
+
+                            <div style="position:absolute; right:25mm; top:15mm; font-size:16px; z-index:1;">
+                                <span t-field="card.card_type"/>
+                            </div>
+
+                            <!-- Points -->
+                            <div style="position:absolute; right:20mm; top:50mm; font-size:60px; font-weight:800; color:#000000; z-index:1;">
+                                <!--                                <t t-esc="card.sudo().points_display"/>-->
+                                ₹
+                                <t t-esc="int(float((card.sudo().points_display or '0').replace('₹','').replace(',','').strip()))"/>
+                                /-
+
+                            </div>
+
+                            <!-- Expiration Date -->
+                            <div style="position:absolute; right:70mm; top:95mm; font-size:16px; z-index:1;">
+                                Expires:
+                                <t t-esc="card.expiration_date or ''"/>
+                            </div>
+
+                            <div style="position:absolute; right:10mm; top:95mm; z-index:1;">
+                                <span t-field="card.code"
+                                      t-options="{'widget': 'barcode', 'humanreadable': 0, 'symbology': 'auto', 'img_style': 'width:200px; height:35px; background:0 !important;'}">
+                                </span>
+                            </div>
+
+
+                        </div>
+
+                        <!-- Page break every 3 cards -->
+                        <t t-if="((index) + 1) % 3 == 0">
+                            <div style="page-break-after:always;"></div>
+                        </t>
+
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
+        <!--    <template id="gift_voucher_custom.loyalty_card_template">-->
+
+        <!--        <main style="margin:0; padding:0;">-->
+
+        <!--            <t t-if="docs">-->
+        <!--                <div style="margin:0; padding:0; width:100%;">-->
+
+        <!--                    <t t-foreach="docs" t-as="card" t-index="idx">-->
+        <!--                        <t t-set="index" t-value="idx or 0"/>-->
+
+        <!--                        <div style="width:200mm; height:80mm; position:relative;-->
+        <!--                                margin:5mm auto; page-break-inside:avoid;">-->
+
+        <!--                            <img t-att-src="'/gift_voucher_custom/static/src/img/voucher_bg.jpg'"-->
+        <!--                                 style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0;"/>-->
+
+        <!--                            <div style="position:absolute; left:10mm; top:10mm; font-size:16px; font-weight:700; z-index:1;">-->
+        <!--                                <t t-esc="card.sudo().partner_id.name or ''"/>-->
+        <!--                            </div>-->
+
+        <!--                            <div style="position:absolute; left:50%; transform:translateX(-50%); top:5mm; z-index:1;">-->
+        <!--                                <img t-if="card.sudo().company_id.logo"-->
+        <!--                                     t-att-src="image_data_uri(card.sudo().company_id.logo)"-->
+        <!--                                     style="height:20mm; width:auto;"/>-->
+        <!--                            </div>-->
+
+        <!--                            <div style="position:absolute; right:10mm; top:30mm; font-size:22px; font-weight:700; color:black; z-index:1;">-->
+        <!--                                <t t-esc="card.sudo().points_display or '0'"/>-->
+        <!--                            </div>-->
+
+        <!--                            <div style="position:absolute; left:10mm; bottom:10mm; font-size:14px; z-index:1;">-->
+        <!--                                Expires:-->
+        <!--                                <t t-esc="card.expiration_date or ''"/>-->
+        <!--                            </div>-->
+
+        <!--                            <div style="position:absolute; right:10mm; bottom:5mm; z-index:1;">-->
+        <!--                                <barcode t-att-value="card.code" type="code128" height="15mm"/>-->
+        <!--                            </div>-->
+
+        <!--                        </div>-->
+
+        <!--                        <t t-if="((index + 1) % 3) == 0">-->
+        <!--                            <div style="page-break-after:always;"></div>-->
+        <!--                        </t>-->
+
+        <!--                    </t>-->
+        <!--                </div>-->
+        <!--            </t>-->
+        <!--        </main>-->
+
+        <!--    </template>-->
+        <!--</odoo>-->
+

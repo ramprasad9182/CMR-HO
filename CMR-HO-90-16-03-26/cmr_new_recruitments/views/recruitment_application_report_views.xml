@@ -1,0 +1,29 @@
+<odoo>
+    <record id="view_hr_job_report_tree_vacant" model="ir.ui.view">
+        <field name="name">hr.job.report.tree</field>
+        <field name="model">hr.job</field>
+        <field name="arch" type="xml">
+            <tree string="Recruitment Summary Report" create="false" edit="false" delete="false">
+                <field name="name" string="Job Position"/>
+<!--                <field name="applications_received" string="Applications Received"/>-->
+<!--                <field name="shortlisted" string="Shortlisted"/>-->
+                 <field name="no_of_recruitment"/>
+                <field name="hired" string="Hired"/>
+                <field name="vacant_count" string="Vacant"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hr_job_report" model="ir.actions.act_window">
+        <field name="name">Target vs Vacancy</field>
+        <field name="res_model">hr.job</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_hr_job_report_tree_vacant"/>
+    </record>
+
+    <menuitem id="menu_hr_job_report"
+              name="Target vs Vacancy"
+              parent="hr_recruitment.report_hr_recruitment"
+              action="action_hr_job_report"/>
+</odoo>

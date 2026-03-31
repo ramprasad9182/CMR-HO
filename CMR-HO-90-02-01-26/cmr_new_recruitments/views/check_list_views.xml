@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Tree view for checklist Master with Department and Designation -->
+    <record id="view_check_list_master_tree" model="ir.ui.view">
+        <field name="name">check.list.master.tree</field>
+        <field name="model">check.list</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="list_of_docs"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action to open check list Master -->
+    <record id="action_check_list_master" model="ir.actions.act_window">
+        <field name="name">Check List Master</field>
+        <field name="res_model">check.list</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!-- Menu item -->
+    <menuitem id="menu_check_list"
+              name="Check List Master"
+              parent="hr_recruitment.menu_hr_recruitment_config_activities"
+              action="action_check_list_master"/>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--&lt;!&ndash;  <template id="gift_voucher_template">&ndash;&gt;-->
+<!--&lt;!&ndash;    <t t-call="web.external_layout">&ndash;&gt;-->
+<!--&lt;!&ndash;      <t t-set="docs" t-value="docs"/>&ndash;&gt;-->
+<!--&lt;!&ndash;      <t t-set="image_data" t-value="docs and docs[0]._get_voucher_bg()"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;      <main class="page" style="width:210mm; height:297mm; padding:6mm; box-sizing:border-box;">&ndash;&gt;-->
+<!--&lt;!&ndash;        <t t-set="index" t-value="0"/>&ndash;&gt;-->
+<!--&lt;!&ndash;        <t t-foreach="docs" t-as="voucher">&ndash;&gt;-->
+<!--&lt;!&ndash;          <t t-set="index" t-value="index + 1"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;          &lt;!&ndash; Each voucher 1/3 of A4 &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;          <div style="width:100%; height:90mm; position:relative; margin-bottom:5mm; page-break-inside:avoid;">&ndash;&gt;-->
+
+<!--&lt;!&ndash;            &lt;!&ndash; Background &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;            <img t-att-src="'data:image/jpeg;base64,%s' % image_data"&ndash;&gt;-->
+<!--&lt;!&ndash;                 style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.35; z-index:0;"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            &lt;!&ndash; Voucher Content &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;            <div style="position:absolute; right:20mm; top:12mm; font-size:20px; font-weight:700; z-index:1;">&ndash;&gt;-->
+<!--&lt;!&ndash;              <t t-esc="voucher.name"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <div style="position:absolute; left:22mm; top:40mm; font-size:22px; font-weight:800; color:#8b0000; z-index:1;">&ndash;&gt;-->
+<!--&lt;!&ndash;              <t t-esc="voucher.amount"/> <t t-esc="voucher.currency_id.symbol"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <div style="position:absolute; left:22mm; top:60mm; font-size:14px; font-weight:600; z-index:1;">&ndash;&gt;-->
+<!--&lt;!&ndash;              <t t-esc="voucher.customer_name or ''"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <div style="position:absolute; right:22mm; top:60mm; font-size:12px; z-index:1;">&ndash;&gt;-->
+<!--&lt;!&ndash;              Issue: <t t-esc="voucher.issue_date"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <div style="position:absolute; right:22mm; top:72mm; font-size:12px; z-index:1;">&ndash;&gt;-->
+<!--&lt;!&ndash;              Expires: <t t-esc="voucher.expiry_date"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;          &lt;!&ndash; Page break after every 3 vouchers &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;          <t t-if="index % 3 == 0">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div style="page-break-after: always;"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;          </t>&ndash;&gt;-->
+
+<!--&lt;!&ndash;        </t>&ndash;&gt;-->
+<!--&lt;!&ndash;      </main>&ndash;&gt;-->
+<!--&lt;!&ndash;    </t>&ndash;&gt;-->
+<!--&lt;!&ndash;  </template>&ndash;&gt;-->
+<!--&lt;!&ndash;</odoo>&ndash;&gt;-->
+
+<!--<odoo>-->
+<!--   <template id="gift_voucher_template">-->
+
+<!--    <main class="page"-->
+<!--          style="width:210mm; height:297mm; padding:6mm; box-sizing:border-box;">-->
+
+<!--        <t t-set="count" t-value="0"/>-->
+
+<!--        <t t-foreach="docs" t-as="voucher">-->
+<!--            <t t-set="count" t-value="count + 1"/>-->
+
+<!--            &lt;!&ndash; Voucher Block (reduced height to fit 3/page) &ndash;&gt;-->
+<!--            <div style="width:100%; height:80mm; position:relative;-->
+<!--                        margin-bottom:4mm; page-break-inside:avoid;">-->
+
+<!--                <img t-att-src="'data:image/jpeg;base64,%s' % voucher._get_voucher_bg()"-->
+<!--                     style="position:absolute; inset:0; width:100%; height:100%;-->
+<!--                            object-fit:cover; opacity:0.35; z-index:0;"/>-->
+
+<!--                <div style="position:absolute; right:20mm; top:10mm;-->
+<!--                            font-size:18px; font-weight:700; z-index:1;">-->
+<!--                    <t t-esc="voucher.name"/>-->
+<!--                </div>-->
+
+<!--                <div style="position:absolute; left:20mm; top:30mm;-->
+<!--                            font-size:20px; font-weight:800; color:#8b0000; z-index:1;">-->
+<!--                    <t t-esc="voucher.amount"/> <t t-esc="voucher.currency_id.symbol"/>-->
+<!--                </div>-->
+
+<!--                <div style="position:absolute; left:20mm; top:50mm;-->
+<!--                            font-size:12px; font-weight:600; z-index:1;">-->
+<!--                    <t t-esc="voucher.customer_name or ''"/>-->
+<!--                </div>-->
+
+<!--                <div style="position:absolute; right:20mm; top:50mm;-->
+<!--                            font-size:11px; z-index:1;">-->
+<!--                    Issue: <t t-esc="voucher.issue_date"/>-->
+<!--                </div>-->
+
+<!--                <div style="position:absolute; right:20mm; top:62mm;-->
+<!--                            font-size:11px; z-index:1;">-->
+<!--                    Expires: <t t-esc="voucher.expiry_date"/>-->
+<!--                </div>-->
+
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Force page break after every 3 vouchers &ndash;&gt;-->
+<!--            <t t-if="count % 3 == 0">-->
+<!--                <div style="page-break-after:always;"></div>-->
+<!--            </t>-->
+
+<!--        </t>-->
+
+<!--    </main>-->
+<!--</template>-->
+
+
+</odoo>

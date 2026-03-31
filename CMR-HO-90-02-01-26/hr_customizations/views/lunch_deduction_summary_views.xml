@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- TREE VIEW -->
+    <record id="view_lunch_deduction_summary_tree" model="ir.ui.view">
+        <field name="name">lunch.deduction.summary.tree</field>
+        <field name="model">lunch.deduction.summary</field>
+        <field name="arch" type="xml">
+            <tree string="Lunch Deduction Summary">
+                <field name="month"/>
+                <field name="year"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_lunch_deduction_summary_form" model="ir.ui.view">
+        <field name="name">lunch.deduction.summary.form</field>
+        <field name="model">lunch.deduction.summary</field>
+        <field name="arch" type="xml">
+            <form string="Lunch Deduction Summary">
+                <header>
+                    <button name="generate_report"
+                            string="Generate Report"
+                            type="object"
+                            class="oe_highlight"/>
+                    <button name="delete_selected_lines"
+                            string="Delete Selected Lines"
+                            type="object"
+                            class="btn-primary"
+                            confirm="Are you sure you want to delete the selected lines?"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="month"/>
+                        <field name="year"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Lunch Deduction Lines">
+
+                            <group>
+                                <field name="select_all"/>
+                            </group>
+
+                            <field name="line_ids" nolabel="1">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="is_selected"/>
+                                    <field name="employee_code"/>
+                                    <field name="employee_id"/>
+                                    <field name="lunch_total"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_lunch_deduction_summary" model="ir.actions.act_window">
+        <field name="name">Lunch Deduction Summary</field>
+        <field name="res_model">lunch.deduction.summary</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- MENU -->
+    <menuitem id="menu_lunch_deduction_summary"
+              name="Lunch Deduction Summary"
+              parent="hr_customizations.menu_shift_deduction_master_root"
+              action="action_lunch_deduction_summary"/>
+
+</odoo>

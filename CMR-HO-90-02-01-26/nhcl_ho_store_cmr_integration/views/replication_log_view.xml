@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="cmr_replication_log_tree_view" model="ir.ui.view">
+        <field name="name">nhcl.replication.log.tree</field>
+        <field name="model">nhcl.replication.log</field>
+        <field name="arch" type="xml">
+            <tree string="Replication Log" create="0" expand
+="1">
+                <!--                  decoration-info="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='success'" decoration-danger="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='failure'"-->
+                <!--            >-->
+                <field name="nhcl_serial_no" readonly="1" force_save="1"/>
+                <field name="nhcl_date_of_log" readonly="1" force_save="1"/>
+                <field name="nhcl_source_id" readonly="1" force_save="1"/>
+                <field name="nhcl_source_name" readonly="1" string="Source" force_save="1"/>
+                <field name="nhcl_destination_id" readonly="1" force_save="1"/>
+                <field name="nhcl_destination_name" readonly="1" string="Destination" force_save="1"/>
+                <field name="nhcl_model" readonly="1" force_save="1"/>
+                <field name="nhcl_record_id" readonly="1" force_save="1"/>
+                <field name="nhcl_function_required" readonly="1" string="Function Req." force_save="1"/>
+                <field name="nhcl_status_code" readonly="1" force_save="1"/>
+                <field name="nhcl_status" readonly="1" force_save="1"/>
+                <field name="nhcl_details_status" readonly="1" force_save="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="cmr_old_store_replication_log_tree_view" model="ir.ui.view">
+        <field name="name">nhcl.old.store.replication.log.tree</field>
+        <field name="model">nhcl.old.store.replication.log</field>
+        <field name="arch" type="xml">
+            <tree string="Old Store Replication Log" create="0" expand
+="1">
+                <!--                  decoration-info="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='success'" decoration-danger="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='failure'"-->
+                <!--            >-->
+                <field name="nhcl_serial_no" readonly="1" force_save="1"/>
+                <field name="nhcl_date_of_log" readonly="1" force_save="1"/>
+                <field name="nhcl_processing_time" readonly="1" force_save="1"/>
+                <field name="nhcl_end_time" readonly="1" force_save="1"/>
+                <field name="nhcl_source_id" readonly="1" force_save="1"/>
+                <field name="nhcl_source_name" readonly="1" string="Source" force_save="1"/>
+                <field name="nhcl_destination_id" readonly="1" force_save="1"/>
+                <field name="nhcl_destination_name" readonly="1" string="Destination" force_save="1"/>
+                <field name="nhcl_model" readonly="1" force_save="1"/>
+                <field name="nhcl_record_id" readonly="1" force_save="1"/>
+                <field name="nhcl_function_required" readonly="1" string="Function Req." force_save="1"/>
+                <field name="nhcl_status_code" readonly="1" force_save="1"/>
+                <field name="nhcl_status" readonly="1" force_save="1"/>
+                <field name="nhcl_details_status" readonly="1" force_save="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="cmr_transaction_replication_log_tree_view" model="ir.ui.view">
+        <field name="name">nhcl.transaction.replication.log.tree</field>
+        <field name="model">nhcl.transaction.replication.log</field>
+        <field name="arch" type="xml">
+            <tree string="Transaction Replication Log" create="0" expand
+="1">
+                <!--                  decoration-info="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='success'" decoration-danger="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='failure'"-->
+                <!--            >-->
+                <field name="nhcl_serial_no" readonly="1" force_save="1"/>
+                <field name="nhcl_date_of_log" readonly="1" force_save="1"/>
+                <field name="nhcl_source_id" readonly="1" force_save="1"/>
+                <field name="nhcl_source_name" readonly="1" string="Source" force_save="1"/>
+                <field name="nhcl_destination_id" readonly="1" force_save="1"/>
+                <field name="nhcl_destination_name" readonly="1" string="Destination" force_save="1"/>
+                <field name="nhcl_model" readonly="1" force_save="1"/>
+                <field name="nhcl_record_id" readonly="1" force_save="1"/>
+                <field name="nhcl_function_required" readonly="1" string="Function Req." force_save="1"/>
+                <field name="nhcl_status_code" readonly="1" force_save="1"/>
+                <field name="nhcl_status" readonly="1" force_save="1"/>
+                <field name="nhcl_details_status" readonly="1" force_save="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="cmr_store_replication_log_tree_view" model="ir.ui.view">
+        <field name="name">nhcl.store.replication.log.tree</field>
+        <field name="model">nhcl.store.replication.log</field>
+        <field name="arch" type="xml">
+            <tree string="Store/HO Replication Log" create="0" expand
+    ="1">
+                <!--                  decoration-info="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='success'" decoration-danger="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='failure'"-->
+                <!--            >-->
+                <field name="nhcl_serial_no" readonly="1" force_save="1"/>
+                <field name="nhcl_date_of_log" readonly="1" force_save="1"/>
+                <field name="nhcl_source_id" readonly="1" force_save="1"/>
+                <field name="nhcl_source_name" readonly="1" string="Source" force_save="1"/>
+                <field name="nhcl_destination_id" readonly="1" force_save="1"/>
+                <field name="nhcl_destination_name" readonly="1" string="Destination" force_save="1"/>
+                <field name="nhcl_model" readonly="1" force_save="1"/>
+                <field name="nhcl_record_id" readonly="1" force_save="1"/>
+                <field name="nhcl_function_required" readonly="1" string="Function Req." force_save="1"/>
+                <field name="nhcl_status_code" readonly="1" force_save="1"/>
+                <field name="nhcl_status" readonly="1" force_save="1"/>
+                <field name="nhcl_details_status" readonly="1" force_save="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="cmr_job_initiated_status_log_tree_view" model="ir.ui.view">
+        <field name="name">nhcl.initiated.status.log.tree</field>
+        <field name="model">nhcl.initiated.status.log</field>
+        <field name="arch" type="xml">
+            <tree string="Job Initiated Status Log" create="0" expand
+    ="1">
+                <!--                  decoration-info="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='success'" decoration-danger="nhcl_source_id == False and nhcl_source_name == False and nhcl_status =='failure'"-->
+                <!--            >-->
+                <field name="nhcl_serial_no" readonly="1" force_save="1"/>
+                <field name="nhcl_date_of_log" readonly="1" force_save="1"/>
+                <field name="nhcl_job_name" readonly="1" force_save="1"/>
+                <field name="nhcl_status" readonly="1" force_save="1"/>
+                <field name="nhcl_details_status" readonly="1" force_save="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="replications_source_graph_view" model="ir.ui.view">
+        <field name="name">Source Performance Analysis</field>
+        <field name="model">nhcl.replication.log</field>
+        <field name="arch" type="xml">
+            <graph string="Source Performance Analysis" type="bar">
+                <field name="nhcl_date_of_log" interval="month"/>
+                <field name="nhcl_destination_name"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_search_replication_log" model="ir.ui.view">
+        <field name="name">nhcl.replication.log.search</field>
+        <field name="model">nhcl.replication.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Replication Logs">
+                <field name="nhcl_destination_name" string="Destination Name"/>
+                <field name="nhcl_model_name" string="Replication Log" />
+                <!-- Group By Options -->
+                <group string="Group By">
+                    <filter string="Destination Name" name="group_by_destination"
+                            context="{'group_by': 'nhcl_destination_name'}"/>
+                    <filter string="Model Name" name="group_by_model"
+                            context="{'group_by': 'nhcl_model_name'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'nhcl_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="replications_old_store_graph_view" model="ir.ui.view">
+        <field name="name">Source Performance Analysis</field>
+        <field name="model">nhcl.old.store.replication.log</field>
+        <field name="arch" type="xml">
+            <graph string="Source Performance Analysis" type="bar">
+                <field name="nhcl_date_of_log" interval="month"/>
+                <field name="nhcl_destination_name"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_search_old_store_replication_log" model="ir.ui.view">
+        <field name="name">Old Search Source Performance Analysis</field>
+        <field name="model">nhcl.old.store.replication.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Replication Logs">
+                <field name="nhcl_destination_name" string="Destination Name"/>
+                <field name="nhcl_model" string="Replication Log" />
+                <!-- Group By Options -->
+                <group string="Group By">
+                    <filter string="Destination Name" name="group_by_destination"
+                            context="{'group_by': 'nhcl_destination_name'}"/>
+                    <filter string="Model Name" name="group_by_model"
+                            context="{'group_by': 'nhcl_model'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="replications_transaction_graph_view" model="ir.ui.view">
+        <field name="name">Source Performance Analysis</field>
+        <field name="model">nhcl.transaction.replication.log</field>
+        <field name="arch" type="xml">
+            <graph string="Source Performance Analysis" type="bar">
+                <field name="nhcl_date_of_log" interval="month"/>
+                <field name="nhcl_destination_name"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="job_initiated_status_graph_view" model="ir.ui.view">
+        <field name="name">Job Initiated Status Analysis</field>
+        <field name="model">nhcl.initiated.status.log</field>
+        <field name="arch" type="xml">
+            <graph string="Job Initiated Status Analysis" type="bar">
+                <field name="nhcl_date_of_log" interval="month"/>
+                <field name="nhcl_job_name"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="replications_store_graph_view" model="ir.ui.view">
+        <field name="name">Source Performance Analysis</field>
+        <field name="model">nhcl.store.replication.log</field>
+        <field name="arch" type="xml">
+            <graph string="Source Performance Analysis" type="bar">
+                <field name="nhcl_date_of_log" interval="month"/>
+                <field name="nhcl_destination_name"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_cmr_replication_log" model="ir.actions.act_window">
+        <field name="name">New Store Replication Log</field>
+        <field name="res_model">nhcl.replication.log</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_group_by_destination':1,'search_default_group_by_model':1}</field>
+        <field name="search_view_id" ref="view_search_replication_log"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Log
+            </p>
+        </field>
+    </record>
+
+    <record id="action_cmr_old_store_replication_log" model="ir.actions.act_window">
+        <field name="name">Old Store Replication Log</field>
+        <field name="res_model">nhcl.old.store.replication.log</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_group_by_destination':1,'search_default_group_by_model':1}</field>
+        <field name="search_view_id" ref="view_search_old_store_replication_log"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a old store new Log
+            </p>
+        </field>
+    </record>
+
+    <record id="action_cmr_transaction_replication_log" model="ir.actions.act_window">
+        <field name="name">Transaction Replication Log</field>
+        <field name="res_model">nhcl.transaction.replication.log</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a Transaction new Log
+            </p>
+        </field>
+    </record>
+
+    <record id="action_cmr_store_replication_log" model="ir.actions.act_window">
+        <field name="name">Store/HO Replication Log</field>
+        <field name="res_model">nhcl.store.replication.log</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a store new Log
+            </p>
+        </field>
+    </record>
+
+    <record id="action_cmr_job_initiated_status_log" model="ir.actions.act_window">
+        <field name="name">Job Initiated Status Log</field>
+        <field name="res_model">nhcl.initiated.status.log</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a store new Log
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_cmr_replication_log" name="New Store Integration Log"
+              parent="log_report"
+              sequence="6"
+              action="action_cmr_replication_log"/>
+    <menuitem id="menu_cmr_old_store_replication_log" name="Old Store Integration Log"
+              parent="log_report"
+              sequence="6"
+              action="action_cmr_old_store_replication_log"/>
+    <menuitem id="menu_cmr_transaction_replication_log" name="Transaction Integration Log"
+              parent="log_report"
+              sequence="6"
+              action="action_cmr_transaction_replication_log"/>
+    <menuitem id="menu_cmr_store_replication_log" name="Store-HO Integration Log"
+              parent="log_report"
+              sequence="6"
+              action="action_cmr_store_replication_log"/>
+    <menuitem id="menu_cmr_job_initiated_status_log" name="Job Initiated Status Log"
+              parent="log_report"
+              sequence="7"
+              action="action_cmr_job_initiated_status_log"/>
+
+</odoo>

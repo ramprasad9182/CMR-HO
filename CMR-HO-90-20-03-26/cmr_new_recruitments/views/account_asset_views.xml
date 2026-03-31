@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_asset_custom" model="ir.ui.view">
+        <field name="name">account.asset.nhcl</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/sheet/notebook/page/group/group[@name='asset_values']/field[@name='original_value']" position="before">
+                    <field name="employee_id_nhcl_xpath"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

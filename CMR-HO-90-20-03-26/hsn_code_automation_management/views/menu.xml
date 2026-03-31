@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <menuitem id="menu_hsn_code_master" name="HSN/SAC Code" action="hsn_category_action" parent="account.account_account_menu" sequence="10"/>
+
+</odoo>

@@ -1,0 +1,7 @@
+<odoo noupdate="1">
+    <record id="seq_product_auto" model="ir.sequence">
+        <field name="name">Product</field>
+        <field name="code">product.product</field>
+        <field eval="5" name="padding" />
+    </record>
+</odoo>

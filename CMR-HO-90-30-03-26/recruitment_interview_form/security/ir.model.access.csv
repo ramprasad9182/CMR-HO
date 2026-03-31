@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_survey_email_wizard,survey.email.wizard,model_survey_email_wizard,,1,1,1,1
+access_hr_interview_form_form_users,hr.interview.form read only,model_hr_interview_form,recruitment_interview_form.group_form_users,1,0,0,0
+access_hr_interview_form_form_users_all,hr.interview.form read only all,model_hr_interview_form,recruitment_interview_form.group_form_users_all,1,1,1,1

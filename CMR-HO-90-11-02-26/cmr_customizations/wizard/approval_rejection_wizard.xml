@@ -1,0 +1,35 @@
+<odoo>
+    <record id="view_approval_rejection_wizard_wizard" model="ir.ui.view">
+        <field name="name">Approval Reject Wizard</field>
+        <field name="model">approval.rejection.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="reason"/>
+                    <field name="approval_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_rejection" type="object" string="Submit" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_approval_rejection_wizard_wizard2" model="ir.ui.view">
+        <field name="name">Approval Reject Wizard2</field>
+        <field name="model">approval.rejection.wizard2</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="reason"/>
+                    <field name="approval_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_rejection" type="object" string="Submit" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

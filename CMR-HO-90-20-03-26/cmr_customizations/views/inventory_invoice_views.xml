@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+     <!-- Rename Receipts to GRC -->
+    <record id="stock.in_picking" model="ir.ui.menu">
+        <field name="name">GRC</field>
+    </record>
+
+    <!-- Rename Deliveries to Packets -->
+    <record id="stock.out_picking" model="ir.ui.menu">
+        <field name="name">Packets</field>
+    </record>
+
+</odoo>

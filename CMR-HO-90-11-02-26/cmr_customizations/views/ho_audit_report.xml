@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="ho_audit_report_form" model="ir.ui.view">
+        <field name="name">Ho Audit Report Form</field>
+        <field name="model">ho.audit.report</field>
+        <field name="arch" type="xml">
+            <form string="Ho Audit Report" create="0">
+                <h1 style="color:black;font-weight:1000;text-align:center;">Ho Audit Report
+                </h1>
+                <sheet>
+<!--                    <header>-->
+<!--                        <button name="ho_audit_report" type="object"-->
+<!--                                string="Submit" class="btn-primary"/>-->
+<!--                        <button name="action_to_reset" type="object"-->
+<!--                                string="Reset" class="btn-secondary"/>-->
+<!--                        <button name="get_excel_sheet" type="object"-->
+<!--                                string="Excel" class="btn-success"/>-->
+<!--                    </header>-->
+                    <group name="ho_audit_report" style="border: 2px solid #990099; padding: 10px;">
+                        <group name="ho_audit_report_group">
+                            <field name="nhcl_store_id"
+                                   widget="many2many_checkboxes"
+                                   />
+<!--                            <field name="plan_id" options='{"no_open": True, "no_create": True}'/>-->
+<!--                            <field name="plan_dup"/>-->
+                        </group>
+                        <group name="ho_audit_report_date_details">
+                            <group>
+                                <field name="from_date" widget="daterange"
+                                       options="{'to_date_field': 'to_date'}"/>
+                                <field name="to_date"/>
+                            </group>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Audit Report">
+                            <field name="ho_audit_report_ids" readonly="True" >
+                                <tree create="0" delete="0" editable="bottom">
+                                    <field name="audit_site"/>
+                                    <!--                                           domain="[('nhcl_active', '=', True),('nhcl_store_type', '!=', 'ho')]"/>-->
+                                    <field name="stock_point"/>
+                                    <field name="audit_plan"/>
+                                    <field name="description"/>
+                                    <field name="start_date"/>
+                                    <field name="remarks"/>
+                                    <field name="barcode"/>
+                                    <field name="product_id"/>
+                                    <field name="snap_division"/>
+                                    <field name="snap_section"/>
+                                    <field name="snap_department"/>
+                                    <field name="snap_article"/>
+                                    <field name="snap_categ_one" optional="hide"/>
+                                    <field name="snap_categ_two" optional="hide"/>
+                                    <field name="snap_categ_three" optional="hide"/>
+                                    <field name="snap_categ_four" optional="hide"/>
+                                    <field name="snap_categ_five" optional="hide"/>
+                                    <field name="snap_categ_six" optional="hide"/>
+                                    <field name="vendor" optional="hide"/>
+                                    <field name="new_division" optional="hide"/>
+                                    <field name="new_section" optional="hide"/>
+                                    <field name="new_department" optional="hide"/>
+                                    <field name="new_article" optional="hide"/>
+                                    <field name="new_categ_one" optional="hide"/>
+                                    <field name="new_categ_two" optional="hide"/>
+                                    <field name="new_categ_three" optional="hide"/>
+                                    <field name="new_categ_four" optional="hide"/>
+                                    <field name="new_categ_five" optional="hide"/>
+                                    <field name="new_categ_six" optional="hide"/>
+                                    <field name="new_desc_five" optional="hide"/>
+                                    <field name="new_barcode" optional="hide"/>
+                                    <field name="book_stock_qty" optional="hide"/>
+                                    <field name="book_stock_rsp" optional="hide"/>
+                                    <field name="physical_stock_qty" optional="hide"/>
+                                    <field name="physical_stock_rsp" optional="hide"/>
+                                    <field name="snapshot_qty" optional="hide"/>
+                                    <field name="snapshot_rsp" optional="hide"/>
+                                    <field name="dif_qty" optional="hide"/>
+                                    <field name="mrp" optional="hide"/>
+                                    <field name="rsp" optional="hide"/>
+                                    <field name="cost_price" optional="hide"/>
+                                    <field name="dif_rsp_amount" optional="hide"/>
+                                    <field name="item_rate" optional="hide"/>
+                                    <field name="book_stock_value" optional="hide"/>
+                                    <field name="physical_stock_value" optional="hide"/>
+                                    <field name="dif_stock_value" optional="hide"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="ho_audit_report" model="ir.actions.act_window">
+        <field name="name">Ho Audit Report</field>
+        <field name="res_model">ho.audit.report</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    <menuitem id="reporting_status_ho_audit_report"
+              name="Ho Audit Report"
+              parent="nhcl_ho_store_cmr_integration.reporting_store_heading"
+              action="ho_audit_report"
+              sequence="14"
+    />
+</odoo>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+<template id="label_production_view_pdf_s" inherit_id="mrp.label_production_view_pdf">
+    <xpath expr="t[@t-call='web.basic_layout']" position="replace">
+        <!-- Call the web.html_container template -->
+        <t t-call="web.html_container">
+            <!-- Your content goes here -->
+            <t t-set='nRows' t-value='7'/>
+            <t t-set='nCols' t-value='2'/>
+            <t t-set="uom_categ_unit" t-value="env.ref('uom.product_uom_categ_unit')"/>
+            <t t-set="move_lines" t-value="docs.move_finished_ids.move_line_ids.filtered(lambda ml: ml.move_id.production_id.state == 'done' and ml.state == 'done' and ml.quantity)"/>
+            <t t-set="move_line_qtys" t-value="[]"/>
+
+            <!-- Calculate quantities -->
+            <t t-foreach="move_lines" t-as="move_line">
+                <t t-if="move_line.product_uom_id.category_id == uom_categ_unit">
+                    <t t-set="move_line_qtys" t-value="move_line_qtys + [int(move_line.quantity)]"/>
+                </t>
+                <t t-else="">
+                    <t t-set="move_line_qtys" t-value="move_line_qtys + [1]"/>
+                </t>
+            </t>
+            <t t-set="index_to_qtys" t-value="{i: qty for i, qty in zip(range(0, len(move_line_qtys)), move_line_qtys)}"/>
+            <t t-set="num_pages" t-value="sum(move_line_qtys) // (nRows * nCols) + 1"/>
+
+            <!-- Generate pages -->
+            <div t-foreach="range(num_pages)" t-as="page" class="o_label_sheet" t-att-style="'padding: 9mm 3mm'">
+                <table class="table table-sm table-borderless">
+                    <t t-foreach="range(nRows)" t-as="row">
+                        <tr>
+                            <t t-foreach="range(nCols)" t-as="column">
+                                <t t-if="index_to_qtys and not current_quantity">
+                                    <t t-set="index_to_qty" t-value="index_to_qtys.popitem()"/>
+                                    <t t-set="move_line" t-value="move_lines[index_to_qty[0]]"/>
+                                    <t t-set="current_quantity" t-value="index_to_qty[1]"/>
+                                </t>
+                                <t t-if="current_quantity">
+                                    <t t-set="make_invisible" t-value="False"/>
+                                    <t t-set="current_quantity" t-value="current_quantity - 1"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="make_invisible" t-value="True"/>
+                                </t>
+                                <td t-att-style="make_invisible and 'visibility:hidden;'" >
+                                    <div t-if="move_line" t-translation="off"
+                                         t-att-style="'position:relative; width:97mm; height:39.1mm; border: 1px solid %s; box-sizing: border-box;' % (move_line.env.user.company_id.primary_color or 'black')">
+                                        <!-- Customized label layout according to PDF content -->
+                                        <div class="o_label_name">
+                                            <span t-out="move_line.product_id.display_name">Combo(Shirt+Pant)</span>
+                                        </div>
+
+                                        <div class="o_label_data">
+                                            <div class="text-center o_label_left_column" style="text-align:start; margin-left:5mm; margin-top:5mm; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                <span class="text-nowrap"/>
+                                                <t t-if="move_line.product_id.barcode">
+                                                    <t t-set="final_barcode" t-value="( '01'+move_line.product_id.barcode or '') + '21' + move_line.lot_id.name"/>
+                                                    <div t-out="final_barcode"
+                                                         t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': 'width:50mm; height:10mm;','code':'gs1-128'}"/>
+                                                    <span style="margin:0mm;padding:0mm;margin-left:5mm;font-size:12px;text-align:center;" class="text-center" t-out="final_barcode"/>
+                                                </t>
+                                            </div>
+                                            <div style="line-height:normal; text-align:end; overflow: hidden;margin:0mm;padding:0mm;">
+                                                    <div style="font-family:Verdana, Arial,sans-serif; font-size:16px; white-space: nowrap;margin:0mm;padding:0mm;">
+                                                        <t t-if="move_line.lot_id">
+                                                            <strong>MRP:</strong>
+                                                            <span t-esc="int(move_line.lot_id.mr_price) or 0"/>/-
+                                                            <br/>
+                                                            <strong>RSP:</strong>
+                                                            <span t-esc="int(move_line.lot_id.rs_price) or 0"/>/-
+                                                        </t>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+        </t>
+    </xpath>
+</template>
+</odoo>

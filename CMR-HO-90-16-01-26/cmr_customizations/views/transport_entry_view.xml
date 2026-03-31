@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="dev_transport_entry_from_view" model="ir.ui.view">
+        <field name="name">dev.transport.entry.form.view</field>
+        <field name="model">dev.transport.entry</field>
+        <field name="arch" type="xml">
+            <form string="Transpoter Entry">
+                <header>
+                    <button name="action_start" class="btn-primary" invisible="state not in ['start','waiting']" type="object" string="Start"/>
+                    <button name="action_re_start" class="btn-primary" invisible="state != 'cancel'"  type="object" string="Re-Start"/>
+                    <button name="action_done" class="btn-primary" invisible="state != 'in_progress'"  type="object" string="Done"/>
+                    <button name="action_waiting" class="btn-primary" invisible="state not in ['start','in_progress']"  type="object" string="Waiting"/>
+                    <button name="action_cancel" class="btn-primary" invisible="state not in ['start','waiting','in_progress']"  type="object" string="Cancel"/>
+                    <field name="state" widget="statusbar" statusbar_visible="start,waiting,in_progress,done,cancel"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="state != 'start'"/>
+        					<field name="transport_date" readonly="state != 'start'"/>
+        					<field name="picking_id" readonly="state != 'start'"/>
+        					<field name="lr_number" readonly="state != 'start'"/>
+                        </group>
+                        <group>
+                            <field name="transport_details_id" readonly="state != 'start'"/>
+                            <field name="contact_name"  readonly="state !=' start'"/>
+                            <field name="no_of_parcel" readonly="state != 'start'"/>
+                            <field name="vehicle_id" domain="[('transpoter_id', '=', transport_details_id)]" required="1" readonly="state != 'start'"/>
+                            <field name="note"  readonly="state != 'start'"/>
+                        </group>
+                    </group>
+                <notebook>
+                    <page string="Location Details" name="location_details">
+                        <field name="transport_location_line" readonly="state != 'start'">
+                            <tree>
+                                <field name="source_location_id" />
+                                <field name="destination_location_id" />
+                                <field name="distance" />
+                                <field name="transport_charges" />
+                                <field name="time_hour" />
+                                <field name="start_time" />
+                                <field name="end_time" />
+                                <field name="tracking_number" />
+                                <field name="state" />
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--tree-->
+	<record id="dev_transport_entry_tree_view" model="ir.ui.view">
+		<field name="name">dev.transport.entry.tree.view</field>
+		<field name="model">dev.transport.entry</field>
+		<field name="arch" type="xml">
+		    <tree string="Transpoter Entry">
+                <field name="name"/>
+                <field name="transport_date" />
+				<field name="picking_id" />
+				<field name="transport_details_id" />
+				<field name="state" />
+ 		    </tree>
+		</field>
+	</record>
+	
+	<record id="dev_transport_entry_filter_view" model="ir.ui.view">
+        <field name="name">dev.transport.entry.filter</field>
+        <field name="model">dev.transport.entry</field>
+        <field name="arch" type="xml">
+            <search string="Transport Entry">
+            	<field name="name" />
+            	<field name="picking_id" />
+            	<field name="transport_details_id" />
+            	<field name="state" />
+            	 <separator/>
+                    <filter string="Start" name="start" domain="[('state','=','start')]"/>
+                    <filter string="Waiting" name="waiting" domain="[('state','=','waiting')]"/>
+                    <filter string="In-Progress" name="in_progress" domain="[('state','=','in_progress')]"/>
+                    <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                    <filter string="Cancel" name="cancel" domain="[('state','=','cancel')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Delivery Order" name="picking_id" domain="[]" context="{'group_by': 'picking_id'}"/>
+                    <filter string="Transporter" name="transport_details_id" domain="[]" context="{'group_by': 'transport_details_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+	<!--Action-->
+	<record id="action_dev_transport_entry" model="ir.actions.act_window">
+        <field name="name">Transport Entry</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dev.transport.entry</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="dev_transport_entry_tree_view"/>
+    </record>
+    
+    
+
+ 	<menuitem name="Transport Entry"
+              id='menu_action_transport_entry'
+              parent="menu_parent_transport"
+              action="action_dev_transport_entry"
+              sequence="4"/>
+              
+</odoo>

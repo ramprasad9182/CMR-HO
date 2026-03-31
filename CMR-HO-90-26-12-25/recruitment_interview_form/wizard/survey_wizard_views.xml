@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_survey_email_wizard_form" model="ir.ui.view">
+        <field name="name">survey.email.wizard.form</field>
+        <field name="model">survey.email.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send Survey Email">
+                <group>
+                    <field name="partner_id"/>
+                    <field name="email" readonly="1"/>
+<!--                    <field name="form_id"/>-->
+                    <field name="survey_link" readonly="1"/>
+
+                </group>
+                <footer>
+                    <button string="Send Email" type="object" name="action_send_email" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_survey_email_wizard" model="ir.actions.act_window">
+        <field name="name">Send Survey Email</field>
+        <field name="res_model">survey.email.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

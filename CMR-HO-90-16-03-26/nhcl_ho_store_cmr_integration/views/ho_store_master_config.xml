@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="cmr_master_tree_view" model="ir.ui.view">
+        <field name="name">ho.store.master.tree</field>
+        <field name="model">nhcl.ho.store.master</field>
+        <field name="arch" type="xml">
+            <tree string="HO/Store Master" editable="bottom">
+                <field name="nhcl_create_date" readonly="1"/>
+                <field name="nhcl_store_type" required="1" readonly="nhcl_active==True"/>
+                <field name="nhcl_store_id" readonly="nhcl_active==True"/>
+                <field name="nhcl_store_name" required="1" readonly="nhcl_active==True"/>
+                <field name="nhcl_location_id" required="1" readonly="nhcl_active==True"/>
+                <field name="nhcl_terminal_ip" required="1" readonly="nhcl_active==True"/>
+                <field name="nhcl_port_no" required="1" readonly="nhcl_active==True"/>
+                <field name="nhcl_api_key" required="1" readonly="nhcl_active==True"/>
+                <field name="nhcl_effective_date" required="1" readonly="nhcl_active==True"/>
+                <field name="nhcl_active" string="Status" readonly="1"/>
+                <field name="nhcl_sink" string="Old Store" readonly="0"/>
+                <field name="nhcl_web_url" optional="hide" readonly="nhcl_active==True"/>
+                <field name="nhcl_login_user" optional="hide" readonly="nhcl_active==True"/>
+                <field name="nhcl_password" optional="hide" readonly="nhcl_active==True"/>
+                <button name="activate_store" type="object" string="Activate" invisible="nhcl_active==True"/>
+                <button name="deactivate_store" type="object" string="De-Activate" invisible="nhcl_active==False"/>
+                <button name="action_show_store_details" type="object" icon="fa-list" title="Details"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- odoorestapi : actions -->
+    <record id="nhcl_master_config_action" model="ir.actions.act_window">
+        <field name="name">HO/Store Masters</field>
+        <field name="res_model">nhcl.ho.store.master</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new master
+            </p>
+        </field>
+    </record>
+
+    <record id="cmr_master_data_form_view" model="ir.ui.view">
+        <field name="name">nhcl.ho.store.master</field>
+        <field name="model">nhcl.ho.store.master</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nhcl_store_id"/>
+                        <field name="nhcl_store_name"/>
+                    </group>
+                <notebook>
+                        <page name="masters" string="Masters">
+                            <field name="nhcl_store_data_id" >
+                                <tree editable="bottom">
+                                    <field name="model_id" options="{'no_open':True, 'no_create':True}"/>
+                                    <field name="nhcl_line_data"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+    <menuitem name="Integration Configuration" id="nhcl_integration_configuration"
+              parent="cmr_customizations.nhcl_cmr_configuration" sequence="1"/>
+    <menuitem id="nhcl_master_config" name="HO/Store Masters"
+              parent="configurations_report" action="nhcl_master_config_action"
+              sequence="1"/>
+</odoo>

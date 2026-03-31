@@ -1,0 +1,59 @@
+<odoo>
+    <record id="view_shift_deduction_master_form" model="ir.ui.view">
+        <field name="name">shift.deduction.master.form</field>
+        <field name="model">shift.deduction.master</field>
+        <field name="arch" type="xml">
+            <form string="Shift Deduction Master">
+                <sheet>
+                    <group>
+                        <field name="shift_id"/>
+                        <field name="break_type"/>
+                    </group>
+
+                     <notebook>
+                        <page string="Shift Slabs">
+
+                                <field name="slab_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="from_time"/>
+                                        <field name="to_time"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_shift_deduction_master_tree" model="ir.ui.view">
+        <field name="name">shift.deduction.master.tree</field>
+        <field name="model">shift.deduction.master</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="shift_id"/>
+                <field name="break_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_shift_deduction_master" model="ir.actions.act_window">
+        <field name="name">Shift Deduction Master</field>
+        <field name="res_model">shift.deduction.master</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+     <menuitem id="menu_shift_deduction_master_root"
+              name="Deduction Master"
+              parent="hr_attendance.menu_hr_attendance_root"
+              />
+
+    <menuitem id="menu_shift_deduction_master"
+              name="Shift Deduction Master"
+              parent="hr_customizations.menu_shift_deduction_master_root"
+              action="action_shift_deduction_master"/>
+</odoo>

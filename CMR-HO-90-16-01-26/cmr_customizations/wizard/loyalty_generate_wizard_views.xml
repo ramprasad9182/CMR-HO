@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit the wizard form -->
+    <record id="view_loyalty_generate_wizard_form_inherit" model="ir.ui.view">
+        <field name="name">loyalty.generate.wizard.form.inherit.company</field>
+        <field name="model">loyalty.generate.wizard</field>
+        <field name="inherit_id" ref="loyalty.loyalty_generate_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='coupon_qty']" position="attributes">
+                <attribute name="readonly"/>
+            </xpath>
+
+        </field>
+
+    </record>
+</odoo>

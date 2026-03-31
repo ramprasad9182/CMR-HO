@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_shift_addition_master_tree" model="ir.ui.view">
+        <field name="name">shift.addition.master.tree</field>
+        <field name="model">shift.addition.master</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="shift_id"/>
+                <field name="category"/>
+                <field name="addition_type"/>
+                <field name="month"/>
+                <field name="year"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_shift_addition_master_form" model="ir.ui.view">
+        <field name="name">shift.addition.master.form</field>
+        <field name="model">shift.addition.master</field>
+        <field name="arch" type="xml">
+            <form string="Shift Addition Master">
+                <group>
+                    <field name="shift_id"/>
+                    <field name="category"/>
+                    <field name="addition_type"/>
+                    <field name="month"/>
+                    <field name="year"/>
+                </group>
+
+                  <notebook>
+                        <page string="Shift Addition Slabs">
+
+                                <field name="slab_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="from_time"/>
+                                        <field name="to_time"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+
+                        </page>
+                    </notebook>
+
+            </form>
+        </field>
+    </record>
+
+     <!-- Menu & Action -->
+    <record id="action_shift_addition_master" model="ir.actions.act_window">
+        <field name="name">Shift Addition Master</field>
+        <field name="res_model">shift.addition.master</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="menu_shift_addition_master"
+              name="Addition Master"
+              parent="hr_customizations.menu_hr_addition_master"
+              action="action_shift_addition_master"
+              sequence="10"/>
+
+</odoo>

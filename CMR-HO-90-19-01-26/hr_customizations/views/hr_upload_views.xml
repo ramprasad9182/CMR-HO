@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="initial_test_upload" model="ir.ui.view">
+            <field name="name">initial.test.report.tree</field>
+            <field name="model">hr.upload</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button name="open_upload_wizard" type="object" string="Upload Excel" display="always"/>
+                    </header>
+
+                    <field name="employee_name"/>
+                    <field name="employee_code"/>
+                    <field name="designation_id"/>
+                    <field name="department_id"/>
+                    <field name="date"/>
+                    <field name="check_in_attendance"/>
+                    <field name="check_out_attendance"/>
+                    <field name="difference_check_in"/>
+                    <field name="difference_check_out"/>
+                    <field name="late_deduction"/>
+                    <field name="total_working_hours"/>
+                    <field name="attendance_status"/>
+                    <field name="overtime_amount"/>
+                    <field name="your_datetime"/>
+                    <field name="your_checkout_datetime"/>
+                    <field name="morning_session"/>
+                    <field name="afternoon_session"/>
+                    <field name="full_day_status"/>
+                    <field name="lunch_in"/>
+                    <field name="lunch_out"/>
+                    <field name="lunch_delay"/>
+                    <field name="lunch_delay_amount"/>
+                    <field name="break_in"/>
+                    <field name="break_out"/>
+                    <field name="break_delay"/>
+                    <field name="break_delay_amount"/>
+                    <field name="lunch_addition_amount"/>
+                    <field name="ctc_type"/>
+                    <field name="company_id"/>
+                    <field name="division_id"/>
+
+                </tree>
+            </field>
+        </record>
+        <record id="final_test_uppload" model="ir.ui.view">
+            <field name="name">Hr Upload</field>
+            <field name="model">hr.upload</field>
+            <field name="arch" type="xml">
+                <form string="Hr Upload">
+                    <sheet style="border: 2px solid #000; padding: 10px;">
+                        <group>
+                            <group>
+                                <field name="employee_name"/>
+                                <field name="employee_code"/>
+                                <field name="designation_id"/>
+                                <field name="department_id"/>
+                                <field name="date"/>
+                                <field name="check_in_attendance"/>
+                                <field name="check_out_attendance"/>
+                                <field name="difference_check_in"/>
+                                <field name="difference_check_out"/>
+                                <field name="late_deduction"/>
+                                <field name="total_working_hours"/>
+                                <field name="attendance_status"/>
+                                <field name="overtime_amount"/>
+
+
+                            </group>
+                            <group>
+                                <field name="your_datetime"/>
+                                <field name="your_checkout_datetime"/>
+                                <field name="morning_session"/>
+                                <field name="afternoon_session"/>
+                                <field name="full_day_status"/>
+                                <field name="ctc_type"/>
+                                <field name="company_id"/>
+                                <field name="division_id"/>
+                                <field name="lunch_in"/>
+                                <field name="lunch_out"/>
+                                <field name="lunch_delay"/>
+                                <field name="lunch_delay_amount"/>
+                                <field name="break_in"/>
+                                <field name="break_out"/>
+                                <field name="break_delay"/>
+                                <field name="break_delay_amount"/>
+                                <field name="lunch_addition_amount"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_hr_upload_search" model="ir.ui.view">
+            <field name="name">hr.upload.search</field>
+            <field name="model">hr.upload</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter name="group_by_employee_name"
+                            string="Employee"
+                            context="{'group_by':'employee_name'}"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_upload" model="ir.actions.act_window">
+            <field name="name">Upload Sheet</field>
+            <field name="res_model">hr.upload</field>
+            <field name="view_mode">tree,form,search</field>
+            <field name="context">{'search_default_group_by_employee_name': 1}</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+                <p>
+                    Start scheduling activities on your Final Test LV Motor Here
+                </p>
+            </field>
+        </record>
+        <menuitem id="menu_hr_attendance_oiyt" name="Upload Attendance" parent="hr_attendance.menu_hr_attendance_root"/>
+        <menuitem id="menu_hr_attendance_test" name="Upload Sheet" parent="hr_customizations.menu_hr_attendance_oiyt"
+                  sequence="5" action="action_upload"/>
+
+        <record id="view_hr_upload_wizard_form" model="ir.ui.view">
+            <field name="name">hr.upload.wizard.form</field>
+            <field name="model">hr.upload.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Upload HR Data">
+                    <group>
+                        <field name="file"/>
+                    </group>
+                    <footer>
+                        <button name="action_upload" type="object" string="Upload" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_hr_upload_wizard" model="ir.actions.act_window">
+            <field name="name">Upload HR Data</field>
+            <field name="res_model">hr.upload.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_hr_upload_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <record id="view_hr_late_deduction_master_tree" model="ir.ui.view">
+            <field name="name">hr.late.deduction.master.tree</field>
+            <field name="model">hr.late.deduction.master</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="start_time"/>
+                    <field name="end_time"/>
+                    <field name="deduction_amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_late_deduction_master_form" model="ir.ui.view">
+            <field name="name">hr.late.deduction.master.form</field>
+            <field name="model">hr.late.deduction.master</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="start_time"/>
+                            <field name="end_time"/>
+                            <field name="deduction_amount"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_hr_monthly_late_deduction_tree" model="ir.ui.view">
+            <field name="name">hr.monthly.late.deduction.tree</field>
+            <field name="model">hr.monthly.late.deduction</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <!--                    <field name="employee_id"/>-->
+                    <field name="month"/>
+                    <field name="year"/>
+
+                </tree>
+            </field>
+        </record>
+        <record id="view_hr_monthly_late_deduction_form" model="ir.ui.view">
+            <field name="name">hr.monthly.late.deduction.form</field>
+            <field name="model">hr.monthly.late.deduction</field>
+            <field name="arch" type="xml">
+                <form string="Monthly Late Deduction">
+                    <header>
+                        <button name="action_generate_all_employees"
+                                string="Generate Employees"
+                                type="object"
+                                class="btn-primary"/>
+                        <button name="delete_selected_lines"
+                                string="Delete Selected Lines"
+                                type="object"
+                                class="btn-danger"
+                                confirm="Are you sure you want to delete the selected lines?"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="month"/>
+                            <field name="year"/>
+                        </group>
+                        <notebook>
+                            <page string="Late Deduction Lines">
+                                <group>
+                                    <field name="select_all"/>
+                                </group>
+                                <field name="line_ids">
+                                    <tree editable="bottom" create="false">
+                                        <field name="is_selected"/>
+                                        <field name="employee_id" readonly="1"/>
+                                        <field name="month" readonly="1"/>
+                                        <field name="year" readonly="1"/>
+                                        <field name="deduction_amount" readonly="0"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_state_tax_master_tree" model="ir.ui.view">
+            <field name="name">state.tax.master.tree</field>
+            <field name="model">state.tax.master</field>
+            <field name="arch" type="xml">
+                <tree string="State Tax Master">
+                    <field name="state_id" domain="[('country_id.code','=','IN')]"/>
+
+                    <field name="tax_amount"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_state_tax_master_form" model="ir.ui.view">
+            <field name="name">state.tax.master.form</field>
+            <field name="model">state.tax.master</field>
+            <field name="arch" type="xml">
+                <form string="State Tax Master">
+                    <sheet>
+                        <group>
+                            <field name="state_id" domain="[('country_id.code','=','IN')]"/>
+
+                            <field name="tax_amount"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_state_tax_master" model="ir.actions.act_window">
+            <field name="name">State Tax Master</field>
+            <field name="res_model">state.tax.master</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="action_hr_monthly_late_deduction" model="ir.actions.act_window">
+            <field name="name">Monthly Late Deduction</field>
+            <field name="res_model">hr.monthly.late.deduction</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="action_hr_late_deduction_master" model="ir.actions.act_window">
+            <field name="name">Late Deduction Master</field>
+            <field name="res_model">hr.late.deduction.master</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="view_hr_overtime_master_tree" model="ir.ui.view">
+            <field name="name">hr.overtime.master.tree</field>
+            <field name="model">hr.overtime.master</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="start_time"/>
+                    <field name="end_time"/>
+                    <field name="overtime_amount"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_hr_overtime_master_form" model="ir.ui.view">
+            <field name="name">hr.overtime.master.form</field>
+            <field name="model">hr.overtime.master</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="start_time"/>
+                        <field name="end_time"/>
+                        <field name="overtime_amount"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="view_hr_monthly_overtime_tree" model="ir.ui.view">
+            <field name="name">hr.monthly.overtime.tree</field>
+            <field name="model">hr.monthly.overtime</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="month"/>
+                    <field name="year"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_hr_monthly_overtime_form" model="ir.ui.view">
+            <field name="name">hr.monthly.overtime.form</field>
+            <field name="model">hr.monthly.overtime</field>
+            <field name="arch" type="xml">
+                <form string="Monthly Overtime">
+                    <header>
+                        <button name="action_generate_all_employees" string="Generate Employees" type="object"
+                                class="btn-primary"/>
+                        <button name="delete_selected_lines"
+                                type="object"
+                                string="Delete Selected Lines"
+                                class="btn-danger"
+                                confirm="Are you sure you want to delete the selected lines?"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="month"/>
+                            <field name="year"/>
+                        </group>
+                        <notebook>
+                            <page string="Overtime Lines">
+                                <group>
+                                    <field name="select_all"/>
+                                </group>
+                                <field name="line_ids">
+                                    <tree editable="bottom" create="false">
+                                        <field name="is_selected"/>
+                                        <field name="employee_id" readonly="1"/>
+                                        <field name="month" readonly="1"/>
+                                        <field name="year" readonly="1"/>
+
+                                        <field name="overtime_amount" readonly="0"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_shift_master_tree" model="ir.ui.view">
+            <field name="name">shift.master.tree</field>
+            <field name="model">shift.master</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="shift_from_id"/>
+                    <field name="shift_to_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_shift_master_form" model="ir.ui.view">
+            <field name="name">shift.master.form</field>
+            <field name="model">shift.master</field>
+            <field name="arch" type="xml">
+                <form string="Shift Master">
+
+                    <header>
+                        <button name="action_move_shift" type="object"
+                                string="Move Employees" class="btn btn-primary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="shift_from_id"/>
+                            <field name="shift_to_id"/>
+                        </group>
+
+                        <group string="Employees In From Shift">
+                            <field name="employee_line_ids">
+                                <tree editable="bottom">
+                                    <field name="employee_id"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_shift_master" model="ir.actions.act_window">
+            <field name="name">Shift Master</field>
+            <field name="res_model">shift.master</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_hr_overtime_master" model="ir.actions.act_window">
+            <field name="name">Overtime Master</field>
+            <field name="res_model">hr.overtime.master</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="action_hr_monthly_overtime" model="ir.actions.act_window">
+            <field name="name">Monthly Overtime</field>
+            <field name="res_model">hr.monthly.overtime</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_hr_add/ded_root"
+                  name="Addition/Deduction"
+                  parent="hr_attendance.menu_hr_attendance_root"/>
+
+        <menuitem id="menu_state_tax_master" name="Tax Master"
+                  parent="hr_attendance.menu_hr_attendance_root"
+                  action="action_state_tax_master"/>
+
+        <menuitem id="menu_hr_monthly_master"
+                  name="Monthly Master"
+                  parent="menu_hr_add/ded_root"/>
+
+
+        <menuitem id="menu_hr_monthly_late_deduction"
+                  name="Monthly Late Deduction"
+                  parent="menu_hr_monthly_master"
+                  action="action_hr_monthly_late_deduction"/>
+
+
+        <menuitem id="menu_hr_addition_master"
+                  name="Addition Master"
+                  parent="menu_hr_add/ded_root"/>
+
+        <menuitem id="menu_hr_deduction_master"
+                  name="Deduction Master"
+                  parent="menu_hr_add/ded_root"/>
+
+
+        <menuitem id="menu_hr_overtime_master"
+                  name="Overtime Master"
+                  parent="menu_hr_addition_master"
+                  action="action_hr_overtime_master"/>
+
+        <menuitem id="menu_hr_monthly_overtime"
+                  name="Monthly Overtime"
+                  parent="menu_hr_monthly_master"
+                  action="action_hr_monthly_overtime"/>
+
+        <menuitem id="menu_hr_late_deduction_master"
+                  name="Late Deduction Master"
+                  parent="menu_hr_deduction_master"
+                  action="action_hr_late_deduction_master"/>
+
+        <menuitem id="menu_shift_master"
+                  name="Shift Mapping"
+                  parent="hr_attendance.menu_hr_attendance_root"
+                  action="action_shift_master"/>
+
+    </data>
+</odoo>
