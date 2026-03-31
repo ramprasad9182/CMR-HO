@@ -1,1 +1,0 @@
-from.import tally_integration

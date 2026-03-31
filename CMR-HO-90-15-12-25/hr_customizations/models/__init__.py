@@ -1,9 +1,0 @@
-from.import hr_upload
-from.import hr_attendance
-from.import hr_payslip
-from.import hr_leave
-from.import shift_deduction_master
-from.import shift_addition_master
-from.import lunch_deduction_summary
-from.import lunch_addition_summary
-from.import break_deduction_summary
