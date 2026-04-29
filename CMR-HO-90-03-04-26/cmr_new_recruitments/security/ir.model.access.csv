@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_employee_nominee,access.hr.employee.nominee,model_hr_employee_nominee,,1,1,1,1
+access_family_details,access.family.details,model_family_details,,1,1,1,1
+access_professional_details,access.professional.details,model_professional_details,,1,1,1,1
+access_hr_applicant,access.hr.applicant,model_hr_applicant,,1,1,1,1
+access_employee_reference,access.employee.reference,model_employee_reference,,1,1,1,1
+access_employee_education,access_employee_education,model_employee_education,base.group_user,1,1,1,1
+access_grade_master,access.grade.master,model_grade_master,,1,1,1,1
+access_check_list_master,access.check.list.master,model_check_list,,1,1,1,1
+access_check_list_orderline,access.check.list.orderline,model_hr_applicant_checklist_orderline,,1,1,1,1
+access_hr_appl_stage_remarks,access.hr.appl.stage.remarks,model_hr_applicant_stage_remark,,1,1,1,1
+access_employee_letter_user,access.employee.letter,model_employee_letter,base.group_user,1,1,1,0

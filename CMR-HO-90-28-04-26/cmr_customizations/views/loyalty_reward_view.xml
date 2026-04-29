@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="cmr_loyalty_reward_form_inherited_view" model="ir.ui.view">
+        <field name="name">loyalty.reward.view.form.inherit</field>
+        <field name="model">loyalty.reward</field>
+        <field name="inherit_id" ref="loyalty.loyalty_reward_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name = 'reward_type_group']" position="after">
+                <group name="discounted_product" string="Discount Product"
+                       invisible="reward_type != 'discount_on_product'">
+                    <field name="discount_product_id"/>
+                    <field name="cmr_discount_product_ids" widget="many2many_tags"
+                           options="{'no_create': True, 'no_edit':True}"/>
+                    <field name="product_price"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='discount_product_domain']" position="before">
+                <field name="buy_with_reward_price" invisible="reward_type != 'discount'"/>
+            </xpath>
+            <xpath expr="//field[@name='buy_with_reward_price']" position="after">
+                <label for="buy_product_value" invisible="buy_with_reward_price != 'yes'">Buy</label>
+                <div id="buy_product_value" class="o_row" invisible="buy_with_reward_price != 'yes'">
+                    <field name="buy_product_value" class="oe_inline" required="buy_with_reward_price == 'yes'"/>
+                    <b>With Price</b>
+                    <field name="reward_price" class="oe_inline" required="buy_with_reward_price == 'yes'"/>
+                </div>
+            </xpath>
+
+             <xpath expr="//field[@name='description']" position="before">
+                <field name="is_custom_description"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="loyalty_reward_view_kanban_inherit_discounted_product" model="ir.ui.view">
+        <field name="name">loyalty.reward.view.kanban.inherit.discount.product</field>
+        <field name="model">loyalty.reward</field>
+        <field name="inherit_id" ref="loyalty.loyalty_reward_view_kanban"/>
+        <field name="arch" type="xml">
+            <div name="reward_info" position="inside">
+                <t t-elif="record.reward_type.raw_value === 'discount_on_product'">
+                    <div class="d-flex">
+                        <i class="fa fa-cube fa-fw" title="Discount Product"/>
+                        <field name="discount_product_id" class="d-inline"/>
+                        <t t-if="record.product_price.raw_value > 0">( Price
+                            <field name="product_price"/>
+                            )
+                        </t>
+
+                    </div>
+                    <br/>
+                    <span class="fw-bold text-decoration-underline">Applied to:</span>
+
+                    <t t-if="record.cmr_discount_product_ids.raw_value.length > 0">
+                        <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="cmr_discount_product_ids" widget="many2many_tags" class="d-inline"/></div>
+                    </t>
+                </t>
+                <t t-elif="record.buy_with_reward_price === 'yes'">
+                    <div class="d-flex">
+                        <i class="fa fa-cube fa-fw" title="Discount Product Price"/>
+                        <field name="discount_product_ids" class="d-inline"/>
+                        <t t-if="record.reward_price.raw_value > 0">( Reward Price
+                            <field name="reward_price"/>
+                            )
+                        </t>
+
+                    </div>
+                </t>
+            </div>
+        </field>
+    </record>
+</odoo>

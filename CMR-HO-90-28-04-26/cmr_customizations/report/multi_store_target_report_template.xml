@@ -1,0 +1,97 @@
+<odoo>
+    <template id="report_multi_stores_target_pdf">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+
+                <!-- Group lines by store -->
+                <t t-set="stores"
+                   t-value="doc.line_ids.mapped('store_id')"/>
+
+                <t t-foreach="stores" t-as="store">
+                    <div class="page">
+                        <h2 style="text-align:center;">Multi Store Target Report</h2>
+
+                        <p>
+                            <strong>Store:</strong>
+                            <t t-esc="store.name"/>
+                        </p>
+                        <p>
+                            <strong>Period:</strong>
+                            <t t-esc="doc.from_date"/> to
+                            <t t-esc="doc.to_date"/>
+                        </p>
+
+                        <table class="table table-condensed"
+                               style="width:100%; border-collapse: collapse;"
+                               border="1">
+                            <thead>
+                                <tr style="background-color:#D3D3D3; font-weight:bold; text-align:center;">
+                                    <th>S.No</th>
+                                    <th>Division</th>
+
+                                    <th t-if="doc.day_month_selection=='day'">Regular per Day</th>
+                                    <th t-if="doc.day_month_selection=='day'">Festival per Day</th>
+                                    <th t-if="doc.day_month_selection=='day'">Day Target</th>
+
+                                    <th t-if="doc.day_month_selection=='month'">Regular Excess Month</th>
+                                    <th t-if="doc.day_month_selection=='month'">Festival Excess Month</th>
+                                    <th t-if="doc.day_month_selection=='month'">Month Target</th>
+
+                                    <th>Achievement</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <!-- Only this store lines -->
+                                <t t-set="store_lines"
+                                   t-value="doc.line_ids.filtered(lambda l: l.store_id.id == store.id)"/>
+
+                                <t t-foreach="store_lines" t-as="line">
+                                    <tr style="text-align:center;">
+                                        <td><t t-esc="line.s_no"/></td>
+                                        <td><t t-esc="line.division_name"/></td>
+
+                                        <td t-if="doc.day_month_selection=='day'">
+                                            <t t-esc="line.regular or 0.0"/>
+                                        </td>
+                                        <td t-if="doc.day_month_selection=='day'">
+                                            <t t-esc="line.festival or 0.0"/>
+                                        </td>
+                                        <td t-if="doc.day_month_selection=='day'">
+                                            <t t-esc="line.Per_day_target or 0.0"/>
+                                        </td>
+
+                                        <td t-if="doc.day_month_selection=='month'">
+                                            <t t-esc="line.regular_excess_month or 0.0"/>
+                                        </td>
+                                        <td t-if="doc.day_month_selection=='month'">
+                                            <t t-esc="line.festival_excess_month or 0.0"/>
+                                        </td>
+                                        <td t-if="doc.day_month_selection=='month'">
+                                            <t t-esc="line.per_month_target or 0.0"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-esc="line.target_price or 0.0"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_multi_stores_target" model="ir.actions.report">
+        <field name="name">Multi Store Target Report</field>
+        <field name="model">multi.store.target.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cmr_customizations.report_multi_stores_target_pdf</field>
+        <field name="report_file">cmr_customizations.report_multi_stores_target_pdf</field>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

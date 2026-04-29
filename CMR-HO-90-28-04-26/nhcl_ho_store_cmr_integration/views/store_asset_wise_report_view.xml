@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="nhcl_store_asset_report" model="ir.actions.act_window">
+        <field name="name">Store Wise Asset Report</field>
+        <field name="res_model">nhcl.store.asset.report</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="nhcl_store_asset_report_form" model="ir.ui.view">
+        <field name="name">Asset Report Form</field>
+        <field name="model">nhcl.store.asset.report</field>
+        <field name="arch" type="xml">
+            <form string="Store Asset Report" create="0">
+                <h1 style="color:black;font-weight:1000;text-align:center;">Store Wise Asset Report</h1>
+                <sheet>
+                    <header>
+                        <button name="nhcl_store_asset_report" type="object"
+                                string="Submit" class="btn-primary"/>
+                        <button name="action_to_reset" type="object"
+                                string="Reset" class="btn-secondary"/>
+                        <button name="get_excel_sheet" type="object"
+                                string="Excel" class="btn-success"/>
+                        <button name="%(action_store_asset_report_pdf)d"
+                                string="Print PDF" type="action" class="btn-primary"/>
+                        <button name="action_view_store_asset_lines" type="object"
+                                string="View Detailed Report" class="btn-success"/>
+                    </header>
+                    <group name="store_Asset_report" style="border: 2px solid #990099; padding: 10px;">
+                        <group name="store_Asset_report_group">
+                            <field name="nhcl_store_id"
+                                   placeholder="Select Company"
+                                   domain="[('nhcl_active', '=', True),('nhcl_store_type', '!=', 'ho')]"
+                                   widget="many2many_tags"/>
+                        </group>
+                        <group name="store_Asset_report_date_details">
+                            <group>
+                                <field name="from_date" required="1" widget="daterange"
+                                       options="{'to_date_field': 'to_date'}"/>
+                                <field name="to_date" required="1"/>
+                            </group>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Asset Lines">
+                            <field name="nhcl_store_asset_report_ids" readonly="1" forsesave="1">
+                                <tree create="0" delete="0" editable="bottom">
+                                    <field name="nhcl_store_id"/>
+                                    <field name="asset_name"/>
+<!--                                    <field name="category_name"/>-->
+<!--                                    <field name="class_name"/>-->
+<!--                                    <field name="brick_name"/>-->
+<!--                                    <field name="bill_qty" sum="total_qty"/>-->
+                                    <field name="global_amount" sum="net_total"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+                </sheet>
+                <!--                                <div class="oe_chatter">-->
+                <!--                                    <field name="message_follower_ids"/>-->
+                <!--                                    <field name="activity_ids"/>-->
+                <!--                                    <field name="message_ids"/>-->
+                <!--                                </div>-->
+            </form>
+        </field>
+    </record>
+
+<!--    <record id="empty_page" model="ir.actions.client">-->
+<!--        <field name="name">Empty</field>-->
+<!--        <field name="tag">empty_report</field>-->
+<!--    </record>-->
+
+
+    <record id="view_nhcl_store_asset_report_line_tree" model="ir.ui.view">
+        <field name="name">nhcl.store.asset.report.line.tree</field>
+        <field name="model">nhcl.store.asset.report.line</field>
+        <field name="arch" type="xml">
+            <tree limit="1000000">
+                <field name="nhcl_store_id"/>
+                <field name="asset_name"/>
+                <field name="global_amount" sum="Total"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_nhcl_store_asset_report_line_pivot" model="ir.ui.view">
+        <field name="name">nhcl.store.asset.report.line.pivot</field>
+        <field name="model">nhcl.store.asset.report.line</field>
+        <field name="arch" type="xml">
+            <pivot string="POS Hour Report Analysis">
+                <field name="nhcl_store_id" type="row"/>
+                <field name="asset_name" type="row"/>
+                <field name="global_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+
+
+    <menuitem id="reporting_status_store_asset"
+              name="Store Wise Asset Report"
+              parent="reporting_store_heading"
+              action="nhcl_ho_store_cmr_integration.nhcl_store_asset_report"
+              sequence="8"/>
+
+
+
+
+</odoo>
+

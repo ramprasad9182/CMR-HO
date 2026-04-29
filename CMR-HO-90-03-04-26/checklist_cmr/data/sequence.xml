@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="sequence_cmr" model="ir.sequence">
+            <field name="name">cmr</field>
+            <field name="code">check.lists</field>
+            <field name="prefix">SWC</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

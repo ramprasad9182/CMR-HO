@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="nhcl_ho_store_cmr_integration.BulkReplication">
+        <div style="padding:10px;">
+               <style>
+                   body {
+                      background-color: #ffffff !important;
+                   }
+                   .styled-table {
+                    border-collapse: separate;
+                    border-spacing: 10px;
+                    margin: 5px auto;
+                    width: fit-content;
+                    }
+
+                    .styled-table tr {
+                        height: 60px;
+                    }
+
+                    .styled-table td {
+                        padding: 10;
+                   <!--                        background-color: #ffffff;-->
+                   text-align: left;
+                   background-color: #f2f2f2;
+                   color: #5c5c5c;
+                   width: 160px;
+                   height: 100px;
+                   border-radius: 2px;
+                   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
+                   transition: transform 0.1s ease, box-shadow 0.1s ease;
+                   }
+                   .styled-table td:hover {
+                   transform: translateY(0px);
+                   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
+                   }
+
+                   .title {
+                   font-size: 1.5rem;
+                   font-weight: bold;
+                   color: #01666b;
+                   margin: 3px;
+                   letter-spacing: 1.2px;
+                   }
+                   .tab-title{
+                   color:#5c5c5c;
+                   font-weight: 400;
+                   font-size: 16px;
+                   margin-bottom: 10px;
+                   text-align: center;
+                   }
+                   .tab-sec-title{
+                   color:#000000;
+                   text-align: center;
+                   font-weight: 400;
+                   font-size: 16px;
+                   margin-bottom: 10px;
+                   }
+                   .tab-third-title{
+                   text-align: center;
+                   font-size: 12px;
+                   font-weight: 400;
+                   }
+
+                   select {
+                   font-size: 0.8rem;
+                   padding: 10px;
+                   border: 2px solid #ccc;
+                   border-radius: 5px;
+                   background-color: #f9f9f9;
+                   color: #333;
+                   width: 200px; /* Adjust based on your layout */
+                   }
+
+                   select option {
+                   font-weight: bold;
+                   color: #555;
+                   }
+
+                   select:hover {
+
+                   border-color: #ff6347;
+                   }
+
+               </style>
+
+            <center>
+                <div class="title">Masters for Sites are Pending</div>
+                <t t-name="pos_self_order.LoadingOverlay">
+                    <div t-if="state.loading"
+                         class="position-absolute top-0 w-100 min-vh-100 d-flex justify-content-center align-items-center bg-black opacity-50"
+                         style="z-index: 1000;">
+                        <span class="spinner-border"/>
+                    </div>
+                </t>
+                <table class="styled-table">
+                        <tr>
+                            <td>
+
+                                <div class="tab-title">
+                                    Accounts
+                                </div>
+                                <div class="tab-sec-title">
+                                    <span t-esc="state.pending.account"></span>
+                                </div>
+                                <div class="tab-third-title" style="color:green;" t-if="state.pending.account == 0">
+                                    Completed
+                                </div>
+                                <div class="tab-third-title" style="color:orange;" t-if="state.pending.account &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="tab-title">
+                                    Tax
+                                </div>
+                                <div class="tab-sec-title">
+                                    <span t-esc="state.pending.tax"></span>
+                                </div>
+                                <div class="tab-third-title" style="color:green;" t-if="state.pending.tax == 0">
+                                    Completed
+                                </div>
+                                <div class="tab-third-title" style="color:orange;" t-if="state.pending.tax &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="tab-title">
+                                    Fiscal Year
+                                </div>
+                                <div class="tab-sec-title">
+                                    <span t-esc="state.pending.fiscal"></span>
+                                </div>
+                                <div class="tab-third-title" style="color:green;" t-if="state.pending.fiscal == 0">
+                                    Completed
+                                </div>
+                                <div class="tab-third-title" style="color:orange;" t-if="state.pending.fiscal &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="tab-title">
+                                    Employees
+                                </div>
+                                <div class="tab-sec-title">
+                                    <span t-esc="state.pending.employee"></span>
+                                </div>
+                                <div class="tab-third-title" style="color:green;" t-if="state.pending.employee == 0">
+                                    Completed
+                                </div>
+                                <div class="tab-third-title" style="color:orange;" t-if="state.pending.employee &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+                        </tr>
+                    <tr>
+                            <td>
+                                <div class="tab-title">
+                                    Products Templates
+                                </div>
+                                <div class="tab-sec-title">
+                                    <span t-esc="state.pending.template"></span>
+                                </div>
+                                <div class="tab-third-title" style="color:green;" t-if="state.pending.template == 0">
+                                    Completed
+                                </div>
+                                <div class="tab-third-title" style="color:orange;" t-if="state.pending.template &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+                        <td>
+                                <div class="tab-title">
+                                    Products Categories
+                                </div>
+                            <div class="tab-sec-title">
+                                    <span t-esc="state.pending.category"></span>
+                                </div>
+                            <div class="tab-third-title" style="color:green;" t-if="state.pending.category == 0">
+                                    Completed
+                                </div>
+                            <div class="tab-third-title" style="color:orange;" t-if="state.pending.category &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+                        <td>
+                                <div class="tab-title">
+                                    Products Variants
+                                </div>
+                            <div class="tab-sec-title">
+                                    <span t-esc="state.pending.product"></span>
+                                </div>
+                            <div class="tab-third-title"  style="color:green; font-size: 10px; font-weight: bold;"
+                                 t-if="state.pending.product == 0">
+                                    Completed
+                                </div>
+                            <div class="tab-third-title"  style="color:orange; font-size: 10px; font-weight: bold;"
+                                 t-if="state.pending.product &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+                        <td>
+                                <div class="tab-title">
+                                    Products Attributes
+                                </div>
+                            <div class="tab-sec-title">
+                                    <span t-esc="state.pending.attribute"></span>
+                                </div>
+                            <div class="tab-third-title"  style="color:green; font-size: 10px; font-weight: bold;"
+                                 t-if="state.pending.attribute == 0">
+                                    Completed
+                                </div>
+                            <div class="tab-third-title"  style="color:orange; font-size: 10px; font-weight: bold;"
+                                 t-if="state.pending.attribute &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+                        </tr>
+                    <tr>
+                            <td>
+                                <div class="tab-title">
+                                    Promotions
+                                </div>
+                                <div class="tab-sec-title">
+                                    <span t-esc="state.pending.loyalty"></span>
+                                </div>
+                                <div class="tab-third-title"  style="color:green; font-size: 10px; font-weight: bold;"
+                                     t-if="state.pending.loyalty == 0">
+                                    Completed
+                                </div>
+                                <div class="tab-third-title"  style="color:orange; font-size: 10px; font-weight: bold;"
+                                     t-if="state.pending.loyalty &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+                        <td>
+                                <div class="tab-title">
+                                    Users
+                                </div>
+                            <div class="tab-sec-title">
+                                    <span t-esc="state.pending.users"></span>
+                                </div>
+                            <div class="tab-third-title"  style="color:green; font-size: 10px; font-weight: bold;"
+                                 t-if="state.pending.users == 0">
+                                    Completed
+                                </div>
+                            <div class="tab-third-title"  style="color:orange; font-size: 10px; font-weight: bold;"
+                                 t-if="state.pending.users &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+
+                        <td>
+                                <div class="tab-title">
+                                    Contacts
+                                </div>
+                            <div class="tab-sec-title">
+                                    <span t-esc="state.pending.partner"></span>
+                                </div>
+                            <div class="tab-third-title"  style="color:green; font-size: 10px; font-weight: bold;"
+                                 t-if="state.pending.partner == 0">
+                                    Completed
+                                </div>
+                            <div class="tab-third-title" style="color:orange; font-size: 10px; font-weight: bold;"
+                                 t-if="state.pending.partner &gt; 0">
+                                    In Progress
+                                </div>
+                            </td>
+                        </tr>
+                </table>
+            </center>
+           </div>
+
+        <div class="row">
+            <center>
+                <div class="d-flex flex-row justify-content-center">
+                    <b style="padding-top:7px;padding-right:10px;"><span>Master's</span></b>
+                    <div style="width:20%">
+                    <select t-on-change="onModelSelect" class="form-control" t-att-value="state.selectedModelId">
+                        <option value="">Select Model</option>
+                        <t t-foreach="state.models" t-as="model" t-key="model.id">
+                            <option t-att-value="model.id" t-esc="model.name"/>
+                        </t>
+                    </select>
+                </div>
+                    <div style="width:20%">
+                    <!-- Button to trigger record fetching -->
+                        <button t-on-click="getRecords" t-att-disabled="!state.selectedModelId"
+                                class="btn btn-primary ml-2">Get Records</button>
+                </div>
+                </div>
+             </center>
+        </div>
+    </t>
+</templates>

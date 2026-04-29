@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="nhcl_ho_store_cmr_integration.BulkTracking">
+        <style>
+           body {
+              background-color: #ffffff !important;
+           }
+           .styled-table {
+            border-collapse: separate;
+            border-spacing: 5px;
+            margin: 10px;
+            width: fit-content;
+            }
+            .styled-table tr {
+                height: 195px;
+            }
+            .sidebar-title {
+              font-weight: bold;
+              margin-top: 1rem;
+              padding: 5px;
+              padding-left: 15px;
+              color: #444;
+            }
+            .sidebar-item {
+              padding: 8px 12px;
+              font-size:14px;
+                color: black;
+              cursor: pointer;
+              padding-left:35px;
+            }
+            .sidebar-item:hover {
+             background-color: #F5F5F5;
+            }
+            .sidebar-item.active {
+              background-color: #f2f7fc;
+              color: #2b6340;
+            }
+           .styled-table td {
+           padding: 7;
+           text-align: center;
+           color: #333;
+           width: 250px;
+           border-radius: 0.5px;
+           }
+           .info-tab {
+           background-color: #f2f2f2;
+           font-size: 10px;
+           font-weight: bold;
+           margin-bottom: 10px;
+           text-align:left;
+           margin-left:5px;
+           }
+           .info-title {
+           font-weight: 600;
+            color: #888888;
+            font-size: 18px;
+            text-align:left;
+            padding-bottom:35px;
+            padding-left:5px;
+           }
+           .info-number {
+           font-weight:600;
+           font-size: 32px;
+           text-align: left;
+           text-align:center;
+           }
+           .trans-tab {
+           background-color: #f2f2f2;
+           }
+            .master-tab{
+            background-color: #f2f2f2;
+            }
+            .master-title {
+             color: #888888;
+            font-size: 22px;
+            margin-bottom: 10px;
+            text-align:center;
+            font-weight: 600;
+            }
+            .master-number {
+            display: flex;
+            justify-content: space-between;
+            font-size: 28px;
+            font-weight: 500;
+            margin-top: 22px;
+            margin-bottom: 22px;
+            transform: scaleY(1.27);
+            transform-origin: center;
+            }
+            .master-number > * {
+            flex: 1 1 200px;
+            max-width: 130px;
+            }
+            .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #01666b;
+            margin: 15px;
+            letter-spacing: 1.2px;
+            }
+            .master-third {
+            display:flex;
+            gap: 33px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-left: 20px;
+            }
+            .sidebar {
+            background-color: #ffff; /* Odoo light background */
+            border-right: 1px solid #e0e0e0;
+            width: 240px;
+            height: 80vh;
+            overflow-y: auto;
+            }
+            .table-title{
+            font-size: 20px;
+            font-weight: bold;
+            margin-left:20px;
+            color: #2580c2;
+            text-align: Left;
+            }
+            .clickable-div {
+            cursor: pointer; /* Makes the cursor appear clickable */
+            }
+       </style>
+        <div class="title"><span>Dashboard For Data Sync </span></div>
+        <div class="row">
+            <div class="border m-0 p-0 bg-white"/>
+            <div class="col-lg-3 sidebar" style="background-color: #fff; padding: 1rem;">
+                 <div class="bulk-sidebar">
+                     <t t-set="lastParent" t-value="''"/>
+                     <t t-foreach="menuItems" t-as="item" t-key="item.id">
+                         <t t-if="item.parent !== lastParent">
+                         <div class="sidebar-title">
+                            <t t-esc="item.parent"/>
+                         </div>
+                             <t t-set="lastParent" t-value="item.parent"/>
+                         </t>
+                         <div class="sidebar-item"
+                              t-att-class="state.selected === item.id ? 'active' : ''"
+                              t-on-click="() => selectMenu(item.id)">
+                            <t t-esc="item.label"/>
+                         </div>
+                     </t>
+                 </div>
+            </div>
+            <div class="col" style="padding: 1rem; bg-white">
+                <t t-if="state.selected === 1">
+                    <div>
+                         <table class="styled-table">
+                            <tr class="master-tab">
+                                <td class="td">
+                                    <div class="master-title">
+                                        Accounts
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.total.account">0</span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.processed.account">0</span>
+                                        </div>
+                                        <div class="clickable-div"
+                                             t-on-click="viewAccountFailure">
+                                            <span t-esc="state.pending.account">0</span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div style="color: #f72f2f" class="clickable-div"
+                                             t-on-click="viewAccountFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                    </div>
+                                </td>
+                                <td class="td">
+                                    <div class="master-title">
+                                        Fiscal Year
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.total.fiscal"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.processed.fiscal"></span>
+                                        </div>
+                                        <div class="clickable-div" t-on-click="viewFiscalFailure">
+                                            <span t-esc="state.pending.fiscal"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div class="clickable-div" style="color: #f72f2f"
+                                             t-on-click="viewFiscalFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                    </div>
+                                </td>
+                                <td class="td">
+                                    <div class="master-title">
+                                        Tax
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.total.tax">0</span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.processed.tax"></span>
+                                        </div>
+                                        <div class="clickable-div" t-on-click="viewTaxFailure">
+                                            <span t-esc="state.pending.tax"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div style="color: #f72f2f" class="clickable-div"
+                                             t-on-click="viewTaxFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                    </div>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </t>
+                <t t-if="state.selected === 2">
+                    <div>
+                         <table class="styled-table">
+                            <tr class="master-tab">
+                                <td>
+                                    <div class="master-title">
+                                        Products Attributes
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.total.attribute"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.processed.attribute"></span>
+                                        </div>
+                                        <div class="clickable-div" t-on-click="viewAttributeFailure">
+                                            <span t-esc="state.pending.attribute"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div class="clickable-div" style="color: #f72f2f"
+                                             t-on-click="viewAttributeFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="master-title">
+                                        Products Categories
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.total.category"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.processed.category"></span>
+                                        </div>
+                                        <div class="clickable-div" t-on-click="viewCategoryFailure">
+                                            <span t-esc="state.pending.category"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div class="clickable-div" style="color: #f72f2f"
+                                             t-on-click="viewCategoryFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="master-title">
+                                        Products Templates
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.total.template"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.processed.template"></span>
+                                        </div>
+                                        <div class="clickable-div" t-on-click="viewTemplateFailure">
+                                            <span t-esc="state.pending.template"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div class="clickable-div" style="color: #f72f2f"
+                                             t-on-click="viewTemplateFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="master-title">
+                                        Products Variants
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.total.product"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.processed.product"></span>
+                                        </div>
+                                        <div class="clickable-div" t-on-click="viewVariantFailure">
+                                            <span t-esc="state.pending.product"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div class="clickable-div" style="color: #f72f2f"
+                                             t-on-click="viewVariantFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                    </div>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </t>
+                <t t-if="state.selected === 3">
+                    <div>
+                     <table class="styled-table">
+                        <tr class="master-tab">
+                            <td class="td">
+                                <div class="master-title">
+                                    Employees
+                                </div>
+                                <div class="master-number">
+                                    <div>
+                                        <span t-esc="state.total.employee"></span>
+                                    </div>
+                                    <div>
+                                        <span t-esc="state.processed.employee"></span>
+                                    </div>
+                                    <div class="clickable-div" t-on-click="viewEmployeeFailure">
+                                        <span t-esc="state.pending.employee"></span>
+                                    </div>
+                                </div>
+                                <div class="master-third">
+                                    <div style="color: #02a149">Total</div>
+                                    <div style="color: #0094d4">Processed</div>
+                                    <div class="clickable-div" style="color: #f72f2f"
+                                         t-on-click="viewEmployeeFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="master-title">
+                                    Users
+                                </div>
+                                <div class="master-number">
+                                    <div>
+                                        <span t-esc="state.total.users"></span>
+                                    </div>
+                                    <div>
+                                        <span t-esc="state.processed.users"></span>
+                                    </div>
+                                    <div class="clickable-div" t-on-click="viewUsersFailure">
+                                        <span t-esc="state.pending.users"></span>
+                                    </div>
+                                </div>
+                                <div class="master-third">
+                                    <div style="color: #02a149">Total</div>
+                                    <div style="color: #0094d4">Processed</div>
+                                    <div class="clickable-div" style="color: #f72f2f"
+                                         t-on-click="viewUsersFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                </div>
+                            </td>
+                        </tr>
+                     </table>
+                </div>
+                </t>
+                <t t-if="state.selected === 4">
+                    <div>
+                         <table class="styled-table">
+                             <tr class="master-tab">
+                                <td class="td">
+                                    <div class="master-title">
+                                        Promotions
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.total.loyalty"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.processed.loyalty"></span>
+                                        </div>
+                                        <div class="clickable-div" t-on-click="viewPromotionFailure">
+                                            <span t-esc="state.pending.loyalty"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div class="clickable-div" style="color: #f72f2f"
+                                             t-on-click="viewPromotionFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                    </div>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </t>
+                <t t-if="state.selected === 5">
+                    <div>
+                         <table class="styled-table">
+                             <tr class="master-tab">
+                                <td class="td">
+                                    <div class="master-title">
+                                        Contacts
+                                    </div>
+                                    <div class="master-number">
+                                        <div>
+                                            <span t-esc="state.total.partner"></span>
+                                        </div>
+                                        <div>
+                                            <span t-esc="state.processed.partner"></span>
+                                        </div>
+                                        <div class="clickable-div" t-on-click="viewContactFailure">
+                                            <span t-esc="state.pending.partner"></span>
+                                        </div>
+                                    </div>
+                                    <div class="master-third">
+                                        <div style="color: #02a149">Total</div>
+                                        <div style="color: #0094d4">Processed</div>
+                                        <div class="clickable-div" style="color: #f72f2f"
+                                             t-on-click="viewContactFailure">Failure <div><i class="fa fa-chevron-down" style="font-size:10px;"></i></div></div>
+                                    </div>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </t>
+                <t t-if="state.selected === 6">
+                    <div>
+                         <table class="styled-table">
+                            <tr class="master-tab">
+                                <td class="td">
+                                    <div class="info-title">
+                                        Transaction Not Processed HO to All Stores
+                                    </div>
+                                    <div class="info-number clickable-div" style="padding-top: 15px;"
+                                         t-on-click="viewTransactionNotProcessed">
+                                        <span t-esc="state.total.transactionNotProcessed">0</span>
+                                        <i class="fa fa-chevron-down" style="padding-left:20px; font-size:10px;"></i>
+                                    </div>
+                                </td>
+                                <td class="td">
+                                    <div class="info-title">
+                                        Transaction Processed Today
+                                    </div>
+                                    <div class="info-number clickable-div" style="padding-top: 35px;"
+                                         t-on-click="viewTransactionToday">
+                                        <span t-esc="state.total.transactionToday">0</span>
+                                        <i class="fa fa-chevron-down" style="padding-left:20px; font-size:10px;"></i>
+                                    </div>
+                                </td>
+                                <td class="td">
+                                    <div class="info-title">
+                                        Transaction Not Processed Today HO to All Stores
+                                    </div>
+                                    <div class="info-number clickable-div"
+                                         t-on-click="viewTransactionNotProcessedToday">
+                                        <span t-esc="state.total.transactionNotToday">0</span>
+                                        <i class="fa fa-chevron-down" style="padding-left:20px; font-size:10px;"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </t>
+                <t t-if="state.selected === 7">
+                    <div>
+                         <table class="styled-table">
+                            <tr class="master-tab">
+                                <td class="td">
+                                    <div class="info-title">
+                                        Total Batches
+                                    </div>
+                                    <div class="info-number clickable-div" t-on-click="viewTotalBatches">
+                                        <span t-esc="state.total.totalBatches">0</span>
+                                        <i class="fa fa-chevron-down" style="padding-left:20px; font-size:10px;"></i>
+
+                                    </div>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </t>
+                <t t-if="state.selected === 8">
+                    <div>
+                         <table class="styled-table">
+                            <tr class="master-tab">
+                                <td class="td">
+                                    <div class="info-title">
+                                        Total Deliveries
+                                    </div>
+                                    <div class="info-number clickable-div" t-on-click="viewTotalDeliveries">
+                                        <span t-esc="state.total.totalDeliveries">0</span>
+                                        <i class="fa fa-chevron-down" style="padding-left:20px; font-size:10px;"></i>
+
+                                    </div>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </t>
+                <t t-if="state.selected === 9">
+                    <div>
+                         <table class="styled-table">
+                            <tr class="master-tab">
+                                <td class="td">
+                                    <div class="info-title">
+                                        Total Configured Stores
+                                    </div>
+                                    <div class="info-number clickable-div"
+                                         t-on-click="viewTotalSync">
+                                        <span t-esc="state.total.liveSync">0</span>
+                                        <i class="fa fa-chevron-down" style="padding-left:20px; font-size:10px;"></i>
+                                    </div>
+                                </td>
+                                <td class="td">
+                                    <div class="info-title">
+                                        Total Live Stores
+                                    </div>
+                                    <div class="info-number clickable-div"
+                                         t-on-click="viewTotalLiveStore">
+                                        <span t-esc="state.total.liveStore">0</span>
+                                        <i class="fa fa-chevron-down" style="padding-left:20px; font-size:10px;"></i>
+                                    </div>
+                                </td>
+                                <td class="td">
+                                    <div class="info-title">
+                                        Master Data Processed Today
+                                    </div>
+                                    <div><br/></div>
+                                    <div class="info-number">
+                                        <span t-esc="state.total.masterProcessedToday">0</span>
+                                    </div>
+                                </td>
+                                <td class="td">
+                                    <div class="info-title">
+                                        Master Data Not Processed Ho to All Stores
+                                    </div>
+                                    <div class="info-number">
+                                        <span t-esc="state.total.masterNotProcessed">0</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+          </div>
+        </div>
+    </t>
+</templates>

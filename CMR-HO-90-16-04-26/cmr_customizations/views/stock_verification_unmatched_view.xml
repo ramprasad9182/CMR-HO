@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Action for Unmatched Records -->
+    <record id="action_stock_verification_unmatched" model="ir.actions.act_window">
+        <field name="name">Unmatched Serial Numbers</field>
+        <field name="res_model">stock.verification.unmatched</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_stock_verification_root"
+              name="Stock Unmatched Serial/Barcode Verification"
+              parent="stock.menu_warehouse_report"
+              action="action_stock_verification_unmatched"/>
+
+    <record id="view_stock_verification_unmatched_search" model="ir.ui.view">
+        <field name="name">stock.verification.unmatched.search</field>
+        <field name="model">stock.verification.unmatched</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="serial_number"/>
+                <field name="barcode"/>
+                <field name="company_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Company" name="store" context="{'group_by': 'store_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- Tree View -->
+    <record id="view_stock_verification_unmatched_tree" model="ir.ui.view">
+        <field name="name">stock.verification.unmatched.tree</field>
+        <field name="model">stock.verification.unmatched</field>
+        <field name="arch" type="xml">
+            <tree string="Unmatched Barcodes" default_order="id desc">
+                <field name="serial_number"/>
+                <field name="barcode"/>
+                <field name="company_id" widget="many2many_tags"/>
+                <field name="store_name"/>
+                <field name="store_receipt_number"/>
+                <field name="ho_delivery_number"/>
+                <field name="batch_schedule_date" column_invisible="True"/>
+                <field name="store_date" optional="hide"/>
+<!--                <field name="product_dest_location"/>-->
+                <field name="sent_flag"/>
+                <button name="action_replicate" type="object" string="Update" invisible="sent_flag" class="btn-primary"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="server_unmatched_bulk_validate" model="ir.actions.server">
+        <field name="name">Validate Same Store</field>
+        <field name="model_id" ref="cmr_customizations.model_stock_verification_unmatched"/>
+        <field name="binding_model_id" ref="cmr_customizations.model_stock_verification_unmatched"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_check_same_store()</field>
+    </record>
+
+
+</odoo>

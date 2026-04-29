@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_receipt_backdate_wizard" model="ir.ui.view">
+        <field name="name">receipt.backdate.wizard.form</field>
+        <field name="model">receipt.backdate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Backdate Receipts">
+                <group>
+                    <field name="backdate"/>
+                </group>
+                <footer>
+                    <button string="Apply" type="object"
+                            name="action_apply_backdate"
+                            class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

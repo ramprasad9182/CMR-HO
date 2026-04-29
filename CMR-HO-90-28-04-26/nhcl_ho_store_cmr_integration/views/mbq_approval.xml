@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="approval_product_line_view_mbq_details" model="ir.ui.view">
+        <field name="name">approval.product.line.view.tree.domain</field>
+        <field name="model">approval.product.line</field>
+        <field name="inherit_id" ref="approvals.approval_product_line_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="field[@name='description']" position="after">
+                <field name="mbq_plan" readonly="1"/>
+            </xpath>
+            <xpath expr="//tree" position="inside">
+                <button name="action_open_replenishment_wizard" type="object" string="MBQ"
+                        class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_replenishment_wizard_form" model="ir.ui.view">
+        <field name="name">replenishment.wizard.form</field>
+        <field name="model">replenishment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Replenishment Summary">
+                <field name="line_ids" nolabel="1">
+                    <tree editable="bottom" delete="0" create="0">
+<!--                        <field name="price_from" readonly="1" force_save="1"/>-->
+<!--                        <field name="price_to" readonly="1" force_save="1"/>-->
+                        <field name="price_range" readonly="1" force_save="1"/>
+                        <field name="min_qty" readonly="1" force_save="1"/>
+                        <field name="max_qty" readonly="1" force_save="1"/>
+                        <field name="main_onhand_qty" readonly="1" force_save="1"/>
+                        <field name="onhand_qty" readonly="1" force_save="1"/>
+                        <field name="differ_qty" readonly="1" force_save="1"/>
+                        <field name="indent_qty" readonly="1" force_save="1"/>
+                        <field name="to_be_qty" readonly="1" force_save="1"/>
+                        <field name="ho_indent_qty" readonly="1" force_save="1"/>
+                        <field name="select_line"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="action_apply_to_po" string="Apply to PI" type="object" class="oe_highlight"/>
+                    <button name="action_close_wizard" string="Close" type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

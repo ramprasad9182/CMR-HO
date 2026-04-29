@@ -1,0 +1,81 @@
+<odoo>
+    <record id="view_import_stock_receipt_wizard" model="ir.ui.view">
+        <field name="name">Import Stock Receipts Wizard</field>
+        <field name="model">import.stock.receipt.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Stock Receipts">
+                <group>
+                    <field name="file" filename="file_name"/>
+                    <field name="file_name"/>
+                </group>
+                <footer>
+                    <button name="action_import_receipts" type="object" string="Import" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_import_po_wizard" model="ir.ui.view">
+        <field name="name">Import PO Wizard</field>
+        <field name="model">import.po.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Stock Receipts">
+                <group>
+                    <field name="file" filename="file_name"/>
+                    <field name="file_name"/>
+                </group>
+                <footer>
+                    <button name="action_import_purchase_orders" type="object" string="Import" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_excel_qty_split_wizard" model="ir.ui.view">
+        <field name="name">excel.qty.split.wizard.form</field>
+        <field name="model">excel.qty.split.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Split Excel by Quantity">
+                <group>
+                    <field name="file" filename="filename"/>
+                    <field name="filename" invisible="1"/>
+                    <field name="max_qty"/>
+                </group>
+
+                <group>
+                    <field name="output_file" filename="output_filename" readonly="1"/>
+                    <field name="output_filename" invisible="1"/>
+                </group>
+
+                <footer>
+                    <button name="action_split_file"
+                            string="Split File"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_excel_qty_split" model="ir.actions.act_window">
+        <field name="name">Excel Qty Split</field>
+        <field name="res_model">excel.qty.split.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_excel_tools_root"
+              name="Excel Splitter"
+              sequence="10"/>
+
+    <menuitem id="menu_excel_qty_split"
+              name="Split by Quantity"
+              parent="menu_excel_tools_root"
+              action="action_excel_qty_split"
+              sequence="1"/>
+</odoo>

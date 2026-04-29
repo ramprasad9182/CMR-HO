@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="crm_customizations.TaxTotalsField" t-inherit="account.TaxTotalsField" t-inherit-mode="extension"   owl="1">
+        <xpath expr="//label[contains(text(), 'Total')]" position="replace">
+                <label class="o_form_label o_tax_total_label">Total/టోటల్</label>
+        </xpath>
+    </t>
+
+    <t t-name="crm_customizations.CustomLoadingIndicator" t-inherit="web.LoadingIndicator" t-inherit-mode="extension">
+        <xpath expr="//span[contains(@class, 'o_loading_indicator')]" position="replace">
+            <div class="cmr_overlay">
+                <div class="cmr_loader_box">
+                    <div class="cmr_ring"></div>
+                    <div class="cmr_ring cmr_ring2"></div>
+                    <div class="cmr_center">
+                        <span class="cmr_logo">CMR</span>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

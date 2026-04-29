@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="employee_sepration_tree" model="ir.ui.view">
+            <field name="name">hr.employee.sepration.tree</field>
+            <field name="model">hr.employee.sepration</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Employee Separation">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="joined_date"/>
+                    <field name="revealing_date"/>
+                    <field name="approved_date"/>
+                    <field name="notice_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="employee_sepration_form" model="ir.ui.view">
+            <field name="name">hr.employee.sepration.form</field>
+            <field name="model">hr.employee.sepration</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Employee Separation">
+                    <header>
+                        <button string="Confirm" type="object" name="confirm_resignation" invisible="state in ('confirm', 'approved','cancel')" class="oe_highlight"/>
+                        
+                        <button string="Cancel" type="object" name="cancel_resignation" invisible="state in ('confirm', 'approved','cancel')"/>
+                        
+                        <button string="Approve" type="object" groups="hr.group_hr_user" name="approve_resignation" invisible="state in ('draft', 'approved','cancel')"/>
+                        
+                        <button name="action_create_emp_gratuity" type="object" invisible="state != 'approved'" string="Create Employee Gratuity" class="oe_highlight"/>
+                        
+                        <button string="Reject" type="object" groups="hr.group_hr_user" name="reject_resignation" invisible="state in ('draft','approved','cancel')"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                                <button class="oe_stat_button" name="get_gratuity" type="object" icon="fa-edit">
+                                    <field name="count_gratuity" widget="statinfo" string="Gratuity"/>
+                                </button>
+                                <button class="oe_stat_button" name="get_settlements" type="object" icon="fa-edit">
+                                    <field name="count_settlement" widget="statinfo" string="Settlements"/>
+                                </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="employee_id"/>
+                                <field name="department_id"/>
+                                <field name="joined_date"/>
+                                <field name="confirm_date" class="oe_read_only" invisible="confirm_date  == ''"/>
+                                <field name="per_based_on"/>
+                            </group>
+                            <group>
+                                <field name="revealing_date"/>
+                                <field name="approved_date" invisible="state in ('confirm', 'approved')"/>
+                                <field name="notice_id"/>
+                                <field name="duration_type"/>
+                                <field name="sepration_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string='Reason For Separation'>
+                                <field name="reason"/>
+                            </page>
+                            <page string='Attachments'>
+                                <field name="attachment_ids" widget='many2many_binary'/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="view_employee_resignation">
+            <field name="name">Employee Separation</field>
+            <field name="res_model">hr.employee.sepration</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Employee Separation Form
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="employee_sepration" name="Separation" sequence="6" parent="hr.menu_hr_root"/>
+        <menuitem id="employee_sepration_request" parent="pways_hr_sepration_management.employee_sepration" name="Employee Separation"
+                  action="view_employee_resignation" groups="base.group_user" sequence="4"/>
+    </data>
+</odoo>
+
+

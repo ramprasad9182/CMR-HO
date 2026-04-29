@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_purchase_order_line_tree_custom" model="ir.ui.view">
+        <field name="name">purchase.order.line.tree.custom</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Order Lines"
+                  decoration-success="status == 'done'"
+                  decoration-warning="status == 'partial'"
+                  decoration-danger="status == 'pending'">
+                <field name="company_id" string="Store Name"/>
+                <field name="create_date" string="Indent Date"/>
+                <field name="order_id" string="Indent No"/>
+                <field name="divison"/>
+                <field name="section"/>
+                <field name="department"/>
+                <field name="brick"/>
+                <field name="product_id"/>
+                <field name="product_qty" string="Quantity"/>
+                <field name="nhcl_onhand_qty"/>
+                <field name="pending_incoming_qty"/>
+                <field name="issued_qty"/>
+                <field name="diff_qty"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_purchase_order_line_tree_custom" model="ir.actions.act_window">
+        <field name="name">Store Indent References</field>
+        <field name="res_model">purchase.order.line</field>
+        <field name="view_mode">tree,pivot,search</field>
+        <field name="view_id" ref="view_purchase_order_line_tree_custom"/>
+        <field name="context">{'create': False,'edit':False, 'delete':False}</field>
+        <field name="domain">[('order_id.auto_sale_order_id', '=', False), ('order_id.user_id', '=', 4)]</field>
+    </record>
+
+
+    <menuitem id="menu_store_indent_reference"
+              name="Indent Dashboard"
+              parent="menu_internal_purchase_indent_root_one"
+              action="action_purchase_order_line_tree_custom"
+              sequence="1"/>
+</odoo>

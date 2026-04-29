@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="crm_landed_cost_confirm_popup_view" model="ir.ui.view">
+        <field name="name">Landed Cost Confirmation</field>
+        <field name="model">nhcl.landed.cost.confirmation.popup</field>
+        <field name="arch" type="xml">
+            <form string="Landed Cost Confirmation">
+                <div>
+                    <strong>Do you want to apply landed cost?
+</strong>
+                </div>
+                <footer>
+                    <button string="Confirm" name="button_confirm" type="object"
+                            class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_nhcl_landed_wizard_wizard" model="ir.ui.view">
+        <field name="name">Landed cost Wizard</field>
+        <field name="model">nhcl.landed.cost.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="nhcl_landed_id" invisible="1"/>
+                </group>
+                <div>
+                    <strong>Do you want to apply landed cost? then enter the price..</strong>
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object" string="Ok" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

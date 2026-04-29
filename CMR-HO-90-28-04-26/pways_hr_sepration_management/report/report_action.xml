@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_employee_sepration" model="ir.actions.report">
+            <field name="name">Employee Settlement Report</field>
+            <field name="model">hr.employee.settlement</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pways_hr_sepration_management.report_other_sattelment</field>
+            <field name="report_file">pways_hr_sepration_management.report_other_sattelment</field>
+            <field name="print_report_name">'Employee Settlement Report - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_hr_employee_settlement"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

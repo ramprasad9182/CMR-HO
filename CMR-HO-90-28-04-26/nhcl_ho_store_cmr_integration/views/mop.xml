@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+        <record id="pos_mop_wise_report" model="ir.ui.view">
+        <field name="name">MOP By Store Report</field>
+        <field name="model">pos.mop.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="POS MOP Summary Report">
+                <h1 style="color:black;text-align:center;">POS Mode Of Payment Report
+                </h1>
+                <sheet>
+                    <header>
+                        <button name="get_mop_payments"  string="View Mop report" type="object"/>
+                        <button name="action_summery_mop_detailed_report"  string="View Detailed Report"
+                                type="object"/>
+                        <button special="cancel" string="Cancel"/>
+                    </header>
+                    <group name="pos_mop_report" style="border: 2px solid #990099; padding: 10px;">
+                        <group>
+                            <field name="nhcl_store_id" required="1"
+                                   placeholder="Select Company" widget="many2many_tags" domain="[('nhcl_active', '=', True),('nhcl_store_type', '!=', 'ho')]"/>
+
+                        </group>
+                        <group>
+                            <field name="from_date" required="1"/>
+                            <field name="to_date" required="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="MOP Detailed Report">
+                            <group>
+                                <group>
+                                    <field name="total_cash"/>
+                                    <field name="total_hdfc"/>
+                                    <field name="total_paytm"/>
+                                    <field name="total_bajaj"/>
+                                    <field name="total_cheque"/>
+                                    <field name="total_credit_note_settlement"/>
+                                </group>
+                                <group>
+                                    <field name="total_axis"/>
+                                    <field name="total_kotak"/>
+                                    <field name="total_sbi"/>
+                                    <field name="total_mobikwik"/>
+                                    <field name="total_gift_voucher"/>
+                                    <field name="grand_total"/>
+                                </group>
+                            </group>
+                            <field name="pos_mop_report_ids" readonly="1" forsesave="1">
+                                <tree create="0" delete="0" editable="bottom" limit="1000000">
+                                    <field name="nhcl_company_id"/>
+                                    <field name="cash" sum="Total"/>
+                                    <field name="axis" sum="Total"/>
+                                    <field name="hdfc" sum="Total"/>
+                                    <field name="kotak" sum="Total"/>
+                                    <field name="paytm" sum="Total"/>
+                                    <field name="sbi" sum="Total"/>
+                                    <field name="bajaj" sum="Total"/>
+                                    <field name="mobikwik" sum="Total"/>
+                                    <field name="cheque" sum="Total"/>
+                                    <field name="gift_voucher" sum="Total"/>
+                                    <field name="credit_note_settlement" sum="Total"/>
+                                    <field name="grand_total" sum="Total"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+        <record id="view_mop_report_line_tree" model="ir.ui.view">
+        <field name="name">MOP Report Tree</field>
+        <field name="model">pos.mop.report.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nhcl_company_id"/>
+                <field name="cash" sum="Total"/>
+                <field name="axis" sum="Total"/>
+                <field name="hdfc" sum="Total"/>
+                <field name="kotak" sum="Total"/>
+                <field name="paytm" sum="Total"/>
+                <field name="sbi" sum="Total"/>
+                <field name="bajaj" sum="Total"/>
+                <field name="mobikwik" sum="Total"/>
+                <field name="cheque" sum="Total"/>
+                <field name="gift_voucher" sum="Total"/>
+                <field name="credit_note_settlement" sum="Total"/>
+                <field name="grand_total" sum="Total"/>
+            </tree>
+        </field>
+    </record>
+
+        <record id="view_mop_line_pivot" model="ir.ui.view">
+        <field name="name">MOP Report Pivot</field>
+        <field name="model">pos.mop.report.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Terminal wise MOP Analysis">
+
+                <!-- ROW FIELDS (Group By) -->
+                <field name="nhcl_company_id" type="row"/>
+                <!-- MEASURES -->
+                <field name="cash" type="measure"/>
+                <field name="axis" type="measure"/>
+                <field name="hdfc" type="measure"/>
+                <field name="kotak" type="measure"/>
+                <field name="paytm" type="measure"/>
+                <field name="sbi" type="measure"/>
+                <field name="bajaj" type="measure"/>
+                <field name="mobikwik" type="measure"/>
+                <field name="cheque" type="measure"/>
+                <field name="gift_voucher" type="measure"/>
+                <field name="credit_note_settlement" type="measure"/>
+                <field name="grand_total" type="measure"/>
+
+            </pivot>
+        </field>
+    </record>
+
+
+        <record id="pos_mop_wise_reports" model="ir.actions.act_window">
+            <field name="name">POS Mode of Payment Report</field>
+            <field name="res_model">pos.mop.report.wizard</field>
+            <field name="view_mode">form</field>
+<!--            <field name="view_id" ref="view_pos_mop_report_wizard_form"/>-->
+            <field name="target">current</field>  <!-- normal screen -->
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+                id="pos_mop_wise_report_menu"
+                name="POS MOP Wise Report"
+                action="pos_mop_wise_reports"
+                parent="nhcl_ho_store_cmr_integration.reporting_store_heading"
+                sequence="3"
+        />
+    <!--         <record id="report_pos_mop_pdfsss" model="ir.actions.report">-->
+<!--            <field name="name">POS mop Wise Report</field>-->
+<!--            <field name="model">pos.mop.report.wizard</field>-->
+<!--            <field name="report_type">qweb-html</field>-->
+<!--            <field name="report_name">nhcl_ho_store_cmr_integration.pos_payment_grouped_report</field>-->
+<!--            <field name="report_file">nhcl_ho_store_cmr_integration.pos_payment_grouped_report</field>-->
+<!--            <field name="binding_type">report</field>-->
+
+<!--        </record>-->
+
+
+</odoo>

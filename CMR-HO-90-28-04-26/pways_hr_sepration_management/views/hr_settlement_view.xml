@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <record id="other_settlements_tree" model="ir.ui.view">
+        <field name="name">hr.employee.settlement.tree</field>
+        <field name="model">hr.employee.settlement</field>
+        <field name="arch" type="xml">
+            <tree string="Employee Settlement">
+                <field name ="name"/>
+                <field name ="employee_id"/>
+                <field name ="total_payable_amount" sum="Total" widget="monetary" />
+                <field name="currency_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name ="state"/>
+            </tree>
+        </field>
+    </record>
+
+        <record id="hr_employee_settlements_form" model="ir.ui.view">
+            <field name="name">hr.employee.settlements.form</field>
+            <field name="model">hr.employee.settlement</field>
+            <field name="arch" type="xml">
+                <form string="Employee Settlements">
+                    <header>
+                        <button name="validate_function" type="object" string="Validate" class="oe_highlight" invisible="state in ('cancel','approve', 'validate', 'done')"/>
+                        
+                        <button name="compute_function" type="object" string="Compute" class="oe_highlight" invisible="state in ('cancel','approve', 'draft', 'done')"/>
+                        
+                        <button name="approve_function" type="object" string="Confirm" class="oe_highlight" invisible="state in ('cancel','approve','draft', 'done')"/>
+                        
+                        <button name="cancel_function" type="object" string="Cancel" invisible="state in ('cancel','approve', 'done')"/>
+                        
+                        <button name="draft_function" type="object" string="Set to Draft" invisible="state in ('done','approve','validate', 'draft')"/>
+                        
+                        <button name="create_extra_journal_entries" type="object" string="Create Journal Entries" invisible="state != 'approve'" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,validate,approve"/>
+                    </header>
+                        <sheet>
+                            <div class="oe_button_box" name="button_box">
+                                <button class="oe_stat_button" name="action_journal_entries" type="object" icon="fa-usd" invisible="state != 'done'">
+                                    <field name="count_journal_entry" widget="statinfo" string="Journal Entries"/>
+                                </button>
+                            </div>
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="name" readonly="1"/>
+                                </h1>
+                            </div>
+                                <group>
+                                    <group>
+                                        <field name ="employee_id"  string="Employee" required="True" domain="[('id', 'in', employee_ids)]" readonly="state == 'approve'"/>
+                                        <field name="employee_ids" invisible="1"/>
+                                        <field name ="employee_dept" readonly="state == 'approve'"/>
+                                        <field name ="employee_job_id" required="True" readonly="state == 'approve'"/>
+                                        <field name='gratuity_id'/>
+                                        <field name="reason" required="True" readonly="state == 'approve'" widget="radio" options="{'horizontal':true}"/>
+                                    </group>
+                                    <group>
+                                        <field name="journal_id" readonly="state == 'approve'"/>
+                                        <field name="sepration_id" required="True"/>
+                                        <field name="revealing_date" required="True" readonly="state == 'approve'"/>
+                                        <field name="joined_date" required="True" readonly="state == 'approve'"/>
+                                        <field name="last_date" required="True" readonly="state == 'approve'"/>
+                                        <field name="request_date" required="True" readonly="state == 'approve'"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="basic_salary" readonly="state == 'approve'"/>
+                                        <field name="gross_salary" readonly="state == 'approve'"/>
+                                        <field name="net_salary" readonly="state == 'approve'"/>
+                                        <field name="worked_years" readonly="state == 'approve'" widget="float"/>
+                                        <field name="service_days" readonly="state == 'approve'"/>
+                                    </group>
+                                    <group>
+                                        <field name="leave_balance" readonly="state == 'approve'"/>
+                                        <field name="leave_pay" readonly="state == 'approve'"/>
+                                        <field name="other_day" readonly="state == 'approve'"/>
+                                        <field name="other_salary" readonly="state == 'approve'"/>
+                                        <field name="notice_id" readonly="state == 'approve'"/>
+                                    </group>  
+                                </group>
+                                <notebook>
+                                    <page string="Computations">
+                                        <group string='Gratuity Details'/>
+                                        <field name="gratuity_ids">
+                                            <tree editable="none">
+                                                <field name="description" required="True" />
+                                                <field name="remarks"/>
+                                                <field name="quantity"/>
+                                                <field name="amount"/>
+                                                <field name="total"/>
+                                            </tree>
+                                        </field>
+                                        <group string='Leave Details'/>
+                                        <field name="leave_ids">
+                                            <tree editable="none">
+                                                <field name="description" required="True" />
+                                                <field name="remarks"/>
+                                                <field name="quantity"/>
+                                                <field name="amount"/>
+                                                <field name="total"/>
+                                            </tree>
+                                        </field>
+                                        <group string='Other Details'/>
+                                        <field name="other_sattlement_ids">
+                                            <tree editable="none">
+                                                <field name="description" rrequired="True" />
+                                                <field name="remarks"/>
+                                                <field name="quantity"/>
+                                                <field name="amount"/>
+                                                <field name="total"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                </notebook>
+                                 <group>
+                                    <group colspan="4">
+                                        <field name="remarks" class="oe-bordered-editor" nolabel="1" placeholder="Remarks..."/>
+                                    </group>
+                                    <group>
+                                        <field name="notice_period_amount" readonly="state == 'approve'"/>
+                                    </group>
+                                    <group>
+                                        <field name="total_payable_amount"/>
+                                    </group>
+
+                                </group>
+                        </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_work_entry_type_view_form_inherit_peoplesole" model="ir.ui.view">
+            <field name="name">hr.work.entry.type.form.inherit.peoplesol</field>
+            <field name="model">hr.work.entry.type</field>
+            <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
+            <field name="arch" type="xml">
+                <field name="is_leave" position="after">
+                    <field name="is_paid"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_other_settlements" model="ir.actions.act_window">
+           <field name="name">Employee Settlements</field>
+           <field name="res_model">hr.employee.settlement</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem id="other_settlements" name="Employee Settlements" parent="pways_hr_sepration_management.employee_sepration"
+                  action="action_other_settlements" sequence="20" />
+
+    </data>
+</odoo>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="nhcl_daily_sale_detailed_report_form" model="ir.ui.view">
+        <field name="name">Daily Sale detailed Report Form</field>
+        <field name="model">nhcl.daily.sale.detailed.report</field>
+        <field name="arch" type="xml">
+            <form string="Daily Sale Detailed Report" create="0">
+                <h1 style="color:black;text-align:center;">Article Wise Detailed Sale Report
+                </h1>
+                <sheet>
+
+                    <header>
+                        <button name="daily_sale_detailed_report" type="object"
+                                string="Submit" />
+                        <button name="action_to_reset" type="object"
+                                string="Reset" />
+                        <button name="action_view_detailed_report" type="object"
+                                string="View Detailed Report" />
+
+                    </header>
+                    <group name="daily_sale_report" style="border: 2px solid #990099; padding: 10px;">
+                        <group name="daliy_sale_report_group">
+                            <field name="nhcl_store_id"
+                                       placeholder="Select Company"
+                                       domain="[('nhcl_active', '=', True),('nhcl_store_type', '!=', 'ho')]"
+                                       widget="many2many_tags"/>
+                            <field name="config_id"/>
+                            <field name="cashier_id"/>
+                            <field name="aging"/>
+                            <field name="brand"/>
+                            <field name="price_point"/>
+                        </group>
+                        <group name="daily_sale_report_date_details">
+                            <group>
+                                <field name="from_date" required="1" widget="daterange"
+                                       options="{'to_date_field': 'to_date'}"/>
+                                <field name="to_date" required="1"/>
+                                <field name="name" invisible="1"/>
+                                <field name="family"/>
+                                <field name="category"/>
+                                <field name="nhcl_class"/>
+                                <field name="brick"/>
+                            <field name="product_id"/>
+                            </group>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Daily Sale Detailed Report">
+                             <group>
+                                <group>
+                                    <field name="total_order_quantity"/>
+                                    <field name="total_rsp_amount"/>
+                                    <field name="total_sale_amount"/>
+                                </group>
+                                <group>
+                                    <field name="total_discount_amount"/>
+                                    <field name="total_mrp"/>
+                                    <field name="total_tax_amount"/>
+                                    <field name="total_net_amount"/>
+                                </group>
+                            </group>
+                            <field name="nhcl_daily_sale_detailed_report_ids" readonly="1" forsesave="1">
+                                <tree create="0" delete="0" editable="bottom">
+                                    <field name="nhcl_store_id"/>
+                                    <field name="config_id"/>
+                                    <field name="cashier_id"/>
+                                    <field name="nhcl_bill_receipt"/>
+                                    <field name="family_name"/>
+                                    <field name="category_name"/>
+                                    <field name="class_name"/>
+                                    <field name="brick_name"/>
+                                    <field name="product_name"/>
+                                                                        <field name="promo"/>
+                                    <field name="customer_note"/>
+                                    <field name="hsn"/>
+                                                                        <field name="uom"/>
+
+                                    <field name="colour"/>
+                                    <field name="aging"/>
+                                    <field name="fit"/>
+                                    <field name="design"/>
+                                    <field name="size"/>
+                                                                        <field name="brand"/>
+
+                                    <field name="barcode"/>
+                                    <field name="bill_qty" sum="Total"/>
+                                    <field name="mrp" sum="Total"/>
+                                    <field name="rsp_amount" sum="Total"/>
+                                    <field name="tax_persent"/>
+                                    <field name="tax_amount" sum="Total"/>
+                                                                        <field name="discount" sum="Total"/>
+
+                                    <field name="sale_amount" sum="Total"/>
+                                    <field name="net_amount" sum="Total"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="view_nhcl_daily_sale_detailed_report_line_tree" model="ir.ui.view">
+        <field name="name">Daily Sale detailed Report Tree</field>
+        <field name="model">nhcl.daily.sale.detailed.report.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nhcl_store_id"/>
+                <field name="config_id"/>
+                <field name="cashier_id"/>
+                <field name="nhcl_bill_receipt"/>
+                <field name="family_name"/>
+                <field name="category_name"/>
+                <field name="class_name"/>
+                <field name="brick_name"/>
+                <field name="product_name"/>
+                <field name="promo"/>
+                <field name="customer_note"/>
+                <field name="hsn"/>
+                <field name="uom"/>
+                <field name="colour"/>
+                <field name="aging"/>
+                <field name="fit"/>
+                <field name="design"/>
+                <field name="size"/>
+                <field name="brand"/>
+                <field name="barcode"/>
+                <field name="bill_qty" sum="Total"/>
+                <field name="mrp" sum="Total"/>
+                <field name="rsp_amount" sum="Total"/>
+                <field name="tax_persent"/>
+                <field name="tax_amount" sum="Total"/>
+                <field name="discount" sum="Total"/>
+                <field name="sale_amount" sum="Total"/>
+                <field name="net_amount" sum="Total"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_nhcl_daily_sale_report_line_pivot" model="ir.ui.view">
+        <field name="name">Daily Sale Detailed Report Pivot</field>
+        <field name="model">nhcl.daily.sale.detailed.report.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Daily Sale Detailed Report Analysis">
+
+                <!-- ROW FIELDS (Group By) -->
+                <field name="nhcl_store_id" type="row"/>
+                <field name="config_id" type="row"/>
+                <field name="cashier_id" type="row"/>
+                <field name="nhcl_bill_receipt" type="row"/>
+                <field name="family_name" type="row"/>
+                <field name="category_name" type="row"/>
+                <field name="class_name" type="row"/>
+                <field name="brick_name" type="row"/>
+                <field name="product_name" type="row"/>
+                <!-- MEASURES -->
+                <field name="bill_qty" type="measure"/>
+                <field name="mrp" type="measure"/>
+                <field name="rsp_amount" type="measure"/>
+                <field name="tax_amount" type="measure"/>
+                <field name="sale_amount" type="measure"/>
+                <field name="net_amount" type="measure"/>
+
+            </pivot>
+        </field>
+    </record>
+
+        <record id="daily_sale_detailed_reports" model="ir.actions.act_window">
+        <field name="name">Daily Sale Detailed Report</field>
+        <field name="res_model">nhcl.daily.sale.detailed.report</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+       <menuitem
+            id="daily_sale_detailed_report_menu"
+            name="Article Wise Detailed Sale Report"
+            action="nhcl_ho_store_cmr_integration.daily_sale_detailed_reports"
+              parent="nhcl_ho_store_cmr_integration.reporting_store_heading"
+            sequence="10"
+    />
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_gift_voucher_report" model="ir.actions.report">
+        <field name="name">Gift Voucher</field>
+        <field name="model">gift.voucher</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">gift_voucher_custom.gift_voucher_template</field>
+        <field name="report_file">gift_voucher_custom.gift_voucher_template</field>
+        <field name="binding_model_id" ref="model_gift_voucher"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Gift_Voucher_' + object.name</field>
+    </record>
+
+</odoo>

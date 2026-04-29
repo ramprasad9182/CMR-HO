@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="multi_store_target_report_view_form" model="ir.ui.view">
+        <field name="name">multi.store.target.report.form</field>
+        <field name="model">multi.store.target.report</field>
+        <field name="arch" type="xml">
+            <form string="Multi Store Target Report" create="0">
+                <h1 style="font-weight:1000;text-align:center;">
+                    Multi Store Target Report
+                </h1>
+
+                <sheet>
+                    <header>
+                        <button name="action_fetch_multi_store_data" type="object"
+                                string="Submit" class="btn-primary"/>
+                        <button name="action_to_reset" type="object"
+                                string="Reset" class="btn-secondary"/>
+                        <button name="get_multi_store_excel_sheet" type="object"
+                                string="Excel" class="btn-success"/>
+                        <button name="action_print_pdf" type="object" string="Print PDF" class="btn-primary"/>
+                    </header>
+
+                    <group style="border: 2px solid #990099; padding: 10px;">
+                        <group>
+                            <field name="store_ids" widget="many2many_tags"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="day_month_selection"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Report Lines">
+                            <field name="line_ids" readonly="1">
+                                <tree create="0" delete="0" editable="bottom">
+                                    <field name="s_no" width="50"/>
+                                    <field name="store_id" width="150"/>
+                                    <field name="division_name" width="200"/>
+
+                                    <!-- DAY FIELDS -->
+                                    <field name="regular"
+                                           column_invisible="parent.day_month_selection in ['month']"
+                                           sum="Total"/>
+                                    <field name="festival"
+                                           column_invisible="parent.day_month_selection in ['month']"
+                                           sum="Total"/>
+                                    <field name="Per_day_target"
+                                           column_invisible="parent.day_month_selection in ['month']"/>
+
+                                    <!-- MONTH FIELDS -->
+                                    <field name="regular_excess_month"
+                                           column_invisible="parent.day_month_selection in ['day']"
+                                           sum="Total"/>
+                                    <field name="festival_excess_month"
+                                           column_invisible="parent.day_month_selection in ['day']"
+                                           sum="Total"/>
+                                    <field name="per_month_target"
+                                           column_invisible="parent.day_month_selection in ['day']"/>
+
+                                    <!-- COMMON -->
+                                    <field name="target_price" sum="Total"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="multi_store_target_report_action" model="ir.actions.act_window">
+        <field name="name">Multi Store Target Report</field>
+        <field name="res_model">multi.store.target.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="multi_store_target_report_menu"
+              name="Multi Store Target Report"
+              parent="stock.menu_warehouse_report"
+              action="multi_store_target_report_action"
+              sequence="11"/>
+
+</odoo>

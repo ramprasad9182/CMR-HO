@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="view_tally_integration_tree" model="ir.ui.view">
+        <field name="name">tally.integration.tree</field>
+        <field name="model">tally.integration</field>
+        <field name="arch" type="xml">
+            <tree string="Tally Integrations">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="posting_type"/>
+                <field name="today_date"/>
+                <field name="active_record"/>
+                <field name="company"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_tally_integration_form" model="ir.ui.view">
+        <field name="name">tally.integration.form</field>
+        <field name="model">tally.integration</field>
+        <field name="arch" type="xml">
+            <form string="Tally Integration">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="name"/>
+                            <field name="posting_type" widget="selection" required="1" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>
+                        </group>
+                        <group>
+                            <field name="today_date"/>
+                            <field name="active_record"/>
+                            <field name="company" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Configuration">
+                            <group>
+                                <group string="Odoo Info">
+                                    <field name="odoo_server" required="1"/>
+                                    <field name="odoo_ip" required="1"/>
+                                    <field name="odoo_db" required="1"/>
+                                    <field name="odoo_user" required="1"/>
+                                    <field name="odoo_password" required="1"/>
+                                </group>
+                                <group string="SAP Info">
+                                    <field name="tally_server" required="1"/>
+                                    <field name="tally_ip" required="1"/>
+                                    <field name="tally_db" required="1"/>
+                                    <field name="tally_user" required="1"/>
+                                    <field name="tally_password" required="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Security">
+                            <group>
+                                <field name="api_key" required="1"/>
+                            </group>
+                        </page>
+                        <page name="masters_transactions" string="Masters / Transactions">
+<!--                            <group>-->
+<!--                                <div>-->
+                                    <table style="width:100%;">
+
+                                        <tr style="background-color: #f3f3f3;">
+                                            <th style="width:20%; font-weight: bold;">Type</th>
+                                            <th style="width:20%; font-weight: bold;">Active Type</th>
+                                            <th style="width:20%; font-weight: bold;">Tally Company State</th>
+                                            <th style="width:20%; font-weight: bold;">Tally Company Code</th>
+                                            <th style="width:20%; font-weight: bold;">Tally Company Name</th>
+                                        </tr>
+
+                                        <!-- Spacer -->
+                                        <tr>
+                                            <td colspan="5" style="height: 5px;"> </td>
+                                        </tr>
+
+                                        <!-- Masters Label -->
+                                        <tr style="background-color: #f3f3f3;">
+                                            <td colspan="5" style="font-weight: bold;">Masters</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="5" style="height: 10px;"> </td>
+                                        </tr>
+
+                                        <!-- Masters Rows -->
+                                        <tr>
+                                            <td>Company</td>
+                                            <td>
+                                                <field name="company_enable"/>
+                                            </td>
+<!--                                            <td>-->
+<!--                                                <field name="account_group_tally_company_ids" widget="many2many_tags"-->
+<!--                                                       invisible="not account_group" placeholder="-&#45;&#45; Please Select Company State -&#45;&#45;" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="account_group_tally_company_code_ids"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="account_group_tally_company_name_ids"/>-->
+<!--                                            </td>-->
+                                        </tr>
+                                        <tr>
+                                            <td>Warehouse</td>
+                                            <td>
+                                                <field name="warehouse_enable"/>
+                                            </td>
+<!--                                            <td>-->
+<!--                                                <field name="account_group_tally_company_ids" widget="many2many_tags"-->
+<!--                                                       invisible="not account_group" placeholder="-&#45;&#45; Please Select Company State -&#45;&#45;" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="account_group_tally_company_code_ids"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="account_group_tally_company_name_ids"/>-->
+<!--                                            </td>-->
+                                        </tr>
+                                        <tr>
+                                            <td>Locations</td>
+                                            <td>
+                                                <field name="location_enable"/>
+                                            </td>
+<!--                                            <td>-->
+<!--                                                <field name="account_group_tally_company_ids" widget="many2many_tags"-->
+<!--                                                       invisible="not account_group" placeholder="-&#45;&#45; Please Select Company State -&#45;&#45;" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="account_group_tally_company_code_ids"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="account_group_tally_company_name_ids"/>-->
+<!--                                            </td>-->
+                                        </tr>
+                                        <tr>
+                                            <td>Account Group</td>
+                                            <td>
+                                                <field name="account_group"/>
+                                            </td>
+                                            <td>
+                                                <field name="account_group_tally_company_ids" widget="many2many_tags"
+                                                       invisible="not account_group" placeholder="--- Please Select Company State ---" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>
+                                            </td>
+                                            <td>
+                                                <field name="account_group_tally_company_code_ids"/>
+                                            </td>
+                                            <td>
+                                                <field name="account_group_tally_company_name_ids"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>COA</td>
+                                            <td>
+                                                <field name="coa"/>
+                                            </td>
+                                            <td>
+                                                <field name="coa_tally_company_ids" widget="many2many_tags"
+                                                       invisible="not coa" placeholder="--- Please Select Company State ---" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>
+                                            </td>
+                                            <td>
+                                                <field name="coa_tally_company_code_ids"/>
+                                            </td>
+                                            <td>
+                                                <field name="coa_tally_company_name_ids"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Customers</td>
+                                            <td>
+                                                <field name="customers"/>
+                                            </td>
+                                            <td>
+                                                <field name="customers_tally_company_ids" widget="many2many_tags"
+                                                       invisible="not customers" placeholder="--- Please Select Company State ---" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>
+                                            </td>
+                                            <td>
+                                                <field name="customers_tally_company_code_ids"/>
+                                            </td>
+                                            <td>
+                                                <field name="customers_tally_company_name_ids"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vendors</td>
+                                            <td>
+                                                <field name="vendors"/>
+                                            </td>
+                                            <td>
+                                                <field name="vendors_tally_company_ids" widget="many2many_tags"
+                                                       invisible="not vendors" placeholder="--- Please Select Company State ---" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>
+                                            </td>
+                                            <td>
+                                                <field name="vendors_tally_company_code_ids"/>
+                                            </td>
+                                            <td>
+                                                <field name="vendors_tally_company_name_ids"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Spacer -->
+                                        <tr>
+                                            <td colspan="5" style="height: 10px;"> </td>
+                                        </tr>
+
+                                        <!-- Transactions Label -->
+                                        <tr style="background-color: #f3f3f3;">
+                                            <td colspan="5" style="font-weight: bold;">Transactions</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="5" style="height: 10px;"> </td>
+                                        </tr>
+
+                                        <!-- Transaction Rows -->
+                                        <tr>
+                                            <td>Journal Entries</td>
+                                            <td>
+                                                <field name="journal_entries"/>
+                                            </td>
+<!--                                            <td>-->
+<!--                                                <field name="journal_entries_tally_company_ids" widget="many2many_tags"-->
+<!--                                                       invisible="not journal_entries" placeholder="-&#45;&#45; Please Select Company State -&#45;&#45;" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="journal_entries_tally_company_code_ids"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="journal_entries_tally_company_name_ids"/>-->
+<!--                                            </td>-->
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>Sale Invoice</td>
+                                            <td>
+                                                <field name="sale_invoice"/>
+                                            </td>
+<!--                                            <td>-->
+<!--                                                <field name="sale_invoice_tally_company_ids" widget="many2many_tags"-->
+<!--                                                       invisible="not sale_invoice" placeholder="-&#45;&#45; Please Select Company State -&#45;&#45;" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="sale_invoice_tally_company_code_ids"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="sale_invoice_tally_company_name_ids"/>-->
+<!--                                            </td>-->
+                                        </tr>
+                                        <tr>
+                                            <td>Sale Credit Note</td>
+                                            <td>
+                                                <field name="sale_credit_note"/>
+                                            </td>
+<!--                                            <td>-->
+<!--                                                <field name="sale_credit_note_tally_company_ids" widget="many2many_tags"-->
+<!--                                                       invisible="not sale_credit_note" placeholder="-&#45;&#45; Please Select Company State -&#45;&#45;" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="sale_credit_note_tally_company_code_ids"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="sale_credit_note_tally_company_name_ids"/>-->
+<!--                                            </td>-->
+                                        </tr>
+                                        <tr>
+                                            <td>Purchase Invoice</td>
+                                            <td>
+                                                <field name="purchase_invoice"/>
+                                            </td>
+<!--                                            <td>-->
+<!--                                                <field name="purchase_invoice_tally_company_ids" widget="many2many_tags"-->
+<!--                                                       invisible="not purchase_invoice" placeholder="-&#45;&#45; Please Select Company State -&#45;&#45;" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="purchase_invoice_tally_company_code_ids"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="purchase_invoice_tally_company_name_ids"/>-->
+<!--                                            </td>-->
+                                        </tr>
+                                        <tr>
+                                            <td>Purchase Credit Note</td>
+                                            <td>
+                                                <field name="purchase_credit_note"/>
+                                            </td>
+<!--                                            <td>-->
+<!--                                                <field name="purchase_credit_note_tally_company_ids"-->
+<!--                                                       widget="many2many_tags" invisible="not purchase_credit_note" placeholder="-&#45;&#45; Please Select Company State -&#45;&#45;" style="border-bottom: 1px solid #4B4B4B;padding-top: 6px;margin-bottom: 10px;"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="purchase_credit_note_tally_company_code_ids"/>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <field name="purchase_credit_note_tally_company_name_ids"/>-->
+<!--                                            </td>-->
+                                        </tr>
+
+                                    </table>
+<!--                                </div>-->
+<!--                            </group>-->
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Action -->
+    <record id="action_tally_integration" model="ir.actions.act_window">
+        <field name="name">Odoo-SAP Integration AdminPanel</field>
+        <field name="res_model">tally.integration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Tally Integration record
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu item -->
+    <menuitem id="menu_tally_integration_root" name="Odoo-SAP Integration AdminPanel"  web_icon="integration_admin_panel,static/description/odoo_sap.png"/>
+
+    <menuitem id="menu_tally_integration_main"
+              name="Integration Entries"
+              parent="menu_tally_integration_root"
+              action="action_tally_integration"/>
+
+</odoo>

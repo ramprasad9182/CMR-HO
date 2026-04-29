@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_product_replication_inherit_view" model="ir.ui.view">
+            <field name="name">product.product.replication.form.view.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                            <xpath expr="//header" position="before">
+                <div class="alert alert-success" role="alert" invisible="update_replication == False">
+                    <field name="warning_message" style="white-space: pre-wrap;"/>
+                </div>
+                <div class="alert alert-danger" role="alert" invisible="update_replication == True">
+                    <field name="warning_message" style="white-space: pre-wrap;"/>
+                </div>
+            </xpath>
+<!--                <xpath expr="//header" position="inside">-->
+<!--                    <button class="oe_highlight" name="generate_ean"-->
+<!--                            type="object" string="Generate Barcode" invisible="barcode != False"/>-->
+<!--                </xpath>-->
+                <xpath expr="//page[@name='general_information']" position="after">
+                    <page string="Integration">
+                        <button name="button_fetch_replication_data" type="object" string="Get Stores" class="oe_highlight"/>
+                        <group>
+                            <field name="nhcl_id" readonly="1" force_save="1"/>
+                        <field name="update_replication" readonly="1" force_save="1"/>
+<!--                            <field name="update_status" readonly="1" force_save="1"/>-->
+                            <button name="send_replication_data" type="object" string="Update" class="oe_highlight"/>
+<!--                            <button name="update_product_variant_data" type="object" string="Update" class="oe_highlight" invisible="update_status == True"/>-->
+
+                        </group>
+                        <field name="product_replication_list_id">
+                            <tree create="0" editable="bottom" delete="0" edit="0">
+                                <field name="store_id" width="40%" />
+                                <field name="status" width="30%" />
+                                <field name="date_replication" width="30%" />
+                                <field name="nhcl_terminal_ip" />
+                                <field name="nhcl_port_no" />
+                                <field name="nhcl_api_key" />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    <record id="product_product_inherit_tree_view" model="ir.ui.view">
+        <field name="name">product.product.tree.view.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="update_replication"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

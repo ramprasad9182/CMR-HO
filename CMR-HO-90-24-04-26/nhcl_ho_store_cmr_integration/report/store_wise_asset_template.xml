@@ -1,0 +1,73 @@
+<odoo>
+    <template id="store_asset_report_template">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="doc">
+        <t t-set="data" t-value="doc.get_asset_report_data()"/>
+
+        <div class="page">
+            <h2>Store Asset Report</h2>
+
+            <table class="table table-bordered" style="width:100%; border-collapse: collapse;" border="1">
+                <thead>
+                    <tr>
+                        <th>Store</th>
+
+                        <t t-foreach="data['asset_names']" t-as="asset">
+                            <th>
+                                <t t-esc="asset"/>
+                            </th>
+                        </t>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <t t-foreach="data['store_data'].items()" t-as="store_row">
+
+                        <tr>
+                            <td>
+                                <t t-esc="store_row[0]"/>
+                            </td>
+
+                            <t t-foreach="data['asset_names']" t-as="asset">
+                                <td>
+                                    <t t-esc="store_row[1].get(asset,0)"/>
+                                </td>
+                            </t>
+
+                        </tr>
+
+                    </t>
+
+                </tbody>
+
+            </table>
+        </div>
+    </t>
+    </t>
+</template>
+
+<!--    <record id="paperformat_store_asset_landscape" model="report.paperformat">-->
+<!--        <field name="name">Store Asset Landscape</field>-->
+<!--        <field name="default" eval="False"/>-->
+<!--        <field name="format">A4</field>-->
+<!--        <field name="orientation">Landscape</field>-->
+<!--        <field name="margin_top">20</field>-->
+<!--        <field name="margin_bottom">20</field>-->
+<!--        <field name="margin_left">10</field>-->
+<!--        <field name="margin_right">10</field>-->
+<!--    </record>-->
+
+    <record id="action_store_asset_report_pdf" model="ir.actions.report">
+        <field name="name">Store Asset Report</field>
+        <field name="model">nhcl.store.asset.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">nhcl_ho_store_cmr_integration.store_asset_report_template</field>
+        <field name="report_file">nhcl_ho_store_cmr_integration.store_asset_report_template</field>
+    <!--        <field name="paperformat_id" ref="nhcl_ho_store_cmr_integration.paperformat_store_asset_landscape"/>-->
+        <field name="binding_type">report</field>
+</record>
+
+
+</odoo>

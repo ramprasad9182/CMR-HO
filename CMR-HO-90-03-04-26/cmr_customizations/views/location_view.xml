@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+	<record id="dev_location_tree_view" model="ir.ui.view">
+		<field name="name">dev.location.tree.view</field>
+		<field name="model">dev.location.location</field>
+		<field name="arch" type="xml">
+		    <tree string="Transport Location">
+                <field name="name" required="1" />
+ 		    </tree>
+		</field>
+	</record>
+
+	<record id="dev_location_form_view" model="ir.ui.view">
+        <field name="name">dev.location.form.view</field>
+        <field name="model">dev.location.location</field>
+        <field name="arch" type="xml">
+            <form string="Transport Location Details">
+                <header>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+	
+
+	<!--Action-->
+	<record id="action_dev_location" model="ir.actions.act_window">
+        <field name="name">Transport Locations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dev.location.location</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="dev_location_tree_view"/>
+    </record>
+    
+    
+
+ 	<menuitem name="Transport Locations"
+              id='menu_action_transport_location'
+              parent="menu_transport_config"
+              action="action_dev_location"
+              sequence="1"/>
+              
+</odoo>

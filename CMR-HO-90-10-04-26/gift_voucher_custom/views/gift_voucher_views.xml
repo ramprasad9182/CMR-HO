@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="view_gift_voucher_tree" model="ir.ui.view">
+        <field name="name">gift.voucher.tree</field>
+        <field name="model">gift.voucher</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <!-- HEADER BUTTON ONLY IN TREE VIEW -->
+                <header>
+                    <button name="%(gift_voucher_custom.action_gift_voucher_report)d"
+                            string="Print Selected Vouchers"
+                            type="action"
+                            class="oe_highlight"/>
+                </header>
+
+                <field name="name"/>
+                <field name="customer_name"/>
+                <field name="amount"/>
+                <field name="issue_date"/>
+                <field name="expiry_date"/>
+                <field name="status"/>
+
+            </tree>
+        </field>
+    </record>
+
+
+    <!-- Form view (NO button here) -->
+    <record id="view_gift_voucher_form" model="ir.ui.view">
+        <field name="name">gift.voucher.form</field>
+        <field name="model">gift.voucher</field>
+        <field name="arch" type="xml">
+            <form string="Gift Voucher">
+                <header>
+                    <button string="Set Issued"
+                            type="object"
+                            name="action_set_issued"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="customer_name"/>
+                            <field name="amount"/>
+                            <field name="currency_id"/>
+                        </group>
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_loyalty_program_form_custom" model="ir.ui.view">
+        <field name="name">loyalty.program.form.custom</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_gift_ewallet_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='portal_point_name']" position="after">
+                <field name="card_type" required="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_loyalty_card_form_custom" model="ir.ui.view">
+        <field name="name">loyalty.card.form.custom</field>
+        <field name="model">loyalty.card</field>
+        <field name="inherit_id" ref="loyalty.loyalty_card_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="card_type" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Menu and Action -->
+    <menuitem id="menu_gift_voucher_root" name="Gift Vouchers"/>
+    <menuitem id="menu_gift_voucher" name="Vouchers" parent="menu_gift_voucher_root"/>
+
+    <record id="action_gift_voucher" model="ir.actions.act_window">
+        <field name="name">Gift Vouchers</field>
+        <field name="res_model">gift.voucher</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_gift_voucher_action"
+              name="Manage Vouchers"
+              parent="menu_gift_voucher"
+              action="action_gift_voucher"/>
+
+</odoo>

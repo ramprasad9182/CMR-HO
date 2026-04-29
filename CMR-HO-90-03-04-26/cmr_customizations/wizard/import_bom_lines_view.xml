@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+		<record id="bom_wizard_view" model="ir.ui.view">
+			<field name="name">Import BoM Lines</field>
+			<field name="model">bom.line.wizard</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+					    <field name="import_option" widget="radio"/>
+						<field name="bom_file"/>
+					</group>
+					<group>
+					    <group>
+    					    <field name="import_prod_option" widget="radio"/>
+    					</group>
+    					<group>
+    					    <field name="product_details_option" widget="radio"/>
+    					</group>
+					</group>
+					<footer>
+						<button string="Import" name="import_bom_lines" class="oe_highlight" type="object"/>
+						or
+                        <button name="cancel" string="Cancel" class="oe_link" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="import_bom_line_action" model="ir.actions.act_window">
+			<field name="name">Import BoM Lines</field>
+			<field name="res_model">bom.line.wizard</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="bom_wizard_view"/>
+			<field name="view_mode">form</field>
+		</record>
+
+
+		<record id="bom_nhcl_lot_wizard_view" model="ir.ui.view">
+			<field name="name">Import BoM Lot Wizard</field>
+			<field name="model">nhcl.bom.lot.wizard</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="production_ids" options="{'no_create': True, 'no_open': True, 'no_edit':True}" widget="many2many_tags" readonly="1" invisible="1"/>
+							<field name="nom_categ_1" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_categ_2" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_categ_3" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_categ_4" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_categ_5" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_categ_6" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_categ_7" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_categ_8" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+						</group>
+						<group>
+							<field name="nom_descrip_1" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_descrip_2" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_descrip_3" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_descrip_4" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_descrip_5" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_descrip_6" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_descrip_7" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_descrip_8" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+							<field name="nom_descrip_9" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+						</group>
+					</group>
+					<footer>
+						<button string="Apply" type="object" name="manf_update_cat_and_desp" class="btn-primary"/>
+                        <button name="cancel" string="Cancel" class="oe_link" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="import_bom_lot_action" model="ir.actions.act_window">
+			<field name="name">Import BoM Lot</field>
+			<field name="res_model">nhcl.bom.lot.wizard</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="bom_nhcl_lot_wizard_view"/>
+			<field name="view_mode">form</field>
+		</record>
+	</data>
+</odoo>

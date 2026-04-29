@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_store_indent_reference_tree" model="ir.ui.view">
+        <field name="name">store.indent.reference.tree</field>
+        <field name="model">store.indent.refernce</field>
+        <field name="arch" type="xml">
+            <tree string="Store Indent References">
+                <field name="company_id" string="Store Name"/>
+                <field name="indent_id"/>
+                <field name="so_order_id" column_invisible="1"/>
+                <field name="po_line_id" column_invisible="1"/>
+                <field name="divison"/>
+                <field name="section"/>
+                <field name="department"/>
+                <field name="brick"/>
+                <field name="product_id"/>
+                <field name="pi_quantity"/>
+                <field name="allocated_quantity"/>
+                <field name="order_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_store_indent_reference_pivot" model="ir.ui.view">
+        <field name="name">store.indent.reference.pivot</field>
+        <field name="model">store.indent.refernce</field>
+        <field name="arch" type="xml">
+            <pivot string="Store Indent Analysis">
+                <field name="divison" type="row"/>
+                <field name="section" type="row"/>
+                <field name="department" type="row"/>
+                <field name="brick" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="so_order_id" type="row"/>
+                <field name="indent_id" type="row"/>
+                <field name="company_id" type="col"/>
+                <field name="pi_quantity" type="measure"/>
+                <field name="allocated_quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_store_indent_reference_search" model="ir.ui.view">
+        <field name="name">store.indent.reference.search</field>
+        <field name="model">store.indent.refernce</field>
+        <field name="arch" type="xml">
+            <search string="Search Store Indents">
+                <field name="product_id"/>
+                <field name="so_order_id"/>
+                <field name="company_id"/>
+
+                <filter name="filter_today"
+                        string="Today"
+                        domain="[('order_date','>=', context_today())]"/>
+
+                <group string="Group By">
+                    <filter name="group_product"
+                            string="Product"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter name="group_order"
+                            string="Order"
+                            context="{'group_by': 'so_order_id'}"/>
+                    <filter name="group_company"
+                            string="Company"
+                            context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_store_indent_reference" model="ir.actions.act_window">
+        <field name="name">Store Indent References</field>
+        <field name="res_model">store.indent.refernce</field>
+        <field name="view_mode">tree,pivot,search</field>
+        <field name="search_view_id" ref="view_store_indent_reference_search"/>
+        <field name="context">{'create': False,'edit':False, 'delete':False}</field>
+    </record>
+
+
+    <menuitem id="menu_store_indent_reference"
+              name="Indent Dashboard"
+              parent="menu_internal_purchase_indent_root_one"
+              action="action_store_indent_reference"
+              sequence="50"/>
+</odoo>
